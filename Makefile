@@ -26,7 +26,7 @@ db_shell:
 	docker exec -it time_manager_db psql -U gotham_admin -d time_manager
 
 migrate:
-	docker exec -it time_manager_web mix ecto.migrate
+	docker exec -i time_manager_web mix ecto.migrate
 
 deps:
 	cd ./time_manager && mix deps.get && cd ..
