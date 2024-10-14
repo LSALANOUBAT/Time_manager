@@ -15,9 +15,9 @@ pipeline {
         //     }
         // }
     }
-    // post {
-    //     always {
-    //         sh 'make down'
-    //     }
-    // }
+    post {
+        always {
+            sh 'make down'
+        }
+    }
 }
