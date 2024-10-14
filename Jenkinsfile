@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_COMPOSE_PATH = '.docker/docker-compose.yml'
+    }
     stages {
         stage('Build Docker Images') {
             steps {
@@ -19,17 +22,14 @@ pipeline {
     }
     post {
         always {
-            steps {
-                // Clean up services
-                sh 'make down'
-                
-                // Clean up Docker cache
-                sh '''
-                   docker system prune -af
-                   docker volume prune -f
-                   docker builder prune -af
-                '''
-            }
+            // Clean up services
+            sh 'make down'
+            // Optionally, you can add Docker cache cleanup here
+            sh '''
+                docker system prune -af
+                docker volume prune -f
+                docker builder prune -af
+            '''
         }
     }
 }
