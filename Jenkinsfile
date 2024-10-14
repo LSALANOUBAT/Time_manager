@@ -19,17 +19,14 @@ pipeline {
         stage('Run Database Migrations') {
             steps {
                 // Execute the 'migrate' target in your Makefile
-                sh 	'make migrate'
-
+                sh 'make migrate'
             }
         }
     }
     post {
         always {
-            steps {
-                // Ensure services are stopped even if there's an error
-                sh 'make down'
-            }
+            // Ensure services are stopped even if there's an error
+            sh 'make down'
         }
     }
 }
