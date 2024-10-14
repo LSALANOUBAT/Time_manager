@@ -64,7 +64,7 @@ services:
     networks:
       - time_manager_network
     restart: always
-    mem_limit: 4g 
+    mem_limit: 6g 
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
