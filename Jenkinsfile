@@ -20,7 +20,4 @@ pipeline {
             }
         }
     }
-    post {
-        // No actions needed in 'always' block since services remain running
-    }
 }
