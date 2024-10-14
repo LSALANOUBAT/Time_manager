@@ -56,7 +56,7 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - routing
+      - time_manager_network
     restart: always
     labels:
       - "traefik.enable=true"
