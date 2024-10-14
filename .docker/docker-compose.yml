@@ -6,25 +6,12 @@ services:
       dockerfile: Dockerfile
     container_name: time_manager_vue
     ports:
-      - "8081:8080"
+      - "8080:8080"
     volumes:
       - ../frontend:/app
     networks:
       - time_manager_network
     restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
-      # https
-      - "traefik.http.routers.vue.rule=Host(`time-manager.orbesle.fr`)"  # Replace with actual domain
-      - "traefik.http.routers.vue.tls=true"
-      - "traefik.http.routers.vue.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.vue.entrypoints=websecure"
-      # http (redirect to https)
-      - "traefik.http.routers.vue-http.rule=Host(`home.orbesle.fr)"  # Replace with actual domain
-      - "traefik.http.routers.vue-http.entrypoints=web"
-      - "traefik.http.routers.vue-http.middlewares=redirect-to-https@file"
-
   db:
     image: postgres:14-alpine
     container_name: time_manager_db
@@ -45,7 +32,6 @@ services:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
       interval: 10s
       retries: 5
-
   web:
     build:
       context: ..
@@ -64,24 +50,7 @@ services:
     networks:
       - time_manager_network
     restart: always
-    mem_limit: 6g 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
-      # https
-      - "traefik.http.routers.web.rule=Host(`api.orbesle.fr`)"  # Replace with actual domain
-      - "traefik.http.routers.web.tls=true"
-      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.web.entrypoints=websecure"
-      # http (redirect to https)
-      - "traefik.http.routers.web-http.rule=Host(`home.orbesle.fr`)"  # Replace with actual domain
-      - "traefik.http.routers.web-http.entrypoints=web"
-      - "traefik.http.routers.web-http.middlewares=redirect-to-https@file"
-
 volumes:
   pgdata:
-
 networks:
   time_manager_network:
-    external: true
-    name: reverse-proxy-docker-traefik_routing
