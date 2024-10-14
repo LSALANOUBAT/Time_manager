@@ -9,5 +9,15 @@ pipeline {
                 sh 'make up'
             }
         }
+        stage('migration') {
+            steps {
+                sh 'make migrate'
+            }
+        }
+    }
+    post {
+        always {
+            sh 'make down'
+        }
     }
 }
