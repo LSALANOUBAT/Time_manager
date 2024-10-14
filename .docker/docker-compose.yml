@@ -10,14 +10,14 @@ services:
     volumes:
       - ../frontend:/app
     networks:
-      - time_manager_network
+      - traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.vue.rule=Host(`vue.orbesle.fr`)" # Replace with your actual domain
       - "traefik.http.routers.vue.entrypoints=websecure"
       - "traefik.http.routers.vue.tls.certresolver=myresolver"
-      - "traefik.docker.network=time_manager_network"
+      - "traefik.docker.network=traefik_routing"
 
   db:
     image: postgres:14-alpine
@@ -33,7 +33,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - time_manager_network
+      - traefik_routing
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
@@ -56,19 +56,20 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - time_manager_network
+      - traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=Host(`web.orbesle.fr`)" # Replace with your actual domain
       - "traefik.http.routers.web.entrypoints=websecure"
       - "traefik.http.routers.web.tls.certresolver=myresolver"
-      - "traefik.docker.network=time_manager_network"
+      - "traefik.docker.network=traefik_routing"
 
 volumes:
   pgdata:
 
+
 networks:
-  time_manager_network:
+  traefik_routing:
     external: true
-    name: time_manager_network
+    name: reverse-proxy-docker-traefik_routing
