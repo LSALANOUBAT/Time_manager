@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  vue:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: time_manager_vue
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../frontend:/app
+    networks:
+      - time_manager_network
+    restart: always
+  db:
+    image: postgres:14-alpine
+    container_name: time_manager_db
+    environment:
+      POSTGRES_USER: gotham_admin
+      POSTGRES_PASSWORD: gotham_password
+      POSTGRES_DB: time_manager
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - time_manager_network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
+      interval: 10s
+      retries: 5
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: time_manager_web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MIX_ENV: dev
+      DATABASE_URL: "ecto://gotham_admin:gotham_password@db/time_manager"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ../time_manager:/time_manager
+    networks:
+      - time_manager_network
+    restart: always
+volumes:
+  pgdata:
+networks:
+  time_manager_network:
