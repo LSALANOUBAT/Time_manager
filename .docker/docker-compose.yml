@@ -10,7 +10,7 @@ services:
     volumes:
       - ../frontend:/app
     networks:
-      - routing
+      - time_manager_network
     restart: always
     labels:
       - "traefik.enable=true"
