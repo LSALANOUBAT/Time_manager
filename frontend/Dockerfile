@@ -4,6 +4,7 @@ WORKDIR /front_app
 
 COPY package*.json ./
 
+RUN npm install -g npm@latest && npm install
 RUN npm install
 RUN npm install vue-chartjs chart.js
 
