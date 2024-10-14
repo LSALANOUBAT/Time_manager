@@ -10,8 +10,15 @@ services:
     volumes:
       - ../frontend:/app
     networks:
-      - time_manager_network
+      - routing
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vue.rule=Host(`vue.orbesle.fr`)" # Replace with your actual domain
+      - "traefik.http.routers.vue.entrypoints=websecure"
+      - "traefik.http.routers.vue.tls.certresolver=myresolver"
+      - "traefik.docker.network=routing"
+
   db:
     image: postgres:14-alpine
     container_name: time_manager_db
@@ -32,6 +39,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
       interval: 10s
       retries: 5
+
   web:
     build:
       context: ..
@@ -48,9 +56,20 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - time_manager_network
+      - routing
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`web.orbesle.fr`)" # Replace with your actual domain
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=myresolver"
+      - "traefik.docker.network=routing"
+
 volumes:
   pgdata:
+
 networks:
+  routing:
+    external: true
   time_manager_network:
+    external: true
