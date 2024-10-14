@@ -11,7 +11,7 @@ pipeline {
         }
         stage('migration') {
             steps {
-                sh 'make migrate'
+                sh 'make web_shell'
             }
         }
     }
