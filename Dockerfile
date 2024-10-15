@@ -1,4 +1,4 @@
-FROM cimg/elixir:1.12.3-erlang-24.0.5
+FROM cimg/elixir:latest
 
 ADD . /time_manager
 
