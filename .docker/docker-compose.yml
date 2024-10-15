@@ -10,7 +10,7 @@ services:
     volumes:
       - ../frontend:/app
     networks:
-      - traefik_routing
+      - reverse-proxy-docker-traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
@@ -38,7 +38,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - traefik_routing
+      - reverse-proxy-docker-traefik_routing
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
@@ -61,7 +61,7 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - traefik_routing
+      - reverse-proxy-docker-traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
@@ -79,6 +79,4 @@ volumes:
   pgdata:
 
 networks:
-  traefik_routing:
-    external: true
-    name: reverse-proxy-docker-traefik_routing
+  reverse-proxy-docker-traefik_routing:
