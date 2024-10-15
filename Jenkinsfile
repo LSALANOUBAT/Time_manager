@@ -13,7 +13,7 @@ pipeline {
         //     steps {
         //         sh 'make migrate'
         //     }
-        // }
+        // } 
     }
     post {
         always {
