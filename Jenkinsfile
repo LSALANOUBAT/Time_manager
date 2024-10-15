@@ -4,6 +4,11 @@ pipeline {
         DOCKER_COMPOSE_PATH = '.docker/docker-compose.yml'
     }
     stages {
+        stage('Stop Existing Services') {
+            steps {
+                sh 'make down' // This will stop any running services before starting the new build
+            }
+        }
         stage('Start Services') {
             steps {
                 sh 'make up'
@@ -15,9 +20,9 @@ pipeline {
         //     }
         // } 
     }
-    post {
-        always {
-            sh 'make down'
-        }
-    }
+    // post {
+    //     always {
+    //         sh 'make down'
+    //     }
+    // }
 }
