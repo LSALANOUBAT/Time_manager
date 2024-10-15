@@ -27,10 +27,9 @@ COPY ./time_manager .
 # Compiler les dépendances
 RUN mix deps.get
 RUN mix deps.compile && mix compile
-RUN mix ecto.setup
 
 # Exposer le port pour l'application Phoenix
 EXPOSE 4000
 
 # Commande pour démarrer le serveur Phoenix
-CMD ["mix", "phx.server"]
+ENTRYPOINT ["sh", "-c", "mix clean && mix ecto.setup || true && mix phx.server"]
