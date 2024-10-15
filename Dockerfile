@@ -1,10 +1,6 @@
 FROM elixir:latest
 
-WORKDIR /time_manager
-
-# Copier les fichiers de configuration Mix pour gérer les dépendances
-COPY ./time_manager/mix.exs mix.exs
-COPY ./time_manager/mix.lock mix.lock
+ADD . /time_manager
 
 RUN mix local.hex --force \
     && mix archive.install --force hex phx_new \
@@ -15,6 +11,14 @@ RUN mix local.hex --force \
     && apt-get install -y build-essential \
     && apt-get install -y inotify-tools \
     && mix local.rebar --force
+
+WORKDIR /time_manager
+
+# Copier les fichiers de configuration Mix pour gérer les dépendances
+COPY ./time_manager/mix.exs mix.exs
+COPY ./time_manager/mix.lock mix.lock
+
+
 # Copier le reste de l'application
 COPY ./time_manager .
 
