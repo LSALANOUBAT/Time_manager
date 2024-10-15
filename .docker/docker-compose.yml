@@ -10,11 +10,11 @@ services:
     volumes:
       - ../frontend:/app
     networks:
-      - time_manager_network
+      - reverse-proxy-docker-traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=time_manager_network"
+      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
       - "traefik.http.routers.time_manager_vue.rule=Host(`vue.orbesle.fr`)"
       - "traefik.http.routers.time_manager_vue.tls=true"
       - "traefik.http.routers.time_manager_vue.tls.certresolver=letsencrypt"
@@ -38,7 +38,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - time_manager_network
+      - reverse-proxy-docker-traefik_routing
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
@@ -61,11 +61,11 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - time_manager_network
+      - reverse-proxy-docker-traefik_routing
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=time_manager_network"
+      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
       - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
       - "traefik.http.routers.time_manager_web.tls=true"
       - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
