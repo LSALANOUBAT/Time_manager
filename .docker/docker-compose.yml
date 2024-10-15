@@ -15,6 +15,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
+      - "traefik.http.services.time_manager_vue.loadbalancer.server.port=8080"
       - "traefik.http.routers.time_manager_vue.rule=Host(`vue.orbesle.fr`)"
       - "traefik.http.routers.time_manager_vue.tls=true"
       - "traefik.http.routers.time_manager_vue.tls.certresolver=letsencrypt"
@@ -66,6 +67,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
+      - "traefik.http.services.time_manager_web.loadbalancer.server.port=4000"
       - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
       - "traefik.http.routers.time_manager_web.tls=true"
       - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
@@ -80,3 +82,4 @@ volumes:
 
 networks:
   reverse-proxy-docker-traefik_routing:
+    external: true
