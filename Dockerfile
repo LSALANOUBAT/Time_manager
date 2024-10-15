@@ -25,7 +25,9 @@ COPY ./time_manager/mix.lock mix.lock
 COPY ./time_manager .
 
 # Compiler les dépendances
+RUN mix deps.get
 RUN mix deps.compile && mix compile
+RUN mix ecto.setup
 
 # Exposer le port pour l'application Phoenix
 EXPOSE 4000
