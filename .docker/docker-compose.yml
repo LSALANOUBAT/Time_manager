@@ -12,6 +12,18 @@ services:
     networks:
       - time_manager_network
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=time_manager_network"
+      - "traefik.http.routers.time_manager_vue.rule=Host(`vue.orbesle.fr`)"
+      - "traefik.http.routers.time_manager_vue.tls=true"
+      - "traefik.http.routers.time_manager_vue.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.time_manager_vue.entrypoints=websecure"
+      # Redirection HTTP vers HTTPS
+      - "traefik.http.routers.time_manager_vue-http.rule=Host(`vue.orbesle.fr`)"
+      - "traefik.http.routers.time_manager_vue-http.entrypoints=web"
+      - "traefik.http.routers.time_manager_vue-http.middlewares=redirect-to-https@file"
+
   db:
     image: postgres:14-alpine
     container_name: time_manager_db
@@ -32,6 +44,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
       interval: 10s
       retries: 5
+
   web:
     build:
       context: ..
@@ -50,7 +63,22 @@ services:
     networks:
       - time_manager_network
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=time_manager_network"
+      - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
+      - "traefik.http.routers.time_manager_web.tls=true"
+      - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.time_manager_web.entrypoints=websecure"
+      # Redirection HTTP vers HTTPS
+      - "traefik.http.routers.time_manager_web-http.rule=Host(`web.orbesle.fr`)"
+      - "traefik.http.routers.time_manager_web-http.entrypoints=web"
+      - "traefik.http.routers.time_manager_web-http.middlewares=redirect-to-https@file"
+
 volumes:
   pgdata:
+
 networks:
-  time_manager_network:
+  traefik_routing:
+    external: true
+    name: reverse-proxy-docker-traefik_routing
