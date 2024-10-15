@@ -1,7 +1,12 @@
-FROM cimg/elixir:latest
+FROM elixir:latest
 
+# Définir le répertoire de travail
+WORKDIR /time_manager
+
+# Copier le code source du projet
 ADD . /time_manager
 
+# Installer les outils et dépendances nécessaires
 RUN mix local.hex --force \
     && mix archive.install --force hex phx_new \
     && apt-get update \
@@ -12,18 +17,18 @@ RUN mix local.hex --force \
     && apt-get install -y inotify-tools \
     && mix local.rebar --force
 
-WORKDIR /time_manager
-
 # Copier les fichiers de configuration Mix pour gérer les dépendances
 COPY ./time_manager/mix.exs mix.exs
 COPY ./time_manager/mix.lock mix.lock
 
-
 # Copier le reste de l'application
 COPY ./time_manager .
 
+# Compiler les dépendances
 RUN mix deps.compile && mix compile
 
+# Exposer le port pour l'application Phoenix
 EXPOSE 4000
-CMD ["mix", "phx.server"]
 
+# Commande pour démarrer le serveur Phoenix
+CMD ["mix", "phx.server"]
