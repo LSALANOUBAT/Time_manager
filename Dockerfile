@@ -1,4 +1,4 @@
-FROM elixir:latest
+FROM cimg/elixir:1.12.3-erlang-24.0.5
 
 WORKDIR /time_manager
 
