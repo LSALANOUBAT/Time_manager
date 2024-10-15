@@ -32,4 +32,4 @@ RUN mix deps.compile && mix compile
 EXPOSE 4000
 
 # Commande pour démarrer le serveur Phoenix
-ENTRYPOINT ["sh", "-c", "mix clean && mix ecto.setup || true && mix phx.server"]
+CMD ["mix", "phx.server"]
