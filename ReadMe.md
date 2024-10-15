@@ -10,7 +10,7 @@ mix phx.gen.schema WorkingTime working_times start:naive_datetime end:naive_date
 ```
 Then use :
 ```bash
-make migrate  
+make migrate
 ```
 
 When pulled do these commands:
