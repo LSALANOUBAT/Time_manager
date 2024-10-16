@@ -1,39 +1,31 @@
+# Start with the latest Elixir image
 FROM elixir:latest
 
-# Définir le répertoire de travail
+# Set the working directory to /time_manager
 WORKDIR /time_manager
 
-# Copier le code source du projet
-ADD . /time_manager
+# Copy only the Mix configuration files first for dependency caching
+COPY ./time_manager/mix.exs ./mix.exs
+COPY ./time_manager/mix.lock ./mix.lock
 
-# Installer les outils et dépendances nécessaires
+# Install Hex, Phoenix, and dependencies
 RUN mix local.hex --force \
     && mix archive.install --force hex phx_new \
     && apt-get update \
     && curl -sL https://deb.nodesource.com/setup_lts.x | bash \
-    && apt-get install -y apt-utils \
-    && apt-get install -y nodejs \
-    && apt-get install -y build-essential \
-    && apt-get install -y inotify-tools \
-    && mix local.rebar --force
+    && apt-get install -y apt-utils nodejs build-essential inotify-tools \
+    && mix local.rebar --force \
+    && mix deps.get \
+    && mix deps.compile
 
-# Install Hex and Phoenix globally
-RUN mix local.hex --force && \
-    mix archive.install hex phx_new --force
-
-# Copier les fichiers de configuration Mix pour gérer les dépendances
-COPY ./time_manager/mix.exs mix.exs
-COPY ./time_manager/mix.lock mix.lock
-
-# Copier le reste de l'application
+# Copy the rest of the application files
 COPY ./time_manager .
 
-# Compiler les dépendances
-RUN mix deps.get
-RUN mix deps.compile && mix compile
+# Compile the application
+RUN mix compile
 
-# Exposer le port pour l'application Phoenix
+# Expose the Phoenix port
 EXPOSE 4000
 
-# Commande pour démarrer le serveur Phoenix
+# Command to start the Phoenix server
 CMD ["mix", "phx.server"]
