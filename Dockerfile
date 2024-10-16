@@ -5,8 +5,8 @@ FROM elixir:latest
 WORKDIR /time_manager
 
 # Copy only the Mix configuration files first for dependency caching
-COPY mix.exs ./mix.exs
-COPY mix.lock ./mix.lock
+COPY ./time_manager/mix.exs ./mix.exs
+COPY ./time_manager/mix.lock ./mix.lock
 
 # Install Hex, Phoenix, and dependencies
 RUN mix local.hex --force \
@@ -25,6 +25,6 @@ COPY ./time_manager .
 
 # Expose the Phoenix port
 EXPOSE 4000
-
+WORKDIR /deployment_test/time_manager
 # Command to start the Phoenix server
 CMD ["mix", "phx.server"]
