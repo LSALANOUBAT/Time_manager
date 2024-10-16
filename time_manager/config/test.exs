@@ -17,7 +17,7 @@ config :time_manager, TimeManager.Repo,
 # you can enable the server option below.
 config :time_manager, TimeManagerWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "JAL7GNsH37gM3AegzDIc/oB0i35nSD42p28UG1Eg4zZRTRJxDEbjtCdR/63MWqFM",
+  secret_key_base: "kao+0O2r1TbrD87/bwHv7hIe94dnn8nfltgOvGdQXPSmGw/ThDr3gwyYgjPx2rVm",
   server: false
 
 # In test we don't send emails
@@ -31,7 +31,3 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
-
-# Enable helpful, but potentially expensive runtime checks
-config :phoenix_live_view,
-  enable_expensive_runtime_checks: true
