@@ -17,6 +17,10 @@ RUN mix local.hex --force \
     && apt-get install -y inotify-tools \
     && mix local.rebar --force
 
+# Install Hex and Phoenix globally
+RUN mix local.hex --force && \
+    mix archive.install hex phx_new --force
+
 # Copier les fichiers de configuration Mix pour gérer les dépendances
 COPY ./time_manager/mix.exs mix.exs
 COPY ./time_manager/mix.lock mix.lock
