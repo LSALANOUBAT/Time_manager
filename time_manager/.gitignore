@@ -1,5 +1,5 @@
 # The directory Mix will write compiled artifacts to.
-/_build/*
+/_build/
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -20,6 +20,8 @@ erl_crash.dump
 *.ez
 
 # Temporary files, for example, from tests.
+/tmp/
 
-# Ignorer le répertoire times_managers/build et tout son contenu
-times_managers/build/
+# Ignore package tarball (built via "mix hex.build").
+time_manager-*.tar
+

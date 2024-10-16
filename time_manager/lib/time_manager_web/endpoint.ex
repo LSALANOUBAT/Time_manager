@@ -1,9 +1,6 @@
 defmodule TimeManagerWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :time_manager
   
-  # The session will be stored in the cookie and signed,
-  # this means its contents can be read but not tampered with.
-  # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
     key: "_time_manager_key",
@@ -11,40 +8,23 @@ defmodule TimeManagerWeb.Endpoint do
     same_site: "Lax"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]],
-    longpoll: [connect_info: [session: @session_options]]
-
   # Serve at "/" the static files from "priv/static" directory.
-  #
-  # You should set gzip to true if you are running phx.digest
-  # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
     from: :time_manager,
     gzip: false,
-    only: TimeManagerWeb.static_paths()
+    only: ~w()
 
-  # Code reloading can be explicitly enabled under the
-  # :code_reloader configuration of your endpoint.
+  # Code reloading can be explicitly enabled if needed
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-    plug Phoenix.LiveReloader
-    plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :time_manager
   end
 
-
   plug CORSPlug, 
     origin: ["http://localhost:8080"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], # Autorise les méthodes HTTP nécessaires
-    headers: ["Authorization", "Content-Type"], # Autorise les en-têtes que vous utilisez
-    expose: ["Authorization"] # Expose les en-têtes nécessaires pour le client
-
-
-  plug Phoenix.LiveDashboard.RequestLogger,
-    param_key: "request_logger",
-    cookie_key: "request_logger"
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    headers: ["Authorization", "Content-Type"],
+    expose: ["Authorization"]
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]

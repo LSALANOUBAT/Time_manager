@@ -11,13 +11,13 @@ help:
 	@echo "  make migrate - Lancer les migrations de la base de données"
 
 up: build
-	docker-compose -f $(DOCKER_COMPOSE_PATH) up -d
+	docker compose -f $(DOCKER_COMPOSE_PATH) up -d
 
 down:
-	docker-compose -f $(DOCKER_COMPOSE_PATH) down
+	docker compose -f $(DOCKER_COMPOSE_PATH) down
 
 logs:
-	docker-compose -f $(DOCKER_COMPOSE_PATH) logs -f
+	docker compose -f $(DOCKER_COMPOSE_PATH) logs -f
 
 web_shell:
 	docker exec -it time_manager_web /bin/sh
@@ -26,7 +26,7 @@ db_shell:
 	docker exec -it time_manager_db psql -U gotham_admin -d time_manager
 
 migrate:
-	docker-compose exec -T web mix ecto.migrate
+	docker compose exec -T web mix ecto.migrate
 
 deps:
 	cd ./time_manager && mix deps.get && cd ..
@@ -35,6 +35,6 @@ frontend_deps:
 	cd ./frontend && npm install && cd ..
 
 build: deps frontend_deps
-	docker-compose -f $(DOCKER_COMPOSE_PATH) build
+	docker compose -f $(DOCKER_COMPOSE_PATH) build
 
 .PHONY: help up down logs web_shell db_shell migrate deps frontend_deps build

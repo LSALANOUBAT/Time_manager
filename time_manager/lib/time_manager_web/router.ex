@@ -4,7 +4,7 @@ defmodule TimeManagerWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_live_flash
+    plug :fetch_flash
     plug :put_root_layout, html: {TimeManagerWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
@@ -17,7 +17,8 @@ defmodule TimeManagerWeb.Router do
   scope "/", TimeManagerWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # Define the root path
+    get "/", PageController, :index
   end
 
   scope "/api", TimeManagerWeb do
@@ -26,17 +27,12 @@ defmodule TimeManagerWeb.Router do
     resources "/users", UserController, except: [:new, :edit]
     
     get "/clocks/:user_id", ClockController, :index
-    
     post "/clocks/:user_id", ClockController, :create
     
     get "/workingtime/:userID", WorkingtimeController, :index
-
     get "/workingtime/:userID/:id", WorkingtimeController, :show
-
     post "/workingtime/:userID", WorkingtimeController, :create
-
     put "/workingtime/:id", WorkingtimeController, :update
-
     delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
