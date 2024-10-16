@@ -2,7 +2,7 @@
 FROM elixir:latest
 
 # Set the working directory to /time_manager
-WORKDIR /time_manager
+WORKDIR /deployment_test/time_manager
 
 # Copy only the Mix configuration files first for dependency caching
 COPY ./time_manager/mix.exs ./mix.exs
@@ -25,6 +25,5 @@ COPY ./time_manager .
 
 # Expose the Phoenix port
 EXPOSE 4000
-WORKDIR /deployment_test/time_manager
 # Command to start the Phoenix server
 CMD ["mix", "phx.server"]
