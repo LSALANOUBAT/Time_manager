@@ -29,5 +29,4 @@ WORKDIR /time_manager
 EXPOSE 4000
 
 # Command to start the Phoenix server
-CMD ["mix", "run", "--no-halt"]
-
+CMD ["mix", "phx.server"]
