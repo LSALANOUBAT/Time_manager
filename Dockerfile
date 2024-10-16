@@ -24,10 +24,10 @@ COPY ./time_manager .
 # Compile the application
 RUN mix compile
 
+WORKDIR /time_manager
 # Expose the Phoenix port
 EXPOSE 4000
 
 # Command to start the Phoenix server
-# Start the Phoenix app directly with elixir
 CMD ["mix", "run", "--no-halt"]
 
