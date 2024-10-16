@@ -13,7 +13,7 @@ Then use :
 make migrate
 ```
 
-When pulled do these commands:
+When pulled do these commands:ddddddddd
 
 local : 
 ```bash
