@@ -24,7 +24,7 @@ COPY ./time_manager .
 # Compile the application
 RUN mix compile
 
-WORKDIR /time_manager
+WORKDIR /deployment_test/time_manager
 # Expose the Phoenix port
 EXPOSE 4000
 
