@@ -28,4 +28,6 @@ RUN mix compile
 EXPOSE 4000
 
 # Command to start the Phoenix server
-CMD ["mix", "phx.server"]
+# Start the Phoenix app directly with elixir
+CMD ["mix", "run", "--no-halt"]
+
