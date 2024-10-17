@@ -64,7 +64,7 @@ export default {
         const response = await fetch('http://localhost:4000/api/users'); // Adjust API endpoint if needed
 
         if (!response.ok) {
-          throw new Error(Server error: ${response.status});
+          throw new Error(`Server error: ${response.status}`);
         }
 
         const data = await response.json();
@@ -83,15 +83,16 @@ export default {
       }
 
       try {
-        const response = await fetch(http://localhost:4000/api/workingtime/${this.selectedUserId});
+        const response = await fetch(`http://localhost:4000/api/workingtimes?userID=${this.selectedUserId}`);
 
         if (!response.ok) {
-          throw new Error(Server error: ${response.status});
+          throw new Error(`Server error: ${response.status}`);
         }
 
         const data = await response.json();
         if (data && data.length > 0) {
           this.transformChartData(data); // Transform data for the charts
+          this.errorMessage = null; // Clear any previous error message
         } else {
           this.errorMessage = 'No working time data available for this user.';
           this.clearChartData();
@@ -99,6 +100,7 @@ export default {
       } catch (error) {
         console.error('Failed to fetch working time data:', error);
         this.errorMessage = 'Failed to fetch chart data. Please try again.';
+        this.clearChartData();
       }
     },
 
@@ -111,10 +113,12 @@ export default {
 
     // Transform the fetched working time data for charts
     transformChartData(data) {
-      const sortedData = data.sort((a, b) => new Date(a.start) - new Date(b.start));
+      const sortedData = data.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 
-      const labels = sortedData.map((item) => new Date(item.start).toLocaleDateString());
-      const durations = sortedData.map((item) => this.calculateDuration(item.start, item.end));
+      const labels = sortedData.map((item) => new Date(item.start_time).toLocaleDateString());
+      const durations = sortedData.map((item) =>
+        this.calculateDuration(item.start_time, item.end_time)
+      );
 
       // Line Chart Data
       this.lineChartData = {
