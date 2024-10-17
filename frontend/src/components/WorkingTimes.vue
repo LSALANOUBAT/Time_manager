@@ -13,6 +13,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -22,7 +23,9 @@ export default {
     };
   },
   methods: {
+    
     async getWorkingTimes() {
+      const apiUrl = process.env.VUE_APP_API_URL;
       if (!this.userId) {
         this.errorMessage = 'Please enter a valid User ID';
         this.workingTimes = [];
@@ -30,7 +33,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.userId}`);
+        const response = await fetch(`${apiUrl}/${this.userId}`);
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);

@@ -37,6 +37,7 @@
 </template>
 
 <script>
+const apiUrl = process.env.VUE_APP_API_URL;
 export default {
   data() {
     return {
@@ -59,7 +60,7 @@ export default {
       const startISO = this.formatToISOString(this.start);
       const endISO = this.formatToISOString(this.end);
       
-      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.userId}`, {
+      const response = await fetch(`${apiUrl}/${this.userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -83,7 +84,7 @@ export default {
       const startISO = this.formatToISOString(this.start);
       const endISO = this.formatToISOString(this.end);
       
-      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.workingTimeId}`, {
+      const response = await fetch(`${apiUrl}/${this.workingTimeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -104,7 +105,7 @@ export default {
         return;
       }
 
-      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.userId}/${this.workingTimeId}`, {
+      const response = await fetch(`${apiUrl}/workingtime/${this.userId}/${this.workingTimeId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
       });

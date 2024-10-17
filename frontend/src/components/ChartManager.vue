@@ -29,6 +29,7 @@
 // Import chart components
 import { Line, Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement } from 'chart.js';
+const apiUrl = process.env.VUE_APP_API_URL;
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement);
 
@@ -77,7 +78,7 @@ export default {
   },
   async created() {
     try {
-      const response = await fetch(`https://web.orbesle.fr/api/users`);
+      const response = await fetch(`${apiUrl}/users`);
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
@@ -97,7 +98,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.selectedUserId}`);
+        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`);
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }

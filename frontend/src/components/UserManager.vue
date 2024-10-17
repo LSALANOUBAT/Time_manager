@@ -25,6 +25,7 @@
 </template>
 
 <script>
+const apiUrl = process.env.VUE_APP_API_URL;
 export default {
   data() {
     return {
@@ -38,7 +39,7 @@ export default {
   methods: {
     async createUser() {
       try {
-        const response = await fetch('https://web.orbesle.fr/api/users', {
+        const response = await fetch(`${apiUrl}/users`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -61,7 +62,7 @@ export default {
 
     async getUser() {
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`);
+        const response = await fetch(`${apiUrl}/${this.userId}`);
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
@@ -78,7 +79,7 @@ export default {
 
     async updateUser() {
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`, {
+        const response = await fetch(`${apiUrl}/${this.userId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -101,7 +102,7 @@ export default {
 
     async deleteUser() {
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`, {
+        const response = await fetch(`${apiUrl}/${this.userId}`, {
           method: 'DELETE',
         });
 
