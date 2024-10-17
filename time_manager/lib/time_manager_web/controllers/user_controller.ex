@@ -2,9 +2,25 @@ defmodule TimeManagerWeb.UserController do
   use TimeManagerWeb, :controller
   alias TimeManager.Accounts
 
-  def index(conn, %{"email" => email, "username" => username}) do
-    users = Accounts.list_users()
-            |> Enum.filter(fn u -> u.email == email and u.username == username end)
+  def index(conn, params) do
+    users = 
+      case params do
+        %{"email" => email, "username" => username} ->
+          Accounts.list_users()
+          |> Enum.filter(fn u -> u.email == email and u.username == username end)
+
+        %{"email" => email} ->
+          Accounts.list_users()
+          |> Enum.filter(fn u -> u.email == email end)
+
+        %{"username" => username} ->
+          Accounts.list_users()
+          |> Enum.filter(fn u -> u.username == username end)
+
+        _ ->
+          Accounts.list_users()
+      end
+
     json(conn, users)
   end
 
@@ -19,10 +35,11 @@ defmodule TimeManagerWeb.UserController do
         conn 
         |> put_status(:created) 
         |> json(user)
+
       {:error, changeset} -> 
         conn 
         |> put_status(:unprocessable_entity) 
-        |> json(changeset)
+        |> json(%{errors: changeset})
     end
   end
 
@@ -32,10 +49,11 @@ defmodule TimeManagerWeb.UserController do
     case Accounts.update_user(user, user_params) do
       {:ok, user} -> 
         json(conn, user)
+
       {:error, changeset} -> 
         conn 
         |> put_status(:unprocessable_entity) 
-        |> json(changeset)
+        |> json(%{errors: changeset})
     end
   end
 
@@ -44,17 +62,15 @@ defmodule TimeManagerWeb.UserController do
       user = Accounts.get_user!(id)
       Accounts.delete_user(user)
 
-      # Return a success message in JSON format
       conn
       |> put_status(:ok)
       |> json(%{message: "User successfully deleted"})
     rescue
-      # Handle specific error cases like not found
       Ecto.NoResultsError ->
         conn
         |> put_status(:not_found)
         |> json(%{error: "User not found"})
-      # Handle any other errors
+
       _error ->
         conn
         |> put_status(:internal_server_error)
