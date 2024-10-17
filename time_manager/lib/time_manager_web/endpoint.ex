@@ -21,7 +21,7 @@ defmodule TimeManagerWeb.Endpoint do
   end
 
   plug CORSPlug, 
-    origin: ["https://vue.orbesle.fr"],
+    origin: ["http://localhost:8080", "https://vue.orbesle.fr"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     headers: ["Authorization", "Content-Type"],
     expose: ["Authorization"]

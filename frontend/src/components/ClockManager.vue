@@ -12,6 +12,7 @@
 </template>
 
 <script>
+const apiUrl = process.env.VUE_APP_API_URL;
 export default {
   data() {
     return {
@@ -28,7 +29,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`https://web.orbesle.fr/api/clocks/${this.userId}`, {
+        const response = await fetch(`${apiUrl}/clocks/${this.userId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

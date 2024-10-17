@@ -1,18 +1,35 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
   transpileDependencies: true,
+
+  // Development server configuration
   devServer: {
-    host: '0.0.0.0',  // Écoute sur toutes les interfaces réseau
-    port: 8080,       // Le port sur lequel Vue.js doit écouter
+    host: '0.0.0.0',  // Allows access from any network interface (useful for Docker or LAN access)
+    port: 8080,       // Specifies the port on which the server will run
     allowedHosts: [
-      'vue.orbesle.fr'  // Accepte les requêtes provenant de ce domaine
+      'vue.orbesle.fr',
+      'localhost:8080'  // Accept requests from this host/domain
     ],
-    client: {
-      webSocketURL: 'wss://vue.orbesle.fr/ws',  // WebSocket pour Live Reload (HTTPS)
-    },
     headers: {
-      'Access-Control-Allow-Origin': '*', // Pour éviter les problèmes CORS
+      'Access-Control-Allow-Origin': '*', // Enables CORS for all origins
+    },
+    // If needed, you can add proxy settings for backend API calls
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+      },
     },
   },
-})
+
+  // Adjusting webpack configurations if necessary
+  configureWebpack: {
+    // Custom webpack configurations can be added here
+  },
+
+  // Optional: ChainWebpack for more advanced configurations
+  chainWebpack: config => {
+    // Example of chaining additional configurations
+  },
+});

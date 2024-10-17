@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_COMPOSE_PATH = '.docker/docker-compose.yml'
+        DOCKER_COMPOSE_PATH = '.docker/docker-compose.prod.yml'
     }
     stages {
         stage('Stop Existing Services') {
