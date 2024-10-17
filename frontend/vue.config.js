@@ -1,35 +1,35 @@
 const { defineConfig } = require('@vue/cli-service');
+const webpack = require('webpack');
 
 module.exports = defineConfig({
   transpileDependencies: true,
 
-  // Development server configuration
   devServer: {
-    host: '0.0.0.0',  // Allows access from any network interface (useful for Docker or LAN access)
-    port: 8080,       // Specifies the port on which the server will run
+    host: '0.0.0.0',
+    port: 8080,
     allowedHosts: [
       'vue.orbesle.fr',
-      'localhost:8080'  // Accept requests from this host/domain
+      'localhost:8080'
     ],
     headers: {
-      'Access-Control-Allow-Origin': '*', // Enables CORS for all origins
+      'Access-Control-Allow-Origin': '*',
     },
-    // If needed, you can add proxy settings for backend API calls
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'http://127.0.0.1:4000',
         changeOrigin: true,
       },
     },
+    hot: false,
+    liveReload: false,
   },
 
-  // Adjusting webpack configurations if necessary
   configureWebpack: {
-    // Custom webpack configurations can be added here
-  },
-
-  // Optional: ChainWebpack for more advanced configurations
-  chainWebpack: config => {
-    // Example of chaining additional configurations
+    plugins: [
+      new webpack.DefinePlugin({
+        __VUE_PROD_DEVTOOLS__: false,
+        __VUE_OPTIONS_API__: true,
+      }),
+    ],
   },
 });
