@@ -38,7 +38,7 @@ export default {
   methods: {
     async createUser() {
       try {
-        const response = await fetch('http://localhost:4000/api/users', {
+        const response = await fetch('https://web.orbesle.fr/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -61,7 +61,7 @@ export default {
 
     async getUser() {
       try {
-        const response = await fetch(`http://localhost:4000/api/users/${this.userId}`);
+        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`);
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
@@ -78,7 +78,7 @@ export default {
 
     async updateUser() {
       try {
-        const response = await fetch(`http://localhost:4000/api/users/${this.userId}`, {
+        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -101,7 +101,7 @@ export default {
 
     async deleteUser() {
       try {
-        const response = await fetch(`http://localhost:4000/api/users/${this.userId}`, {
+        const response = await fetch(`https://web.orbesle.fr/api/users/${this.userId}`, {
           method: 'DELETE',
         });
 

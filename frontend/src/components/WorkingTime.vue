@@ -59,7 +59,7 @@ export default {
       const startISO = this.formatToISOString(this.start);
       const endISO = this.formatToISOString(this.end);
       
-      const response = await fetch(`http://localhost:4000/api/workingtime/${this.userId}`, {
+      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -83,7 +83,7 @@ export default {
       const startISO = this.formatToISOString(this.start);
       const endISO = this.formatToISOString(this.end);
       
-      const response = await fetch(`http://localhost:4000/api/workingtime/${this.workingTimeId}`, {
+      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.workingTimeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -104,7 +104,7 @@ export default {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/api/workingtime/${this.userId}/${this.workingTimeId}`, {
+      const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.userId}/${this.workingTimeId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
       });
