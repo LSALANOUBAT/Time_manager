@@ -6,6 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 RUN npm install vue-chartjs chart.js
+RUN npm install -g @vue/cli
+RUN npm install
+RUN npm install vue-chartjs chart.js
 
 COPY . .
 
