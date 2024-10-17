@@ -28,7 +28,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`http://localhost:4000/api/clocks/${this.userId}`, {
+        const response = await fetch(`https://web.orbesle.fr:4000/api/clocks/${this.userId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

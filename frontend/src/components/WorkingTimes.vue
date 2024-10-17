@@ -30,7 +30,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`http://localhost:4000/api/workingtime/${this.userId}`);
+        const response = await fetch(`https://web.orbesle.fr:4000/api/workingtime/${this.userId}`);
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);

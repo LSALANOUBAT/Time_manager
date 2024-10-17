@@ -30,7 +30,7 @@ export default {
   },
   async created() {
     try {
-      const response = await fetch(`http://localhost:4000/api/workingtime`);
+      const response = await fetch(`https://web.orbesle.fr:4000/api/workingtime`);
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
