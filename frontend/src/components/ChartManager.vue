@@ -77,7 +77,7 @@ export default {
   },
   async created() {
     try {
-      const response = await fetch(`https://web.orbesle.fr:4000/api/users`);
+      const response = await fetch(`https://web.orbesle.fr/api/users`);
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
@@ -97,7 +97,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`https://web.orbesle.fr:4000/api/workingtime/${this.selectedUserId}`);
+        const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.selectedUserId}`);
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
