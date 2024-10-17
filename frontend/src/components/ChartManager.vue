@@ -14,9 +14,9 @@
     </div>
 
     <!-- Charts -->
-    <line-chart v-if="lineChartData.datasets.length" :chart-data="lineChartData"></line-chart>
-    <bar-chart v-if="barChartData.datasets.length" :chart-data="barChartData"></bar-chart>
-    <pie-chart v-if="pieChartData.datasets.length" :chart-data="pieChartData"></pie-chart>
+    <line-chart v-if="lineChartData.datasets.length" :data="lineChartData"></line-chart>
+    <bar-chart v-if="barChartData.datasets.length" :data="barChartData"></bar-chart>
+    <pie-chart v-if="pieChartData.datasets.length" :data="pieChartData"></pie-chart>
 
     <!-- Error message -->
     <div v-if="errorMessage" class="error-message">
@@ -28,33 +28,12 @@
 <script>
 // Import chart components
 import { Line, Bar, Pie } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement } from 'chart.js';
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement);
 
 export default {
   components: {
-    LineChart: {
-      extends: Line,
-      props: ['chartData'],
-      mounted() {
-        this.renderChart(this.chartData, { responsive: true, maintainAspectRatio: false });
-      },
-    },
-    BarChart: {
-      extends: Bar,
-      props: ['chartData'],
-      mounted() {
-        this.renderChart(this.chartData, { responsive: true, maintainAspectRatio: false });
-      },
-    },
-    PieChart: {
-      extends: Pie,
-      props: ['chartData'],
-      mounted() {
-        this.renderChart(this.chartData, { responsive: true, maintainAspectRatio: false });
-      },
-    },
+    LineChart: Line,
+    BarChart: Bar,
+    PieChart: Pie,
   },
   data() {
     return {
@@ -76,21 +55,9 @@ export default {
     };
   },
   async created() {
-    try {
-      const response = await fetch(`https://web.orbesle.fr/api/users`);
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      this.users = data;
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-      this.errorMessage = 'Failed to fetch users. Please try again.';
-    }
+    await this.fetchUsers(); // Fetch users when component is created
   },
   methods: {
-<<<<<<< HEAD
     // Fetch the list of users from the API
     async fetchUsers() {
       try {
@@ -109,21 +76,15 @@ export default {
     },
 
     // Fetch working time data for the selected user
-=======
->>>>>>> refs/remotes/origin/main
     async fetchUserData() {
       if (!this.selectedUserId) {
-        this.clearChartData();
+        this.errorMessage = 'Please select a user.';
         return;
       }
 
       try {
-<<<<<<< HEAD
         const response = await fetch(`http://localhost:4000/api/workingtimes?userID=${this.selectedUserId}`);
 
-=======
-        const response = await fetch(`https://web.orbesle.fr/api/workingtime/${this.selectedUserId}`);
->>>>>>> refs/remotes/origin/main
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
