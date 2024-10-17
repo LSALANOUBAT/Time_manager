@@ -64,18 +64,18 @@ services:
     networks:
       - reverse-proxy-docker-traefik_routing
     restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
-      - "traefik.http.services.time_manager_web.loadbalancer.server.port=4000"
-      - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
-      - "traefik.http.routers.time_manager_web.tls=true"
-      - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.time_manager_web.entrypoints=websecure"
-      # Redirection HTTP vers HTTPS
-      - "traefik.http.routers.time_manager_web-http.rule=Host(`web.orbesle.fr`)"
-      - "traefik.http.routers.time_manager_web-http.entrypoints=web"
-      - "traefik.http.routers.time_manager_web-http.middlewares=redirect-to-https@file"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
+    #   - "traefik.http.services.time_manager_web.loadbalancer.server.port=4000"
+    #   - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
+    #   - "traefik.http.routers.time_manager_web.tls=true"
+    #   - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
+    #   - "traefik.http.routers.time_manager_web.entrypoints=websecure"
+    #   # Redirection HTTP vers HTTPS
+    #   - "traefik.http.routers.time_manager_web-http.rule=Host(`web.orbesle.fr`)"
+    #   - "traefik.http.routers.time_manager_web-http.entrypoints=web"
+    #   - "traefik.http.routers.time_manager_web-http.middlewares=redirect-to-https@file"
 
 volumes:
   pgdata:
