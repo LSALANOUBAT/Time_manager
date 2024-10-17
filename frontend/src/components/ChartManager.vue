@@ -29,12 +29,6 @@
 // Import chart components
 import { Line, Bar, Pie } from 'vue-chartjs';
 
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement } from 'chart.js';
-const apiUrl = process.env.VUE_APP_API_URL;
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement);
-
-
 export default {
   components: {
     LineChart: Line,
@@ -61,11 +55,38 @@ export default {
     };
   },
   async created() {
-
-        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`);
+    await this.fetchUsers(); // Fetch users when component is created
+  },
+  methods: {
+    // Fetch the list of users from the API
+    async fetchUsers() {
+      try {
+        const response = await fetch('http://localhost:4000/api/users'); // Adjust API endpoint if needed
 
         if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
+          throw new Error(Server error: ${response.status});
+        }
+
+        const data = await response.json();
+        this.users = data; // Store the list of users
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        this.errorMessage = 'Failed to fetch users. Please try again.';
+      }
+    },
+
+    // Fetch working time data for the selected user
+    async fetchUserData() {
+      if (!this.selectedUserId) {
+        this.errorMessage = 'Please select a user.';
+        return;
+      }
+
+      try {
+        const response = await fetch(http://localhost:4000/api/workingtimes?userID=${this.selectedUserId});
+
+        if (!response.ok) {
+          throw new Error(Server error: ${response.status});
         }
 
         const data = await response.json();
