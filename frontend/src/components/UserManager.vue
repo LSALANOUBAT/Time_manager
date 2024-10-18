@@ -71,7 +71,6 @@ export default {
       try {
         const response = await fetch(`${apiUrl}/users`, {
           method: 'POST',
-          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user: {
@@ -112,7 +111,6 @@ export default {
       try {
         const response = await fetch(`${apiUrl}/users/${this.userId}`, {
           method: 'PUT',
-          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user: {
