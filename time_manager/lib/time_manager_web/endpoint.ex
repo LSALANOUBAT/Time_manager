@@ -20,11 +20,13 @@ defmodule TimeManagerWeb.Endpoint do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :time_manager
   end
 
-  plug CORSPlug, 
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    headers: ["Authorization", "Content-Type"],
-    expose: ["Authorization"]
+plug CORSPlug,
+  origin: ["https://vue.orbesle.fr", "http://localhost:8080"],  # Allow only the necessary origins
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  headers: ["Authorization", "Content-Type"],
+  expose: ["Authorization"],
+  max_age: 86400,  # Optional: cache the CORS response for 24 hours
+  credentials: true
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
