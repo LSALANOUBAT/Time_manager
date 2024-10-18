@@ -16,12 +16,21 @@ module.exports = defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://188.231.18.58:4000',
+        target: 'http://localhost:4000',
         changeOrigin: true,
       },
     },
     hot: false,
     liveReload: false,
+
+    // Fix the client and webSocketURL options
+    client: {
+      webSocketURL: {
+        hostname: 'localhost',   // or 'vue.orbesle.fr' depending on your setup
+        port: 8080,              // port of your dev server
+        protocol: 'ws',          // or 'wss' if using SSL
+      },
+    },
   },
 
   configureWebpack: {
