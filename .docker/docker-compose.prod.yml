@@ -40,7 +40,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - reverse-proxy-docker-traefik_routing
+      - internal_network
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U gotham_admin"]
@@ -63,11 +63,8 @@ services:
     volumes:
       - ../time_manager:/time_manager
     networks:
-      - reverse-proxy-docker-traefik_routing
       - internal_network
     restart: always
-    labels:
-      - "traefik.enable=false" # Désactiver l'accès via Traefik pour le backend
 
 volumes:
   pgdata:
