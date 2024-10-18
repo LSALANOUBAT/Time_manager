@@ -15,8 +15,8 @@ module.exports = defineConfig({
       'Access-Control-Allow-Origin': '*',
     },
     proxy: {
-      '/api': {
-        target: 'http://localhost:4000',
+      '/': {
+        target: process.env.VUE_APP_API_URL,
         changeOrigin: true,
       },
     },
