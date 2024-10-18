@@ -11,6 +11,7 @@ services:
       - ../frontend:/app
     networks:
       - reverse-proxy-docker-traefik_routing
+      - internal_network
     restart: always
     labels:
       - "traefik.enable=true"
@@ -45,7 +46,7 @@ services:
       interval: 10s
       retries: 5
 
-  web:
+   web:
     build:
       context: ..
       dockerfile: Dockerfile
@@ -62,18 +63,11 @@ services:
       - ../time_manager:/time_manager
     networks:
       - reverse-proxy-docker-traefik_routing
+      - internal_network
     restart: always
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=reverse-proxy-docker-traefik_routing"
-      - "traefik.http.services.time_manager_web.loadbalancer.server.port=4000"
-      - "traefik.http.routers.time_manager_web.rule=Host(`web.orbesle.fr`)"
-      - "traefik.http.routers.time_manager_web.tls=true"
-      - "traefik.http.routers.time_manager_web.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.time_manager_web.entrypoints=websecure"
-      - "traefik.http.routers.time_manager_web-http.rule=Host(`web.orbesle.fr`)"
-      - "traefik.http.routers.time_manager_web-http.entrypoints=web"
-      - "traefik.http.routers.time_manager_web-http.middlewares=redirect-to-https@file"
+      - "traefik.enable=false" # Désactiver l'accès via Traefik pour le backend
+
 
 volumes:
   pgdata:
@@ -81,3 +75,6 @@ volumes:
 networks:
   reverse-proxy-docker-traefik_routing:
     external: true
+  internal_network:
+    external: false
+

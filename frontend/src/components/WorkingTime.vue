@@ -84,7 +84,7 @@ export default {
       const startISO = this.formatToISOString(this.start);
       const endISO = this.formatToISOString(this.end);
       
-      const response = await fetch(`${apiUrl}/${this.workingTimeId}`, {
+      const response = await fetch(`${apiUrl}/workingtime/${this.workingTimeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
