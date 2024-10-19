@@ -33,7 +33,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`${apiUrl}/${this.userId}`);
+        const response = await fetch(`${apiUrl}/workingtime/${this.userId}`);
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
