@@ -1,10 +1,8 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router'; // Import du routeur
+import router from './router'; // Import the router
 
-Vue.config.productionTip = false;
-
-new Vue({
-    router, // Utilisation du routeur dans l'application Vue
-    render: h => h(App),
-}).$mount('#app');
+// Create and mount the app
+createApp(App)
+    .use(router) // Use the router instance
+    .mount('#app');
