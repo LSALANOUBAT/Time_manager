@@ -13,12 +13,14 @@
       </select>
     </div>
 
-    <!-- Check if data exists before rendering charts -->
-    <line-chart v-if="lineChartData.datasets && lineChartData.datasets.length" :chart-data="lineChartData"></line-chart>
-    <bar-chart v-if="barChartData.datasets && barChartData.datasets.length" :chart-data="barChartData"></bar-chart>
-    <pie-chart v-if="pieChartData.datasets && pieChartData.datasets.length" :chart-data="pieChartData"></pie-chart>
+    <!-- Render charts only if there is data -->
+    <div v-if="lineChartData.datasets.length || barChartData.datasets.length || pieChartData.datasets.length">
+      <line-chart v-if="lineChartData.datasets.length" :chart-data="lineChartData"></line-chart>
+      <bar-chart v-if="barChartData.datasets.length" :chart-data="barChartData"></bar-chart>
+      <pie-chart v-if="pieChartData.datasets.length" :chart-data="pieChartData"></pie-chart>
+    </div>
 
-    <!-- Error message -->
+    <!-- Display error message -->
     <div v-if="errorMessage" class="error-message">
       <p>Error: {{ errorMessage }}</p>
     </div>
@@ -77,25 +79,40 @@ export default {
     };
   },
   async created() {
-    try {
-      const response = await fetch(`${apiUrl}/users`);
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-      this.users = await response.json();
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-      this.errorMessage = 'Failed to fetch users. Please try again.';
-    }
+    await this.fetchUsers();
   },
   methods: {
+    async fetchUsers() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${apiUrl}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+        this.users = await response.json();
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        this.errorMessage = 'Failed to fetch users. Please try again.';
+      }
+    },
+
     async fetchUserData() {
       if (!this.selectedUserId) {
         this.clearChartData();
         return;
       }
 
+      const token = localStorage.getItem('token');
+
       try {
-        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`);
+        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
         const data = await response.json();
@@ -120,10 +137,10 @@ export default {
     },
 
     transformChartData(data) {
-      const sortedData = data.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+      const sortedData = data.sort((a, b) => new Date(a.start) - new Date(b.start));
 
-      const labels = sortedData.map((item) => new Date(item.start_time).toLocaleDateString());
-      const durations = sortedData.map((item) => this.calculateDuration(item.start_time, item.end_time));
+      const labels = sortedData.map((item) => new Date(item.start).toLocaleDateString());
+      const durations = sortedData.map((item) => this.calculateDuration(item.start, item.end));
 
       this.lineChartData = {
         labels: labels,

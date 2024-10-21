@@ -13,6 +13,9 @@
       </ul>
     </section>
 
+    <!-- Clock Manager Component -->
+    <clock-manager :user-id="user.id"></clock-manager>
+
     <!-- Working Times Section -->
     <section>
       <h3>Your Working Times</h3>
@@ -23,14 +26,29 @@
         </li>
       </ul>
     </section>
+
+    <!-- Working Time Management Component -->
+    <working-time :user-id="user.id"></working-time> <!-- Include WorkingTime component -->
+
+    <!-- Chart Manager Section -->
+    <chart-manager :selected-user-id="user.id"></chart-manager>
   </div>
 </template>
 
 <script>
+import ClockManager from './ClockManager.vue';
+import ChartManager from './ChartManager.vue';
+import WorkingTime from './WorkingTime.vue';  // Import the WorkingTime component
+
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
-  name: 'UserDashboard', // Renamed component to follow multi-word naming convention
+  name: 'UserDashboard',
+  components: {
+    ClockManager,
+    ChartManager,
+    WorkingTime, // Register WorkingTime component
+  },
   data() {
     return {
       user: {},
@@ -101,6 +119,7 @@ export default {
 .dashboard {
   padding: 20px;
 }
+
 section {
   margin-bottom: 20px;
 }
