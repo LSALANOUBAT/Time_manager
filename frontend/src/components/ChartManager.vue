@@ -77,8 +77,18 @@ export default {
     };
   },
   async created() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.errorMessage = 'Please log in to view this content.';
+      return;
+    }
+
     try {
-      const response = await fetch(`${apiUrl}/users`);
+      const response = await fetch(`${apiUrl}/users`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
       this.users = await response.json();
@@ -89,13 +99,18 @@ export default {
   },
   methods: {
     async fetchUserData() {
+      const token = localStorage.getItem('token');
       if (!this.selectedUserId) {
         this.clearChartData();
         return;
       }
 
       try {
-        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`);
+        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
         const data = await response.json();
