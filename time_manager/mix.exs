@@ -46,7 +46,10 @@ defmodule TimeManager.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
-      {:cors_plug, "~> 3.0"}
+      {:cors_plug, "~> 3.0"},
+      {:guardian, "~> 2.0"},
+      {:jose, "~> 1.11"}
+
     ]
   end
 

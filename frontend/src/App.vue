@@ -1,45 +1,29 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="isAuthenticated">
       <h1>Time Manager Application</h1>
-      <button @click="readPageContent">Lire cette page</button>
+      <button @click="logout">Logout</button>
     </header>
     <main>
-      <UserManager />
-      <WorkingTimes />
-      <WorkingTime />
-      <ClockManager />
-      <ChartManager />
+      <router-view /> <!-- Affiche le contenu des routes -->
     </main>
   </div>
 </template>
 
 <script>
-import UserManager from './components/UserManager.vue';
-import WorkingTimes from './components/WorkingTimes.vue';
-import WorkingTime from './components/WorkingTime.vue';
-import ClockManager from './components/ClockManager.vue';
-import ChartManager from './components/ChartManager.vue';
+import { isAuthenticated } from './router/auth';
 
 export default {
   name: 'App',
-  components: {
-    UserManager,
-    WorkingTimes,
-    WorkingTime,
-    ClockManager,
-    ChartManager,
+  computed: {
+    isAuthenticated() {
+      return isAuthenticated(); // Vérifie si l'utilisateur est authentifié
+    },
   },
   methods: {
-    readPageContent() {
-      const content = document.body.innerText; // Récupère tout le texte visible de la page
-      if ('speechSynthesis' in window) {
-        const speech = new SpeechSynthesisUtterance(content); // Crée une instance de synthèse vocale
-        speech.lang = 'fr-FR'; // Définit la langue à français (modifiez si nécessaire)
-        window.speechSynthesis.speak(speech); // Lance la lecture du texte
-      } else {
-        alert("Votre navigateur ne supporte pas la synthèse vocale.");
-      }
+    logout() {
+      localStorage.removeItem('token'); // Supprime le token JWT
+      this.$router.push('/login'); // Redirige vers la page de login après déconnexion
     },
   },
 };
@@ -65,30 +49,5 @@ main {
   align-items: center;
   gap: 20px;
   margin-top: 20px;
-}
-
-main > * {
-  width: 80%;
-  max-width: 800px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button:hover {
-  background-color: #0056b3;
 }
 </style>

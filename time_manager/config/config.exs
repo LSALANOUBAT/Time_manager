@@ -22,6 +22,11 @@ config :time_manager, TimeManagerWeb.Endpoint,
   pubsub_server: TimeManager.PubSub,
   live_view: [signing_salt: "8hgLWfqW"]
 
+
+config :time_manager, TimeManagerWeb.Auth.Guardian,
+       issuer: "time_manager",
+       secret_key: "mNRP0fXvPYZL3oQMJ4Nkl0Mur3L14Xo3oulcyV0k5FYw2difXOlYysKQqlfqeibd"  # Utilise une clé secrète sécurisée ici
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
