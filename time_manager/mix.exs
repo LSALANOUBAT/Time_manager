@@ -48,7 +48,8 @@ defmodule TimeManager.MixProject do
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:cors_plug, "~> 3.0"},
       {:guardian, "~> 2.0"},
-      {:jose, "~> 1.11"}
+      {:jose, "~> 1.11"},
+      {:bcrypt_elixir, "~> 3.0"}
 
     ]
   end

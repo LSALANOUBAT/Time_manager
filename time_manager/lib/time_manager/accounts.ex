@@ -4,7 +4,7 @@ defmodule TimeManager.Accounts do
   alias TimeManager.Clock
   alias TimeManager.Workingtime
   import Ecto.Query
-  alias Comeonin.Bcrypt, as: Bcrypt
+  alias Bcrypt  # Updated alias to use `Bcrypt` from `bcrypt_elixir`
 
   # Lister tous les utilisateurs
   def list_users() do
@@ -16,7 +16,6 @@ defmodule TimeManager.Accounts do
 
   # Créer un utilisateur avec un mot de passe haché et un rôle par défaut
   def create_user(attrs) do
-    attrs = Map.update!(attrs, "password", &Bcrypt.hashpwsalt/1)  # Hacher le mot de passe
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
@@ -31,7 +30,8 @@ defmodule TimeManager.Accounts do
         {:error, "Invalid credentials"}
 
       %User{} = user ->
-        if Bcrypt.checkpw(password, user.hashed_password) do
+        # Updated password verification function to use `Bcrypt.verify_pass/2`
+        if Bcrypt.verify_pass(password, user.hashed_password) do
           {:ok, user}
         else
           {:error, "Invalid credentials"}
