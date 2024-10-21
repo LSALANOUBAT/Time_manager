@@ -24,7 +24,7 @@
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
-  name: 'UserLogin', // Updated component name to multi-word
+  name: 'UserLogin', // Updated component name
   data() {
     return {
       email: '',
@@ -55,7 +55,7 @@ export default {
 
         // Store the JWT token and user ID
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('userId', data.user_id); // Store user_id from the response
 
         // Redirect to the dashboard after successful login
         this.$router.push('/dashboard');
