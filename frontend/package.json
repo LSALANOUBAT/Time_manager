@@ -10,6 +10,10 @@
     "build:prod": "vue-cli-service build --mode production"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/vue3": "^6.1.15",
     "axios": "^1.7.7",
     "chart.js": "^4.4.4",
     "core-js": "^3.8.3",

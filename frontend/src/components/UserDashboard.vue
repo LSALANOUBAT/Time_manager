@@ -1,3 +1,4 @@
+<!-- src/components/Dashboard.vue -->
 <template>
   <div class="dashboard">
     <h2>Welcome, {{ user.username }}!</h2>
@@ -31,14 +32,18 @@
     <working-time :user-id="user.id"></working-time> <!-- Include WorkingTime component -->
 
     <!-- Chart Manager Section -->
-    <chart-manager :selected-user-id="user.id"></chart-manager>
+    <chart-manager v-if="user.id" :selected-user-id="user.id"></chart-manager>
+
+    <!-- Calendar Manager Section -->
+    <calendar-manager v-if="user.id" :selected-user-id="user.id"></calendar-manager>
   </div>
 </template>
 
 <script>
 import ClockManager from './ClockManager.vue';
 import ChartManager from './ChartManager.vue';
-import WorkingTime from './WorkingTime.vue';  // Import the WorkingTime component
+import WorkingTime from './WorkingTime.vue';
+import CalendarManager from './CalendarManager.vue'; // Import CalendarManager component
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -47,7 +52,8 @@ export default {
   components: {
     ClockManager,
     ChartManager,
-    WorkingTime, // Register WorkingTime component
+    WorkingTime,
+    CalendarManager, // Register CalendarManager component
   },
   data() {
     return {
