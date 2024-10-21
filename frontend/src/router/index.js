@@ -1,51 +1,51 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from '../components/Login.vue';
-import Register from '../components/Register.vue';
-import Dashboard from '../components/Dashboard.vue'; // Remplace par ton composant principal après connexion
-import { isAuthenticated } from './auth'; // Import de la fonction d'authentification
+import UserLogin from '../components/UserLogin.vue'; // Updated name for Login component
+import UserRegister from '../components/UserRegister.vue'; // Updated name for Register component
+import UserDashboard from '../components/UserDashboard.vue'; // Updated name for Dashboard component
+import { isAuthenticated } from './auth'; // Import of the authentication function
 
 Vue.use(Router);
 
 const router = new Router({
-    mode: 'history', // Utilise l'historique HTML5 (sans #)
+    mode: 'history', // Use HTML5 history mode (no #)
     routes: [
         {
             path: '/',
-            redirect: '/login', // Rediriger vers login par défaut si la route est "/"
+            redirect: '/login', // Redirect to login by default if the route is "/"
         },
         {
             path: '/login',
-            component: Login,
-            meta: { requiresAuth: false }, // Pas besoin d'authentification pour cette route
+            component: UserLogin,
+            meta: { requiresAuth: false }, // No authentication required for this route
         },
         {
             path: '/register',
-            component: Register,
-            meta: { requiresAuth: false }, // Pas besoin d'authentification pour cette route
+            component: UserRegister,
+            meta: { requiresAuth: false }, // No authentication required for this route
         },
         {
-            path: '/dashboard', // Route pour les composants protégés (comme ton tableau de bord)
-            component: Dashboard,
-            meta: { requiresAuth: true }, // Cette route nécessite l'authentification
+            path: '/dashboard', // Route for protected components like the dashboard
+            component: UserDashboard,
+            meta: { requiresAuth: true }, // This route requires authentication
         },
         {
             path: '*',
-            redirect: '/login', // Rediriger toute route non reconnue vers login
+            redirect: '/login', // Redirect any unrecognized route to login
         },
     ],
 });
 
-// Middleware pour protéger les routes nécessitant une authentification
+// Middleware to protect routes requiring authentication
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!isAuthenticated()) {
-            next('/login'); // Rediriger vers login si l'utilisateur n'est pas authentifié
+            next('/login'); // Redirect to login if the user is not authenticated
         } else {
-            next(); // Continuer si l'utilisateur est authentifié
+            next(); // Proceed if the user is authenticated
         }
     } else {
-        next(); // Continuer si la route ne nécessite pas d'authentification
+        next(); // Proceed if the route does not require authentication
     }
 });
 

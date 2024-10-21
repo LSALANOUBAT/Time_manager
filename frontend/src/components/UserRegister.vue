@@ -4,7 +4,13 @@
     <form @submit.prevent="registerUser">
       <input v-model="username" placeholder="Username" required />
       <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Password" required minlength="6"/>
+      <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          required
+          minlength="6"
+      />
       <button type="submit">Register</button>
     </form>
 
@@ -18,6 +24,7 @@
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
+  name: 'UserRegister', // Updated component name
   data() {
     return {
       username: '',
@@ -28,27 +35,40 @@ export default {
   },
   methods: {
     async registerUser() {
+      if (!this.username || !this.email || !this.password) {
+        this.errorMessage = 'All fields are required.';
+        return;
+      }
+
       try {
         const response = await fetch(`${apiUrl}/users`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             user: {
               username: this.username,
               email: this.email,
-              password: this.password, // Envoie le mot de passe pour être haché côté backend
+              password: this.password,
             },
           }),
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          const errorData = await response.json(); // Récupérer les erreurs du backend
-          throw new Error(errorData.errors || 'Registration failed');
+          const errorMessage =
+              data.errors && data.errors.message
+                  ? data.errors.message
+                  : 'Registration failed';
+          throw new Error(errorMessage);
         }
 
-        const data = await response.json();
-        localStorage.setItem('token', data.token); // Stocker le JWT après la création de l'utilisateur
-        this.$router.push('/'); // Rediriger l'utilisateur après enregistrement
+        // Store the JWT token and user ID
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.user.id);
+
+        // Redirect to the dashboard after successful registration
+        this.$router.push('/dashboard');
       } catch (error) {
         this.errorMessage = error.message || 'Failed to register. Please try again.';
       }
@@ -57,7 +77,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .register-component {
   margin-top: 20px;
 }
