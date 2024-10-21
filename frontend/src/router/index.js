@@ -26,7 +26,7 @@ const routes = [
         meta: { requiresAuth: true }, // This route requires authentication
     },
     {
-        path: '*',
+        path: '/:catchAll(.*)', // Catch-all route using custom regexp
         redirect: '/login', // Redirect any unrecognized route to login
     },
 ];
