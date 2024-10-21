@@ -23,6 +23,9 @@ module.exports = defineConfig({
     },
   },
 
+  // Specify the build output directory
+  outputDir: 'dist',
+
   // Adjusting webpack configurations if necessary
   configureWebpack: {
     // Custom webpack configurations can be added here
