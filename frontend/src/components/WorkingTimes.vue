@@ -13,8 +13,6 @@
 </template>
 
 <script>
-const apiUrl = process.env.VUE_APP_API_URL;
-
 export default {
   data() {
     return {
@@ -25,37 +23,38 @@ export default {
   },
   methods: {
     async getWorkingTimes() {
+      const apiUrl = process.env.VUE_APP_API_URL;
+
       if (!this.userId) {
         this.errorMessage = 'Please enter a valid User ID';
         this.workingTimes = [];
         return;
       }
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        this.errorMessage = 'You must be logged in to fetch working times.';
-        return;
-      }
-
       try {
-        const response = await fetch(`${apiUrl}/workingtime/${this.userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
+        const response = await fetch(`${apiUrl}/workingtime/${this.userId}`);
         if (!response.ok) {
-          throw new Error(`Error fetching working times: ${response.status}`);
+          throw new Error(`Server error: ${response.status}`);
         }
 
         const data = await response.json();
         this.workingTimes = data;
-        this.errorMessage = null; // Clear error if the request is successful
+        this.errorMessage = null; // Clear error message if request is successful
       } catch (error) {
-        this.errorMessage = error.message;
+        console.error('Failed to fetch working times:', error);
+        this.errorMessage = 'Failed to fetch working times. Please try again.';
         this.workingTimes = [];
       }
     },
+  },
+  mounted() {
+    const userId = localStorage.getItem('userId'); // Get userId from local storage after login
+    if (userId) {
+      this.userId = userId;
+      this.getWorkingTimes();
+    } else {
+      this.errorMessage = 'Please log in to view your working times.';
+    }
   },
 };
 </script>
@@ -64,6 +63,7 @@ export default {
 .working-times {
   margin: 20px;
 }
+
 .error-message {
   color: red;
   margin-top: 10px;

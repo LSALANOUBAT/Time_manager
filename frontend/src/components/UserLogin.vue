@@ -10,6 +10,13 @@
     <div v-if="errorMessage" class="error-message">
       <p>{{ errorMessage }}</p>
     </div>
+
+    <!-- Button to navigate to the register page -->
+    <div class="register-link">
+      <p>Don't have an account?
+        <button @click="goToRegister">Register here</button>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -36,8 +43,8 @@ export default {
       try {
         const response = await fetch(`${apiUrl}/sign_in`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({email: this.email, password: this.password}),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: this.email, password: this.password }),
         });
 
         const data = await response.json();
@@ -56,6 +63,9 @@ export default {
         this.errorMessage = error.message || 'Failed to login. Please check your credentials.';
       }
     },
+    goToRegister() {
+      this.$router.push('/register'); // Redirect to the register page
+    },
   },
 };
 </script>
@@ -68,5 +78,21 @@ export default {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+
+.register-link {
+  margin-top: 15px;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button:hover {
+  color: darkblue;
 }
 </style>

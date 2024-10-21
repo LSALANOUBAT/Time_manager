@@ -13,10 +13,10 @@
       </select>
     </div>
 
-    <!-- Charts -->
-    <line-chart v-if="lineChartData.datasets.length" :chart-data="lineChartData"></line-chart>
-    <bar-chart v-if="barChartData.datasets.length" :chart-data="barChartData"></bar-chart>
-    <pie-chart v-if="pieChartData.datasets.length" :chart-data="pieChartData"></pie-chart>
+    <!-- Check if data exists before rendering charts -->
+    <line-chart v-if="lineChartData.datasets && lineChartData.datasets.length" :chart-data="lineChartData"></line-chart>
+    <bar-chart v-if="barChartData.datasets && barChartData.datasets.length" :chart-data="barChartData"></bar-chart>
+    <pie-chart v-if="pieChartData.datasets && pieChartData.datasets.length" :chart-data="pieChartData"></pie-chart>
 
     <!-- Error message -->
     <div v-if="errorMessage" class="error-message">
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-// Import chart components
 import { Line, Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement } from 'chart.js';
-const apiUrl = process.env.VUE_APP_API_URL;
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement);
+
+const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
   components: {
@@ -77,18 +77,8 @@ export default {
     };
   },
   async created() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.errorMessage = 'Please log in to view this content.';
-      return;
-    }
-
     try {
-      const response = await fetch(`${apiUrl}/users`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await fetch(`${apiUrl}/users`);
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
       this.users = await response.json();
@@ -99,18 +89,13 @@ export default {
   },
   methods: {
     async fetchUserData() {
-      const token = localStorage.getItem('token');
       if (!this.selectedUserId) {
         this.clearChartData();
         return;
       }
 
       try {
-        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await fetch(`${apiUrl}/workingtime/${this.selectedUserId}`);
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
         const data = await response.json();
