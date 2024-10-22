@@ -5,6 +5,7 @@ module.exports = defineConfig({
 
   // Development server configuration
   devServer: {
+    webSocketServer: false,
     host: '0.0.0.0',  // Permet l'accès depuis n'importe quelle interface réseau
     port: 8080,       // Spécifie le port sur lequel le serveur de développement tournera
     allowedHosts: [
