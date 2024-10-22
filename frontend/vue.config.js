@@ -19,7 +19,8 @@ module.exports = defineConfig({
       '/api': {
         target: 'https://web.orbesle.fr',  // Proxy vers ton backend API
         changeOrigin: true,
-        secure: false,  // Ajuste selon la configuration SSL de ton serveur
+        secure: false,
+        ws: false  // Ajuste selon la configuration SSL de ton serveur
       },
     },
   },
