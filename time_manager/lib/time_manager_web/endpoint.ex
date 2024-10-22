@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :time_manager
-  
+
   @session_options [
     store: :cookie,
     key: "_time_manager_key",
@@ -13,20 +13,21 @@ defmodule TimeManagerWeb.Endpoint do
     at: "/",
     from: :time_manager,
     gzip: false,
-    only: ~w()
+    only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled if needed
   if code_reloading? do
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :time_manager
   end
 
-plug CORSPlug,
-  origin: ["*"],  # Allow only the necessary origins
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  headers: ["Authorization", "Content-Type"],
-  expose: ["Authorization"],
-  max_age: 86400,  # Optional: cache the CORS response for 24 hours
-  credentials: true
+  # CORS configuration
+  plug CORSPlug,
+    origin: ["*"],  # Allow all origins, adjust as necessary
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    headers: ["Authorization", "Content-Type"],
+    expose: ["Authorization"],
+    max_age: 86400,  # Cache the CORS response for 24 hours
+    credentials: true
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
