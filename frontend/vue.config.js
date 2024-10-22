@@ -17,7 +17,7 @@ module.exports = defineConfig({
     // If needed, you can add proxy settings for backend API calls
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'https://web.orbesle.fr',
         changeOrigin: true,
       },
     },
