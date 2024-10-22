@@ -1,0 +1,7 @@
+{
+	"appId": "com.yourcompany.time_manager",
+	"appName": "Time Manager Application",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"packageClassList": []
+}

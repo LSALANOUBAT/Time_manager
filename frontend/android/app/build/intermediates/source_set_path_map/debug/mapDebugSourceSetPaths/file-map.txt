@@ -1,0 +1,31 @@
+com.yourcompany.time_manager.app-activity-1.8.0-0 /Users/oscarr/.gradle/caches/8.9/transforms/16f12597f90d962182d0a3d52e820fca/transformed/activity-1.8.0/res
+com.yourcompany.time_manager.app-coordinatorlayout-1.2.0-1 /Users/oscarr/.gradle/caches/8.9/transforms/200e4c570370941b19eb7c0a1eb7ee68/transformed/coordinatorlayout-1.2.0/res
+com.yourcompany.time_manager.app-emoji2-1.2.0-2 /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/res
+com.yourcompany.time_manager.app-fragment-1.6.2-3 /Users/oscarr/.gradle/caches/8.9/transforms/2922523f2d7e79c28df7762c71f31a5a/transformed/fragment-1.6.2/res
+com.yourcompany.time_manager.app-savedstate-1.2.1-4 /Users/oscarr/.gradle/caches/8.9/transforms/5a901151afb0815b7b1871169dd3cdb6/transformed/savedstate-1.2.1/res
+com.yourcompany.time_manager.app-core-1.12.0-5 /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/res
+com.yourcompany.time_manager.app-lifecycle-runtime-2.6.1-6 /Users/oscarr/.gradle/caches/8.9/transforms/7f7160759f0527fc93d82e86fd9e0be4/transformed/lifecycle-runtime-2.6.1/res
+com.yourcompany.time_manager.app-profileinstaller-1.3.0-7 /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/res
+com.yourcompany.time_manager.app-lifecycle-livedata-2.6.1-8 /Users/oscarr/.gradle/caches/8.9/transforms/86cd5a3bb15969f8b3ec597e5d9dafde/transformed/lifecycle-livedata-2.6.1/res
+com.yourcompany.time_manager.app-annotation-experimental-1.3.0-9 /Users/oscarr/.gradle/caches/8.9/transforms/889643f5aeb2b6b94ab96320ddc79615/transformed/annotation-experimental-1.3.0/res
+com.yourcompany.time_manager.app-lifecycle-process-2.6.1-10 /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/res
+com.yourcompany.time_manager.app-emoji2-views-helper-1.2.0-11 /Users/oscarr/.gradle/caches/8.9/transforms/a4819f69fdccff38da745b6954d48218/transformed/emoji2-views-helper-1.2.0/res
+com.yourcompany.time_manager.app-lifecycle-livedata-core-2.6.1-12 /Users/oscarr/.gradle/caches/8.9/transforms/ab5443c54e37866f3df23d6b5260fa5f/transformed/lifecycle-livedata-core-2.6.1/res
+com.yourcompany.time_manager.app-core-runtime-2.2.0-13 /Users/oscarr/.gradle/caches/8.9/transforms/aff79a514ec00a5158d1d9f1acee67d0/transformed/core-runtime-2.2.0/res
+com.yourcompany.time_manager.app-lifecycle-viewmodel-2.6.1-14 /Users/oscarr/.gradle/caches/8.9/transforms/bdf17b65ca9698159d20a411688aacfc/transformed/lifecycle-viewmodel-2.6.1/res
+com.yourcompany.time_manager.app-core-ktx-1.12.0-15 /Users/oscarr/.gradle/caches/8.9/transforms/c18e80050f856e296044280f2bfc7096/transformed/core-ktx-1.12.0/res
+com.yourcompany.time_manager.app-webkit-1.9.0-16 /Users/oscarr/.gradle/caches/8.9/transforms/c23bdabc24c9132c392704c59eec9549/transformed/webkit-1.9.0/res
+com.yourcompany.time_manager.app-lifecycle-viewmodel-savedstate-2.6.1-17 /Users/oscarr/.gradle/caches/8.9/transforms/c44ef5ef307779b47c46cdc54583d910/transformed/lifecycle-viewmodel-savedstate-2.6.1/res
+com.yourcompany.time_manager.app-appcompat-resources-1.6.1-18 /Users/oscarr/.gradle/caches/8.9/transforms/cb5f2fcceb960e2388ab9e4dd5f2c9dd/transformed/appcompat-resources-1.6.1/res
+com.yourcompany.time_manager.app-appcompat-1.6.1-19 /Users/oscarr/.gradle/caches/8.9/transforms/d61b026f93fc06b415ab121f2e2acab9/transformed/appcompat-1.6.1/res
+com.yourcompany.time_manager.app-core-splashscreen-1.0.1-20 /Users/oscarr/.gradle/caches/8.9/transforms/d809c1911286d0b5c03ff565fb6a0d8b/transformed/core-splashscreen-1.0.1/res
+com.yourcompany.time_manager.app-startup-runtime-1.1.1-21 /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/res
+com.yourcompany.time_manager.app-pngs-22 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/build/generated/res/pngs/debug
+com.yourcompany.time_manager.app-resValues-23 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/build/generated/res/resValues/debug
+com.yourcompany.time_manager.app-packageDebugResources-24 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.yourcompany.time_manager.app-packageDebugResources-25 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.yourcompany.time_manager.app-debug-26 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.yourcompany.time_manager.app-debug-27 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/debug/res
+com.yourcompany.time_manager.app-main-28 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/res
+com.yourcompany.time_manager.app-debug-29 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/packaged_res/debug/packageDebugResources
+com.yourcompany.time_manager.app-debug-30 /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/node_modules/@capacitor/android/capacitor/build/intermediates/packaged_res/debug/packageDebugResources

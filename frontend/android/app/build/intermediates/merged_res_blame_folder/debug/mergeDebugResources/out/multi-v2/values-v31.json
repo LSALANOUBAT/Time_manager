@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.yourcompany.time_manager.app-mergeDebugResources-24:/values-v31/values-v31.xml",
+            "map": [
+                {
+                    "source": "/Users/oscarr/.gradle/caches/8.9/transforms/d809c1911286d0b5c03ff565fb6a0d8b/transformed/core-splashscreen-1.0.1/res/values-v31/values-v31.xml",
+                    "from": {
+                        "startLines": "2,9",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,473",
+                        "endLines": "8,13",
+                        "endColumns": "12,12",
+                        "endOffsets": "468,697"
+                    }
+                }
+            ]
+        }
+    ]
+}

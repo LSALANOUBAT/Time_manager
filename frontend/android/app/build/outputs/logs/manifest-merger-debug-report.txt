@@ -1,0 +1,295 @@
+-- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:27:9-35:20
+	android:grantUriPermissions
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:31:13-47
+	android:authorities
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:29:13-64
+	android:exported
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:30:13-37
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:28:13-62
+manifest
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:2:1-41:12
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:2:1-41:12
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:2:1-41:12
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:2:1-41:12
+MERGED from [:capacitor-android] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-cordova-android-plugins] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/cb5f2fcceb960e2388ab9e4dd5f2c9dd/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/d61b026f93fc06b415ab121f2e2acab9/transformed/appcompat-1.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/200e4c570370941b19eb7c0a1eb7ee68/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/oscarr/.gradle/caches/8.9/transforms/d809c1911286d0b5c03ff565fb6a0d8b/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/oscarr/.gradle/caches/8.9/transforms/2922523f2d7e79c28df7762c71f31a5a/transformed/fragment-1.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.8.0] /Users/oscarr/.gradle/caches/8.9/transforms/16f12597f90d962182d0a3d52e820fca/transformed/activity-1.8.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/f7c7912f62e1c55ab811e139d4dc14bd/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/4910c0cae6178adc749864b391eab466/transformed/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/a4819f69fdccff38da745b6954d48218/transformed/emoji2-views-helper-1.2.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/0ff69cb3e6a4119d84a0dc6898e8b975/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/390627cdcf8dc9a199e00604ba54f92d/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/oscarr/.gradle/caches/8.9/transforms/c23bdabc24c9132c392704c59eec9549/transformed/webkit-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/7696d35d8c9fa879266ab1a245a5078d/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/5369f42ef936ac6cfcfb7bf094787a5e/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/oscarr/.gradle/caches/8.9/transforms/5a901151afb0815b7b1871169dd3cdb6/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/9b8b597f90b2cfd50cedc4b99f0ec20a/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/86cd5a3bb15969f8b3ec597e5d9dafde/transformed/lifecycle-livedata-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/ab5443c54e37866f3df23d6b5260fa5f/transformed/lifecycle-livedata-core-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/bdf17b65ca9698159d20a411688aacfc/transformed/lifecycle-viewmodel-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/7f7160759f0527fc93d82e86fd9e0be4/transformed/lifecycle-runtime-2.6.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/c44ef5ef307779b47c46cdc54583d910/transformed/lifecycle-viewmodel-savedstate-2.6.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core-ktx:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/c18e80050f856e296044280f2bfc7096/transformed/core-ktx-1.12.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/9e54232e6dae0127bd887d961ccfecab/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2d0e3ad7c65b99176139038e3c6a7aa5/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2c65fc6539070fc56eb1dbd69644391b/transformed/tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/aff79a514ec00a5158d1d9f1acee67d0/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/889643f5aeb2b6b94ab96320ddc79615/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:17:1-22:12
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/af39ada52d4b558a054aea2abf6ab759/transformed/framework-10.1.1/AndroidManifest.xml:20:1-27:12
+	package
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:4:5-36:19
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:4:5-36:19
+MERGED from [:capacitor-cordova-android-plugins] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:8:5-9:19
+MERGED from [:capacitor-cordova-android-plugins] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:8:5-9:19
+MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:28:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/9e54232e6dae0127bd887d961ccfecab/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/9e54232e6dae0127bd887d961ccfecab/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:9:9-35
+	android:label
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:7:9-41
+	android:roundIcon
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:8:9-54
+	android:icon
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:6:9-43
+	android:allowBackup
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:5:9-35
+	android:theme
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:10:9-40
+activity#com.yourcompany.time_manager.MainActivity
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:12:9-25:20
+	android:label
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:15:13-56
+	android:launchMode
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:17:13-44
+	android:exported
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:18:13-36
+	android:configChanges
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:13:13-129
+	android:theme
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:16:13-62
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:14:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:20:13-23:29
+action#android.intent.action.MAIN
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:21:17-69
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:21:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:22:17-77
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:22:27-74
+uses-permission#android.permission.INTERNET
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:40:5-67
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:40:22-64
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:32:13-34:64
+	android:resource
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:34:17-51
+	android:name
+		ADDED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml:33:17-67
+uses-sdk
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+MERGED from [:capacitor-android] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-android] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-cordova-android-plugins] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:6:5-44
+MERGED from [:capacitor-cordova-android-plugins] /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:6:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/cb5f2fcceb960e2388ab9e4dd5f2c9dd/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/cb5f2fcceb960e2388ab9e4dd5f2c9dd/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/d61b026f93fc06b415ab121f2e2acab9/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/d61b026f93fc06b415ab121f2e2acab9/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/200e4c570370941b19eb7c0a1eb7ee68/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/200e4c570370941b19eb7c0a1eb7ee68/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/oscarr/.gradle/caches/8.9/transforms/d809c1911286d0b5c03ff565fb6a0d8b/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/oscarr/.gradle/caches/8.9/transforms/d809c1911286d0b5c03ff565fb6a0d8b/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/oscarr/.gradle/caches/8.9/transforms/2922523f2d7e79c28df7762c71f31a5a/transformed/fragment-1.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/oscarr/.gradle/caches/8.9/transforms/2922523f2d7e79c28df7762c71f31a5a/transformed/fragment-1.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.8.0] /Users/oscarr/.gradle/caches/8.9/transforms/16f12597f90d962182d0a3d52e820fca/transformed/activity-1.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.8.0] /Users/oscarr/.gradle/caches/8.9/transforms/16f12597f90d962182d0a3d52e820fca/transformed/activity-1.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/f7c7912f62e1c55ab811e139d4dc14bd/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/f7c7912f62e1c55ab811e139d4dc14bd/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/4910c0cae6178adc749864b391eab466/transformed/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/4910c0cae6178adc749864b391eab466/transformed/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/a4819f69fdccff38da745b6954d48218/transformed/emoji2-views-helper-1.2.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/a4819f69fdccff38da745b6954d48218/transformed/emoji2-views-helper-1.2.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/0ff69cb3e6a4119d84a0dc6898e8b975/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/0ff69cb3e6a4119d84a0dc6898e8b975/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/390627cdcf8dc9a199e00604ba54f92d/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/390627cdcf8dc9a199e00604ba54f92d/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/oscarr/.gradle/caches/8.9/transforms/c23bdabc24c9132c392704c59eec9549/transformed/webkit-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/oscarr/.gradle/caches/8.9/transforms/c23bdabc24c9132c392704c59eec9549/transformed/webkit-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/7696d35d8c9fa879266ab1a245a5078d/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/7696d35d8c9fa879266ab1a245a5078d/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/5369f42ef936ac6cfcfb7bf094787a5e/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/oscarr/.gradle/caches/8.9/transforms/5369f42ef936ac6cfcfb7bf094787a5e/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/oscarr/.gradle/caches/8.9/transforms/5a901151afb0815b7b1871169dd3cdb6/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/oscarr/.gradle/caches/8.9/transforms/5a901151afb0815b7b1871169dd3cdb6/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/9b8b597f90b2cfd50cedc4b99f0ec20a/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/9b8b597f90b2cfd50cedc4b99f0ec20a/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/86cd5a3bb15969f8b3ec597e5d9dafde/transformed/lifecycle-livedata-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/86cd5a3bb15969f8b3ec597e5d9dafde/transformed/lifecycle-livedata-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/ab5443c54e37866f3df23d6b5260fa5f/transformed/lifecycle-livedata-core-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/ab5443c54e37866f3df23d6b5260fa5f/transformed/lifecycle-livedata-core-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/bdf17b65ca9698159d20a411688aacfc/transformed/lifecycle-viewmodel-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/bdf17b65ca9698159d20a411688aacfc/transformed/lifecycle-viewmodel-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/7f7160759f0527fc93d82e86fd9e0be4/transformed/lifecycle-runtime-2.6.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/7f7160759f0527fc93d82e86fd9e0be4/transformed/lifecycle-runtime-2.6.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/c44ef5ef307779b47c46cdc54583d910/transformed/lifecycle-viewmodel-savedstate-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/c44ef5ef307779b47c46cdc54583d910/transformed/lifecycle-viewmodel-savedstate-2.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core-ktx:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/c18e80050f856e296044280f2bfc7096/transformed/core-ktx-1.12.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/c18e80050f856e296044280f2bfc7096/transformed/core-ktx-1.12.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/9e54232e6dae0127bd887d961ccfecab/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/9e54232e6dae0127bd887d961ccfecab/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2d0e3ad7c65b99176139038e3c6a7aa5/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2d0e3ad7c65b99176139038e3c6a7aa5/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2c65fc6539070fc56eb1dbd69644391b/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/oscarr/.gradle/caches/8.9/transforms/2c65fc6539070fc56eb1dbd69644391b/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/aff79a514ec00a5158d1d9f1acee67d0/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/aff79a514ec00a5158d1d9f1acee67d0/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/889643f5aeb2b6b94ab96320ddc79615/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/889643f5aeb2b6b94ab96320ddc79615/transformed/annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/af39ada52d4b558a054aea2abf6ab759/transformed/framework-10.1.1/AndroidManifest.xml:25:5-44
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/af39ada52d4b558a054aea2abf6ab759/transformed/framework-10.1.1/AndroidManifest.xml:25:5-44
+	android:targetSdkVersion
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/oscarr/Documents/Documents - Oscar’s MacBook Pro/Epitech/2024-2025/Time_manager/frontend/android/app/src/main/AndroidManifest.xml
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/oscarr/.gradle/caches/8.9/transforms/e966270da8ee41b6524af68c4dc52a83/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.2.0] /Users/oscarr/.gradle/caches/8.9/transforms/27181c3e9021103b2644c836a843ec89/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.1] /Users/oscarr/.gradle/caches/8.9/transforms/94edcceedde9f885ad80755247e05bc4/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:30:17-78
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+permission#com.yourcompany.time_manager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+uses-permission#com.yourcompany.time_manager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.12.0] /Users/oscarr/.gradle/caches/8.9/transforms/7632024daf8c8f31a2b41cbed62fe114/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/oscarr/.gradle/caches/8.9/transforms/8405d57197be931221c56f3ca3a4dd9d/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
