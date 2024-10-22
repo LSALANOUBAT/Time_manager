@@ -23,14 +23,11 @@ module.exports = defineConfig({
       },
       // Proxy pour les connexions WebSocket
       '/ws': {
+        target: 'http://localhost:8080', // Cible par défaut, à remplacer par `router` si nécessaire
         ws: true,               // Spécifie que cette configuration concerne un WebSocket
         changeOrigin: true,     // Change l'origine de la requête pour correspondre au domaine cible
         pathRewrite: { '^/ws': '' }, // Réécrit l'URL si nécessaire (optionnel)
         router: function (req) {
-          // Redirige soit vers le serveur distant, soit vers localhost
-          if (req.headers.host.includes('localhost')) {
-            return 'http://localhost:8080';
-          }
           return 'wss://web.orbesle.fr';
         },
       },
