@@ -4,33 +4,33 @@
       <h1>Time Manager Application</h1>
       <button @click="logout">Logout</button>
     </header>
-    <router-view /> <!-- Affiche le contenu des routes ici -->
+    <router-view /> <!-- Displays the content of routes here -->
   </div>
 </template>
 
 <script>
-import { isAuthenticated } from './router/auth'; // Vérifie si l'utilisateur est authentifié
+import { isAuthenticated } from './router/auth'; // Checks if the user is authenticated
 
 export default {
   name: 'App',
   computed: {
     isAuthenticated() {
-      return isAuthenticated(); // Vérifie si l'utilisateur est connecté
+      return isAuthenticated(); // Returns true if the user is authenticated
     },
   },
   methods: {
     logout() {
-      localStorage.removeItem('token'); // Supprime le token JWT
-      this.$router.push('/login'); // Redirige vers la page de login après déconnexion
+      localStorage.removeItem('token'); // Removes JWT token from local storage
+      this.$router.push('/login'); // Redirects to the login page after logout
     },
   },
   mounted() {
-    // Configuration de la connexion WebSocket
+    // WebSocket connection configuration
     const wsUrl = process.env.VUE_APP_WS_URL || 'ws://localhost:8080/ws';
     this.socket = new WebSocket(wsUrl);
 
-    // Gestion des événements WebSocket
-    this.socket.onopen = function (event) {
+    // WebSocket event handlers
+    this.socket.onopen = function () {
       console.log('WebSocket is open now.');
     };
 
@@ -38,7 +38,7 @@ export default {
       console.log('WebSocket message received:', event.data);
     };
 
-    this.socket.onclose = function (event) {
+    this.socket.onclose = function () {
       console.log('WebSocket is closed now.');
     };
 
@@ -46,8 +46,8 @@ export default {
       console.error('WebSocket error observed:', error);
     };
   },
-  beforeDestroy() {
-    // Fermer la connexion WebSocket lorsque le composant est détruit
+  beforeUnmount() { // Changed from beforeDestroy to beforeUnmount
+    // Close the WebSocket connection when the component is unmounted
     if (this.socket) {
       this.socket.close();
     }
@@ -56,5 +56,5 @@ export default {
 </script>
 
 <style>
-/* Style global pour l'application */
+/* Global styles for the application */
 </style>
