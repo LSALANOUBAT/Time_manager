@@ -5,42 +5,32 @@ module.exports = defineConfig({
 
   // Development server configuration
   devServer: {
-    host: '0.0.0.0',  // Allows access from any network interface
-    port: 8080,       // Specifies the port for the dev server
+    host: '0.0.0.0',  // Permet l'accès depuis n'importe quelle interface réseau
+    port: 8080,       // Spécifie le port sur lequel le serveur de développement tournera
     allowedHosts: [
-      'vue.orbesle.fr',  // Allows requests from this domain
-      'localhost',       // Allows requests from localhost
+      'vue.orbesle.fr',  // Autorise les requêtes provenant de ce domaine
+      'localhost',       // Autorise les requêtes provenant de localhost
     ],
     headers: {
-      'Access-Control-Allow-Origin': '*', // Enables CORS for all origins
+      'Access-Control-Allow-Origin': '*', // Active le CORS pour toutes les origines
     },
     proxy: {
-      // Proxy for normal API calls
+      // Proxy pour les appels API normaux
       '/api': {
-        target: 'https://web.orbesle.fr',  // Proxy to your backend API
+        target: 'https://web.orbesle.fr',  // Proxy vers ton backend API
         changeOrigin: true,
-        secure: false,  // Adjust based on your SSL configuration
-      },
-      // Proxy for WebSocket connections
-      '/ws': {
-        target: 'http://localhost:8080', // Default target, replace if necessary
-        ws: true,               // Indicates that this is for WebSocket
-        changeOrigin: true,     // Changes the origin of the request to match the target domain
-        pathRewrite: { '^/ws': '' }, // Optional URL rewrite
-        router: function (req) {
-          return 'wss://web.orbesle.fr'; // WebSocket server URL
-        },
+        secure: false,  // Ajuste selon la configuration SSL de ton serveur
       },
     },
   },
 
-  // Webpack configuration
+  // Configuration supplémentaire de Webpack
   configureWebpack: {
-    devtool: 'source-map', // Enable source maps for easier debugging
+    devtool: 'source-map', // Active les source maps pour faciliter le débogage
   },
 
-  // Advanced Webpack configurations with chainWebpack
+  // Configurations avancées de Webpack avec chainWebpack
   chainWebpack: config => {
-    // Add advanced configurations here if needed
+    // Ajoute des configurations avancées ici si nécessaire
   },
 });
