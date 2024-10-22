@@ -24,6 +24,34 @@ export default {
       this.$router.push('/login'); // Redirige vers la page de login après déconnexion
     },
   },
+  mounted() {
+    // Configuration de la connexion WebSocket
+    const wsUrl = process.env.VUE_APP_WS_URL || 'ws://localhost:8080/ws';
+    this.socket = new WebSocket(wsUrl);
+
+    // Gestion des événements WebSocket
+    this.socket.onopen = function (event) {
+      console.log('WebSocket is open now.');
+    };
+
+    this.socket.onmessage = function (event) {
+      console.log('WebSocket message received:', event.data);
+    };
+
+    this.socket.onclose = function (event) {
+      console.log('WebSocket is closed now.');
+    };
+
+    this.socket.onerror = function (error) {
+      console.error('WebSocket error observed:', error);
+    };
+  },
+  beforeDestroy() {
+    // Fermer la connexion WebSocket lorsque le composant est détruit
+    if (this.socket) {
+      this.socket.close();
+    }
+  },
 };
 </script>
 
