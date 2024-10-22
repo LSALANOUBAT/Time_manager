@@ -5,42 +5,42 @@ module.exports = defineConfig({
 
   // Development server configuration
   devServer: {
-    host: '0.0.0.0',  // Permet l'accès depuis n'importe quelle interface réseau
-    port: 8080,       // Spécifie le port sur lequel le serveur tournera
+    host: '0.0.0.0',  // Allows access from any network interface
+    port: 8080,       // Specifies the port for the dev server
     allowedHosts: [
-      'vue.orbesle.fr',  // Autorise les requêtes depuis ce domaine
-      'localhost',       // Autorise les requêtes depuis localhost
+      'vue.orbesle.fr',  // Allows requests from this domain
+      'localhost',       // Allows requests from localhost
     ],
     headers: {
-      'Access-Control-Allow-Origin': '*', // Active le CORS pour toutes les origines
+      'Access-Control-Allow-Origin': '*', // Enables CORS for all origins
     },
     proxy: {
-      // Proxy pour les appels API normaux
+      // Proxy for normal API calls
       '/api': {
-        target: 'https://web.orbesle.fr',  // Proxy vers ton backend API
+        target: 'https://web.orbesle.fr',  // Proxy to your backend API
         changeOrigin: true,
-        secure: false,  // Ajuste selon la configuration SSL de ton serveur
+        secure: false,  // Adjust based on your SSL configuration
       },
-      // Proxy pour les connexions WebSocket
+      // Proxy for WebSocket connections
       '/ws': {
-        target: 'http://localhost:8080', // Cible par défaut, à remplacer par `router` si nécessaire
-        ws: true,               // Spécifie que cette configuration concerne un WebSocket
-        changeOrigin: true,     // Change l'origine de la requête pour correspondre au domaine cible
-        pathRewrite: { '^/ws': '' }, // Réécrit l'URL si nécessaire (optionnel)
+        target: 'http://localhost:8080', // Default target, replace if necessary
+        ws: true,               // Indicates that this is for WebSocket
+        changeOrigin: true,     // Changes the origin of the request to match the target domain
+        pathRewrite: { '^/ws': '' }, // Optional URL rewrite
         router: function (req) {
-          return 'wss://web.orbesle.fr';
+          return 'wss://web.orbesle.fr'; // WebSocket server URL
         },
       },
     },
   },
 
-  // Configurations Webpack supplémentaires
+  // Webpack configuration
   configureWebpack: {
-    // Ajoute des configurations Webpack personnalisées ici si nécessaire
+    devtool: 'source-map', // Enable source maps for easier debugging
   },
 
-  // Configurations Webpack avancées avec chainWebpack
+  // Advanced Webpack configurations with chainWebpack
   chainWebpack: config => {
-    // Utilise chainWebpack pour des configurations plus avancées
+    // Add advanced configurations here if needed
   },
 });
