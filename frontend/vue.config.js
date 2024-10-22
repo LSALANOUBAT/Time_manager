@@ -5,31 +5,45 @@ module.exports = defineConfig({
 
   // Development server configuration
   devServer: {
-    host: '0.0.0.0',  // Allows access from any network interface (useful for Docker or LAN access)
-    port: 8080,       // Specifies the port on which the server will run
+    host: '0.0.0.0',  // Permet l'accès depuis n'importe quelle interface réseau
+    port: 8080,       // Spécifie le port sur lequel le serveur tournera
     allowedHosts: [
-      'vue.orbesle.fr',
-      'localhost:8080'  // Accept requests from this host/domain
+      'vue.orbesle.fr',  // Autorise les requêtes depuis ce domaine
+      'localhost',       // Autorise les requêtes depuis localhost
     ],
     headers: {
-      'Access-Control-Allow-Origin': '*', // Enables CORS for all origins
+      'Access-Control-Allow-Origin': '*', // Active le CORS pour toutes les origines
     },
-    // If needed, you can add proxy settings for backend API calls
     proxy: {
+      // Proxy pour les appels API normaux
       '/api': {
-        target: 'https://web.orbesle.fr',
+        target: 'https://web.orbesle.fr',  // Proxy vers ton backend API
         changeOrigin: true,
+        secure: false,  // Ajuste selon la configuration SSL de ton serveur
+      },
+      // Proxy pour les connexions WebSocket
+      '/ws': {
+        ws: true,               // Spécifie que cette configuration concerne un WebSocket
+        changeOrigin: true,     // Change l'origine de la requête pour correspondre au domaine cible
+        pathRewrite: { '^/ws': '' }, // Réécrit l'URL si nécessaire (optionnel)
+        router: function (req) {
+          // Redirige soit vers le serveur distant, soit vers localhost
+          if (req.headers.host.includes('localhost')) {
+            return 'http://localhost:8080';
+          }
+          return 'wss://web.orbesle.fr';
+        },
       },
     },
   },
 
-  // Adjusting webpack configurations if necessary
+  // Configurations Webpack supplémentaires
   configureWebpack: {
-    // Custom webpack configurations can be added here
+    // Ajoute des configurations Webpack personnalisées ici si nécessaire
   },
 
-  // Optional: ChainWebpack for more advanced configurations
+  // Configurations Webpack avancées avec chainWebpack
   chainWebpack: config => {
-    // Example of chaining additional configurations
+    // Utilise chainWebpack pour des configurations plus avancées
   },
 });
