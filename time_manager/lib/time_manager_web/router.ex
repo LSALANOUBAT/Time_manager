@@ -45,8 +45,6 @@ defmodule TimeManagerWeb.Router do
     pipe_through [:api, :auth]  # Les routes ici nécessitent une authentification
 
     # Routes pour les clocks
-    get "/clocks/:user_id", ClockController, :index
-    post "/clocks/:user_id", ClockController, :create
 
     # Routes pour les working times
     get "/workingtime/:userID", WorkingtimeController, :index

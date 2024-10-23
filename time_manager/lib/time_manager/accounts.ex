@@ -1,7 +1,7 @@
 defmodule TimeManager.Accounts do
   alias TimeManager.Repo
   alias TimeManager.User
-  alias TimeManager.Clock
+
   alias TimeManager.Workingtime
   import Ecto.Query
   alias Bcrypt  # Updated alias to use `Bcrypt` from `bcrypt_elixir`
@@ -56,18 +56,6 @@ defmodule TimeManager.Accounts do
     user
     |> Ecto.Changeset.change(role: role)
     |> Repo.update()
-  end
-
-  # Lister les clocks d'un utilisateur
-  def list_clocks(user_id) do
-    Repo.all(from c in Clock, where: c.user_id == ^user_id)
-  end
-
-  # Créer un nouveau clock pour un utilisateur
-  def create_clock(attrs \\ %{}) do
-    %Clock{}
-    |> Clock.changeset(attrs)
-    |> Repo.insert()
   end
 
   # Récupérer un workingtime d'un utilisateur par son ID

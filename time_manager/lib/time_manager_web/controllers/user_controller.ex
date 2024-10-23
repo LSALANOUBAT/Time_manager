@@ -41,7 +41,7 @@ defmodule TimeManagerWeb.UserController do
 
         conn
         |> put_status(:created)
-        |> json(%{user: user_data})  # Remove token from response
+        |> json('User have been created')  # Remove token from response
 
       {:error, changeset} ->
         errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
