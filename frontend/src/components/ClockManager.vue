@@ -1,8 +1,9 @@
 <template>
   <div class="clock-manager">
-    <h3>Clock Manager</h3>
+    <h2>Clock Manager</h2>
     <p class="status">Status: <span :class="clockIn ? 'in' : 'out'">{{ clockIn ? 'Clocked In' : 'Clocked Out' }}</span></p>
-    <button @click="clock" :class="clockIn ? 'btn-clock-out' : 'btn-clock-in'">
+    
+    <button @click="clock" :class="clockIn ? 'btn-out' : 'btn-in'">
       {{ clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
 
@@ -25,45 +26,45 @@ export default {
   },
   methods: {
     async clock() {
-      if (!this.userId) {
-        this.errorMessage = 'User ID is missing';
-        return;
-      }
+  if (!this.userId) {
+    this.errorMessage = 'User ID is missing';
+    return;
+  }
 
-      const token = localStorage.getItem('token'); // Retrieve token for authentication
+  const token = localStorage.getItem('token'); // Retrieve token for authentication
 
-      if (!token) {
-        this.errorMessage = 'Missing authentication token';
-        return;
-      }
+  if (!token) {
+    this.errorMessage = 'Missing authentication token';
+    return;
+  }
 
-      try {
-        const response = await fetch(`${apiUrl}/clocks/${this.userId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-          },
-          body: JSON.stringify({
-            clock: {
-              status: !this.clockIn, // Toggle the clock status
-              time: new Date().toISOString(), // Current timestamp
-            },
-          }),
-        });
+  try {
+    const response = await fetch(`${apiUrl}/clocks/${this.userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+      },
+      body: JSON.stringify({
+        clock: {
+          status: !this.clockIn, // Toggle the clock status
+          time: new Date().toISOString(), // Current timestamp
+        },
+      }),
+    });
 
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
 
-        const data = await response.json();
-        this.clockIn = !this.clockIn; // Update the local clock status
-        this.errorMessage = null; // Clear error message if successful
-        this.$emit('clock-changed'); // Emit an event to inform parent component
-      } catch (error) {
-        this.errorMessage = 'Failed to change clock status. Please try again.';
-      }
-    },
+    this.clockIn = !this.clockIn; // Update the local clock status
+    this.errorMessage = null; // Clear error message if successful
+    this.$emit('clock-changed'); // Emit an event to inform parent component
+  } catch (error) {
+    this.errorMessage = 'Failed to change clock status. Please try again.';
+  }
+}
+
   },
 };
 </script>
@@ -74,16 +75,16 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: white;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  max-width: 400px;
-  margin: 20px auto;
 }
 
-h3 {
+h2 {
   font-size: 1.5em;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #333;
 }
 
@@ -101,26 +102,30 @@ h3 {
 }
 
 button {
-  background-color: white;
-  color: black;
-  border-radius: 10em;
-  font-size: 17px;
-  font-weight: 600;
-  padding: 1em 2em;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 25px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  border: 1px solid black;
-  box-shadow: 0 0 0 0 black;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  transform: translateY(-4px) translateX(-2px);
-  box-shadow: 2px 5px 0 0 black;
+.btn-in {
+  background-color: #38a169; /* Green button for clocking in */
+  color: white;
 }
 
-button:active {
-  transform: translateY(2px) translateX(1px);
-  box-shadow: 0 0 0 0 black;
+.btn-in:hover {
+  background-color: #2f855a;
+}
+
+.btn-out {
+  background-color: #e53e3e; /* Red button for clocking out */
+  color: white;
+}
+
+.btn-out:hover {
+  background-color: #c53030;
 }
 
 .error-message {
@@ -129,30 +134,18 @@ button:active {
   text-align: center;
 }
 
-.btn-clock-in {
-  background-color: #38a169; /* Green for Clock In */
-  color: white;
-  border: none;
-}
-
-.btn-clock-out {
-  background-color: #e53e3e; /* Red for Clock Out */
-  color: white;
-  border: none;
-}
-
 @media (max-width: 768px) {
   .clock-manager {
     padding: 15px;
   }
 
-  h3 {
+  h2 {
     font-size: 1.2em;
   }
 
   button {
+    padding: 12px 24px;
     font-size: 1em;
-    padding: 10px 20px;
   }
 }
 </style>
