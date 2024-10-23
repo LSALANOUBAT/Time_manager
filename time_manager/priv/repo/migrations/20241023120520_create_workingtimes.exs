@@ -6,7 +6,7 @@ defmodule TimeManager.Repo.Migrations.CreateWorkingtimes do
       add :start, :utc_datetime, null: false
       add :end, :utc_datetime, null: false
       add :user_id, references(:users, on_delete: :delete_all), null: false
-
+      add :night_time, :boolean, default: false, null: false
       timestamps(type: :utc_datetime)
     end
 
