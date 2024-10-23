@@ -1,26 +1,28 @@
 defmodule TimeManagerWeb.Plugs.AdminOrManager do
   import Plug.Conn
-  import Guardian.Plug
+  import Phoenix.Controller
 
-  def init(default), do: default
+  alias TimeManagerWeb.Auth.Guardian
+  alias TimeManager.User  # Ensure the correct path to the User module
+
+  def init(_opts), do: nil
 
   def call(conn, _opts) do
     case Guardian.Plug.current_resource(conn) do
+      %User{role: "admin"} ->
+        conn
+      %User{role: "manager"} ->
+        conn
       nil ->
         conn
         |> put_status(:unauthorized)
-        |> json(%{error: "Unauthorized"})
+        |> json(%{error: "You must be authenticated to access this resource"})
         |> halt()
-
-      user ->
-        if user.role in ["admin", "manager"] do
-          assign(conn, :current_user, user)  # Assign the user to the connection for further use
-        else
-          conn
-          |> put_status(:forbidden)
-          |> json(%{error: "Forbidden: Insufficient permissions"})
-          |> halt()
-        end
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "You are not authorized to access this resource"})
+        |> halt()
     end
   end
 end

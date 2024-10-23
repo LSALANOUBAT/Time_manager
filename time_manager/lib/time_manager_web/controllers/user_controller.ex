@@ -3,6 +3,11 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManager.Accounts
   alias TimeManagerWeb.Auth.Guardian
 
+
+  alias TimeManagerWeb.Plugs.AdminOrManager  # Make sure you reference the plug here
+
+  plug AdminOrManager when action in [:create]
+
   # List all users
   def index(conn, params) do
     users =
@@ -33,15 +38,13 @@ defmodule TimeManagerWeb.UserController do
   end
 
   # Create a new user
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, %{"users" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
-        # Exclude sensitive data from the response
         user_data = Map.take(user, [:id, :username, :email, :role])
-
         conn
         |> put_status(:created)
-        |> json('User have been created')  # Remove token from response
+        |> json(%{message: "User has been created", user: user_data})
 
       {:error, changeset} ->
         errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
@@ -49,7 +52,6 @@ defmodule TimeManagerWeb.UserController do
             String.replace(acc, "%{#{key}}", to_string(value))
           end)
         end)
-
         conn
         |> put_status(:unprocessable_entity)
         |> json(%{errors: errors})

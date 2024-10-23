@@ -1,7 +1,7 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
 
-  # Pipeline pour les requêtes HTML (browser)
+  # Pipeline for HTML requests (browser)
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -11,42 +11,46 @@ defmodule TimeManagerWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  # Pipeline pour les requêtes JSON (API)
+  # Pipeline for JSON requests (API)
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  # Pipeline pour la vérification du token JWT
+  # Pipeline for JWT token verification
   pipeline :auth do
-    plug TimeManagerWeb.Auth.Pipeline
+    plug TimeManagerWeb.Auth.Pipeline # Assuming this plug is responsible for authentication
   end
 
-  # Routes accessibles via le navigateur
+  # Pipeline for checking admin or manager roles, must follow auth
+  pipeline :admin_or_manager do
+    plug TimeManagerWeb.Plugs.AdminOrManager  # Authorization plug for admin/manager
+  end
+
+  # Routes accessible via the browser
   scope "/", TimeManagerWeb do
     pipe_through :browser
 
-    # Définir la route racine
+    # Define the root route
     get "/", PageController, :index
   end
 
-  # Routes de l'API publique (sans authentification)
+  # Public API routes (without authentication)
   scope "/api", TimeManagerWeb do
     pipe_through :api
 
-    # Routes de gestion des utilisateurs (création, etc.)
-    resources "/users", UserController, except: [:new, :edit]
-
-    # Route pour la connexion (génère un JWT)
+    # Route for login (generates a JWT)
     post "/sign_in", AuthController, :sign_in
+
+    # User management routes (only index and show for unauthenticated users)
+    resources "/users", UserController, only: [:index, :show]
   end
 
-  # Routes de l'API protégées par authentification JWT
+
+  # Additional routes for authenticated users (working times, etc.)
   scope "/api", TimeManagerWeb do
-    pipe_through [:api, :auth]  # Les routes ici nécessitent une authentification
-
-    # Routes pour les clocks
-
-    # Routes pour les working times
+    pipe_through [:api, :auth]  # Routes that require authentication
+    post "/users", UserController, :create, plug: AdminOrManager
+    # Routes for working times
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create
@@ -54,7 +58,7 @@ defmodule TimeManagerWeb.Router do
     delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
-  # Routes de développement
+  # Development routes
   if Application.compile_env(:time_manager, :dev_routes) do
     import Phoenix.LiveDashboard.Router
 

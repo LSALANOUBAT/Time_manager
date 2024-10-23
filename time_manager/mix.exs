@@ -50,7 +50,6 @@ defmodule TimeManager.MixProject do
       {:guardian, "~> 2.0"},
       {:jose, "~> 1.11"},
       {:bcrypt_elixir, "~> 3.0"}
-
     ]
   end
 

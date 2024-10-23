@@ -7,7 +7,8 @@ defmodule TimeManagerWeb.AuthController do
   def sign_in(conn, %{"email" => email, "password" => password}) do
     case Accounts.authenticate_user(email, password) do
       {:ok, user} ->
-        {:ok, token, _claims} = Guardian.encode_and_sign(user)
+        claims = %{"sub" => to_string(user.id), "role" => user.role}  # Ensure role is included in claims
+        {:ok, token, _} = Guardian.encode_and_sign(user, claims)
         json(conn, %{token: token, user_id: user.id})
 
       {:error, reason} ->
@@ -16,4 +17,5 @@ defmodule TimeManagerWeb.AuthController do
         |> json(%{error: reason})
     end
   end
+
 end

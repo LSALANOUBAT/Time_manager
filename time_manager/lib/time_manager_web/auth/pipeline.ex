@@ -3,7 +3,10 @@ defmodule TimeManagerWeb.Auth.Pipeline do
                               module: TimeManagerWeb.Auth.Guardian,
                               error_handler: TimeManagerWeb.Auth.ErrorHandler
 
-  plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+  plug Guardian.Plug.VerifyHeader, scheme: "Bearer"
   plug Guardian.Plug.EnsureAuthenticated
   plug Guardian.Plug.LoadResource
+
+
+
 end
