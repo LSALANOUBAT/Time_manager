@@ -2,7 +2,7 @@ defmodule TimeManager.Clock do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :time, :status, :user_id]}
+  @derive {Jason.Encoder, only: [:id, :time, :status, :user_id, :inserted_at, :updated_at]}
 
   schema "clocks" do
     field :time, :utc_datetime

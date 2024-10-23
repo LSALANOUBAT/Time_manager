@@ -32,6 +32,18 @@ defmodule TimeManagerWeb.Router do
 
   # Routes de l'API protégées par authentification JWT
   scope "/api", TimeManagerWeb do
+    #pipe_through [:api, :auth]  # Les routes ici nécessitent une authentification
+
+    # Routes pour les clocks
+    get "/clocks/:user_id", ClockController, :index
+    post "/clocks/:user_id", ClockController, :create
+
+    # Routes pour les working times
+    get "/workingtime/:userID", WorkingtimeController, :index
+    get "/workingtime/:userID/:id", WorkingtimeController, :show
+    post "/workingtime/:userID", WorkingtimeController, :create
+    put "/workingtime/:id", WorkingtimeController, :update
+    delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
   # Routes de développement
