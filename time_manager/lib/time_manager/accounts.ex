@@ -1,38 +1,39 @@
 defmodule TimeManager.Accounts do
   alias TimeManager.Repo
-  alias TimeManager.User   # Correct path to the User schema
-  alias TimeManager.Workingtime   # Correct path to the Workingtime schema
+  alias TimeManager.User
+
+  alias TimeManager.Workingtime
   import Ecto.Query
   alias Bcrypt  # Updated alias to use `Bcrypt` from `bcrypt_elixir`
 
-  # List all users
+  # Lister tous les utilisateurs
   def list_users() do
     Repo.all(User)
   end
 
-  # Get a user by ID
+  # Récupérer un utilisateur par son ID
   def get_user!(id), do: Repo.get!(User, id)
 
-  # Create a user with a hashed password and default role
+  # Créer un utilisateur avec un mot de passe haché et un rôle par défaut
   def create_user(attrs) do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  # Update a user
+  # Mettre à jour un utilisateur
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
     |> Repo.update()
   end
 
-  # Delete a user
+  # Supprimer un utilisateur
   def delete_user(%User{} = user) do
     Repo.delete(user)
   end
 
-  # Authenticate a user by email and password
+  # Authentifier un utilisateur par email et mot de passe
   def authenticate_user(email, password) do
     user = Repo.get_by(User, email: email)
 
@@ -41,6 +42,7 @@ defmodule TimeManager.Accounts do
         {:error, "Invalid credentials"}
 
       %User{} = user ->
+        # Updated password verification function to use `Bcrypt.verify_pass/2`
         if Bcrypt.verify_pass(password, user.hashed_password) do
           {:ok, user}
         else
@@ -49,42 +51,42 @@ defmodule TimeManager.Accounts do
     end
   end
 
-  # Promote or demote a user to a different role
+  # Promouvoir ou rétrograder un utilisateur à un rôle différent
   def change_role(%User{} = user, role) do
     user
     |> Ecto.Changeset.change(role: role)
     |> Repo.update()
   end
 
-  # Get a workingtime of a user by their ID
+  # Récupérer un workingtime d'un utilisateur par son ID
   def get_workingtime!(user_id, id) do
     Repo.get_by!(Workingtime, user_id: user_id, id: id)
   end
 
-  # Create a new workingtime for a user
+  # Créer un nouveau workingtime pour un utilisateur
   def create_workingtime(attrs) do
     %Workingtime{}
     |> Workingtime.changeset(attrs)
     |> Repo.insert()
   end
 
-  # Update a workingtime
+  # Mettre à jour un workingtime
   def update_workingtime(%Workingtime{} = workingtime, attrs) do
     workingtime
     |> Workingtime.changeset(attrs)
     |> Repo.update()
   end
 
-  # Delete a workingtime
+  # Supprimer un workingtime
   def delete_workingtime(%Workingtime{} = workingtime) do
     Repo.delete(workingtime)
   end
 
-  # List workingtimes for a user within a given time range
+  # Lister les workingtimes d'un utilisateur dans un intervalle donné
   def list_workingtimes(user_id, start_time, end_time) do
     query = from w in Workingtime,
                  where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time
 
-    Repo.all(query)  # This line was missing, it executes the query and fetches the result
+    Repo.all(query)
   end
 end
