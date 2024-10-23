@@ -1,15 +1,12 @@
-<!-- src/components/ChartManager.vue -->
 <template>
   <div class="chart-manager">
-    <h3>Working Time Chart</h3>
+    <h3>Working Time Chart (Day vs Night)</h3>
 
     <div v-if="loading">Loading chart data...</div>
     <div v-else-if="errorMessage" class="error-message">
       <p>Error: {{ errorMessage }}</p>
     </div>
     <div v-else>
-      <!-- Debug: Afficher les données du graphique -->
-      <!-- <pre>{{ chartData }}</pre> -->
       <Line :data="chartData" :options="chartOptions" />
     </div>
   </div>
@@ -31,13 +28,13 @@ import {
 
 // Enregistrer les composants nécessaires de Chart.js
 ChartJS.register(
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    PointElement,
-    CategoryScale,
-    LinearScale
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale
 );
 
 export default defineComponent({
@@ -59,18 +56,38 @@ export default defineComponent({
 
     const apiUrl = process.env.VUE_APP_API_URL;
 
-    // Fonction pour calculer la durée en heures entre deux dates
-    const calculateDuration = (start, end) => {
+    // Fonction pour calculer la durée des heures de jour
+    const calculateDayNightDuration = (start, end) => {
       const startTime = new Date(start);
       const endTime = new Date(end);
-      const duration = (endTime - startTime) / (1000 * 60 * 60); // Heures
-      return parseFloat(duration.toFixed(2)); // Nombre avec deux décimales
+
+      let dayDuration = 0;
+      let nightDuration = 0;
+
+      const startHour = startTime.getHours();
+      const endHour = endTime.getHours();
+
+      // Définir les heures de jour entre 6h et 18h
+      const dayStart = 6;
+      const dayEnd = 18;
+
+      // Boucler sur les heures travaillées pour les répartir entre jour et nuit
+      for (let hour = startHour; hour !== endHour; hour = (hour + 1) % 24) {
+        if (hour >= dayStart && hour < dayEnd) {
+          dayDuration += 1;
+        } else {
+          nightDuration += 1;
+        }
+      }
+
+      return {
+        day: dayDuration,
+        night: nightDuration,
+      };
     };
 
     // Fonction pour transformer les données de l'API en format Chart.js
     const transformChartData = (data) => {
-      console.log('Raw data from API:', data); // Log des données brutes
-
       if (!Array.isArray(data)) {
         errorMessage.value = 'Unexpected data format received from API.';
         return;
@@ -82,21 +99,33 @@ export default defineComponent({
       }
 
       const labels = data.map((item) => new Date(item.start).toLocaleDateString());
-      const durations = data.map((item) => calculateDuration(item.start, item.end));
+      const dayDurations = [];
+      const nightDurations = [];
 
-      console.log('Labels:', labels);
-      console.log('Durations:', durations);
+      data.forEach((item) => {
+        const durations = calculateDayNightDuration(item.start, item.end);
+        dayDurations.push(durations.day);
+        nightDurations.push(durations.night);
+      });
 
       chartData.value = {
         labels: labels,
         datasets: [
           {
-            label: 'Working Time (Hours)',
-            data: durations,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: true,
+            label: 'Day Hours',
+            data: dayDurations,
+            borderColor: '#00b4d8', // Couleur des heures de jour
+            backgroundColor: 'rgba(0, 180, 216, 0.2)',
             tension: 0.4,
+            fill: true,
+          },
+          {
+            label: 'Night Hours',
+            data: nightDurations,
+            borderColor: '#f94144', // Couleur des heures de nuit
+            backgroundColor: 'rgba(249, 65, 68, 0.2)',
+            tension: 0.4,
+            fill: true,
           },
         ],
       };
@@ -108,20 +137,28 @@ export default defineComponent({
           legend: {
             position: 'top',
           },
-          title: {
-            display: true,
-            text: 'Working Time Over Time',
+          tooltip: {
+            backgroundColor: '#000',
+            titleFont: { size: 14 },
+            bodyFont: { size: 12 },
+            padding: 10,
           },
         },
         scales: {
           y: {
             beginAtZero: true,
+            grid: {
+              display: false,
+            },
             title: {
               display: true,
               text: 'Hours',
             },
           },
           x: {
+            grid: {
+              display: false,
+            },
             title: {
               display: true,
               text: 'Date',
@@ -129,8 +166,6 @@ export default defineComponent({
           },
         },
       };
-
-      console.log('chartData:', chartData.value);
     };
 
     // Fonction pour récupérer les données des heures de travail via l'API
@@ -145,7 +180,6 @@ export default defineComponent({
       }
 
       try {
-        // Définir une plage de dates (par exemple, les 30 derniers jours)
         const endDate = new Date().toISOString(); // Date d'aujourd'hui
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 30); // 30 jours avant aujourd'hui
@@ -172,13 +206,13 @@ export default defineComponent({
 
     // Observer les changements de selectedUserId pour recharger les données
     watch(
-        () => props.selectedUserId,
-        () => {
-          loading.value = true;
-          errorMessage.value = null;
-          fetchWorkingTimeData();
-        },
-        { immediate: true }
+      () => props.selectedUserId,
+      () => {
+        loading.value = true;
+        errorMessage.value = null;
+        fetchWorkingTimeData();
+      },
+      { immediate: true }
     );
 
     return {
@@ -196,15 +230,30 @@ export default defineComponent({
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
 }
 
 .chart-manager h3 {
   text-align: center;
+  font-size: 1.5em;
   margin-bottom: 20px;
+  color: #333;
 }
 
 .chart-manager .error-message {
   color: red;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .chart-manager {
+    padding: 15px;
+  }
+
+  .chart-manager h3 {
+    font-size: 1.2em;
+  }
 }
 </style>

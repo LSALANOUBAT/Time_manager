@@ -1,8 +1,10 @@
 <template>
   <div class="clock-manager">
-    <h2>Clock Manager</h2>
-    <p>Status: {{ clockIn ? 'Clocked In' : 'Clocked Out' }}</p>
-    <button @click="clock">{{ clockIn ? 'Clock Out' : 'Clock In' }}</button>
+    <h3>Clock Manager</h3>
+    <p class="status">Status: <span :class="clockIn ? 'in' : 'out'">{{ clockIn ? 'Clocked In' : 'Clocked Out' }}</span></p>
+    <button @click="clock" :class="clockIn ? 'btn-clock-out' : 'btn-clock-in'">
+      {{ clockIn ? 'Clock Out' : 'Clock In' }}
+    </button>
 
     <div v-if="errorMessage" class="error-message">
       <p>Error: {{ errorMessage }}</p>
@@ -56,11 +58,9 @@ export default {
 
         const data = await response.json();
         this.clockIn = !this.clockIn; // Update the local clock status
-        console.log('Clock status changed:', data);
         this.errorMessage = null; // Clear error message if successful
         this.$emit('clock-changed'); // Emit an event to inform parent component
       } catch (error) {
-        console.error('Failed to change clock status:', error);
         this.errorMessage = 'Failed to change clock status. Please try again.';
       }
     },
@@ -70,11 +70,89 @@ export default {
 
 <style scoped>
 .clock-manager {
-  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.status {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.status .in {
+  color: #38a169; /* Green for clocked in */
+}
+
+.status .out {
+  color: #e53e3e; /* Red for clocked out */
+}
+
+button {
+  background-color: white;
+  color: black;
+  border-radius: 10em;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+  box-shadow: 0 0 0 0 black;
+}
+
+button:hover {
+  transform: translateY(-4px) translateX(-2px);
+  box-shadow: 2px 5px 0 0 black;
+}
+
+button:active {
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 black;
 }
 
 .error-message {
   color: red;
-  margin-top: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-clock-in {
+  background-color: #38a169; /* Green for Clock In */
+  color: white;
+  border: none;
+}
+
+.btn-clock-out {
+  background-color: #e53e3e; /* Red for Clock Out */
+  color: white;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .clock-manager {
+    padding: 15px;
+  }
+
+  h3 {
+    font-size: 1.2em;
+  }
+
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+  }
 }
 </style>
