@@ -13,30 +13,26 @@
         </p>
       </div>
     </form>
-
-    <div v-if="errorMessage" class="error-message">
-      <p>{{ errorMessage }}</p>
-    </div>
   </div>
 </template>
 
 <script>
+import { toastController } from '@ionic/vue'; // Import Ionic toast controller
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
-  name: 'UserLogin', // Updated component name
+  name: 'UserLogin',
   data() {
     return {
       email: '',
       password: '',
-      errorMessage: null,
     };
   },
   methods: {
     async loginUser() {
       // Basic validation to ensure email and password are filled
       if (!this.email || !this.password) {
-        this.errorMessage = 'Email and password are required';
+        this.presentToast('Email and password are required');
         return;
       }
 
@@ -60,8 +56,17 @@ export default {
         // Redirect to the dashboard after successful login
         this.$router.push('/dashboard');
       } catch (error) {
-        this.errorMessage = error.message || 'Failed to login. Please check your credentials.';
+        this.presentToast(error.message || 'Failed to login. Please check your credentials.');
       }
+    },
+    async presentToast(message) {
+      const toast = await toastController.create({
+        message: message,
+        duration: 2000, // Toast will disappear after 2 seconds
+        position: 'top', // Show toast at the top of the screen
+        color: 'danger', // Set toast color to red for error
+      });
+      return toast.present();
     },
     goToRegister() {
       this.$router.push('/register'); // Redirect to the register page
@@ -88,7 +93,7 @@ export default {
   border-radius: 25px;
   transition: .4s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.4) 1px 2px 2px;
-  width: 350px; /* Augmente la largeur du formulaire */
+  width: 350px;
 }
 
 .form:hover {
@@ -102,7 +107,7 @@ export default {
   padding-bottom: 2em;
   text-align: center;
   font-weight: bold;
-  font-size: 1.5em; /* Augmente la taille du texte */
+  font-size: 1.5em;
 }
 
 .input {
@@ -112,7 +117,7 @@ export default {
   outline: none;
   padding: 1em;
   transition: .4s ease-in-out;
-  font-size: 1.1em; /* Augmente la taille de la police des champs de saisie */
+  font-size: 1.1em;
 }
 
 .input:hover {
@@ -137,7 +142,7 @@ export default {
   transition: .4s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 1px;
   background-color: #f4f4f4;
-  font-size: 1.1em; /* Augmente la taille de la police du bouton */
+  font-size: 1.1em;
 }
 
 .form .btn:hover {
@@ -152,14 +157,9 @@ export default {
   box-shadow: none;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-
 .register-link {
   margin-top: 15px;
-  text-align: center; /* Centre le texte et le bouton */
+  text-align: center;
 }
 
 button {
@@ -168,7 +168,7 @@ button {
   color: blue;
   cursor: pointer;
   text-decoration: underline;
-  font-size: 1.1em; /* Augmente la taille de la police du lien */
+  font-size: 1.1em;
 }
 
 button:hover {
