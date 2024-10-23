@@ -1,8 +1,6 @@
 <template>
   <div id="app">
     <header v-if="isAuthenticated">
-      <h1>Time Manager Application</h1>
-      <button @click="logout">Logout</button>
     </header>
     <router-view /> <!-- Affiche le contenu des routes ici -->
   </div>
@@ -25,11 +23,6 @@ export default {
     },
   },
   methods: {
-    logout() {
-      localStorage.removeItem('token'); // Supprime le token JWT
-      this.$router.push('/login'); // Redirige vers la page de login après déconnexion
-      this.updateAuthState(); // Met à jour l'état de l'authentification
-    },
     updateAuthState() {
       this.isAuth = isAuthenticated(); // Mets à jour la valeur de isAuth en fonction de l'état de l'authentification
     },
