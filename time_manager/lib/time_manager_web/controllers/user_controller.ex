@@ -37,14 +37,12 @@ defmodule TimeManagerWeb.UserController do
     json(conn, user)
   end
 
-  # Create a new user
-  def create(conn, %{"users" => user_params}) do
+  def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
-        user_data = Map.take(user, [:id, :username, :email, :role])
         conn
         |> put_status(:created)
-        |> json(%{message: "User has been created", user: user_data})
+        |> json(%{message: "User has been created"})
 
       {:error, changeset} ->
         errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
