@@ -36,14 +36,12 @@ defmodule TimeManagerWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
-        {:ok, token, _claims} = Guardian.encode_and_sign(user)
-
         # Exclude sensitive data from the response
         user_data = Map.take(user, [:id, :username, :email, :role])
 
         conn
         |> put_status(:created)
-        |> json(%{user: user_data, token: token})
+        |> json(%{user: user_data})  # Remove token from response
 
       {:error, changeset} ->
         errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
@@ -57,6 +55,7 @@ defmodule TimeManagerWeb.UserController do
         |> json(%{errors: errors})
     end
   end
+
 
   # Update an existing user
   def update(conn, %{"id" => id, "user" => user_params}) do
