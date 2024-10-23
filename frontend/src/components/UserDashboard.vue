@@ -1,6 +1,8 @@
-<!-- src/components/Dashboard.vue -->
 <template>
   <div class="dashboard">
+    <!-- Hamburger Menu -->
+    <HamburgerMenu />
+
     <h2>Welcome, {{ user.username }}!</h2>
 
     <!-- Clocks Section -->
@@ -43,7 +45,8 @@
 import ClockManager from './ClockManager.vue';
 import ChartManager from './ChartManager.vue';
 import WorkingTime from './WorkingTime.vue';
-import CalendarManager from './CalendarManager.vue'; // Import CalendarManager component
+import CalendarManager from './CalendarManager.vue';
+import HamburgerMenu from './HamburgerMenu.vue'; // Import HamburgerMenu component
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -53,7 +56,8 @@ export default {
     ClockManager,
     ChartManager,
     WorkingTime,
-    CalendarManager, // Register CalendarManager component
+    CalendarManager,
+    HamburgerMenu, // Register HamburgerMenu component
   },
   data() {
     return {
