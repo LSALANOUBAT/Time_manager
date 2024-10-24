@@ -57,7 +57,7 @@ defmodule TimeManagerWeb.Router do
 
     post "/users", UserController, :create, plug: AdminOrManager
     delete "/users/:id", UserController, :delete, plug: Admin
-    put "/users/:id", UserController, :update
+    put "/users/:id", UserController, :update, plug: Admin
     # Routes for working times
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show

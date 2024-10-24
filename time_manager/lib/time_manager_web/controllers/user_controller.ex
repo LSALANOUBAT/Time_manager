@@ -9,6 +9,7 @@ defmodule TimeManagerWeb.UserController do
 
   plug AdminOrManager when action in [:create]
   plug Admin when action in [:delete]
+  plug Admin when action in [:update]
 
   # List all users
   def index(conn, params) do
