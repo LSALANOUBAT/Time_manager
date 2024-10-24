@@ -1,209 +1,254 @@
 <template>
-  <div class="user-component">
+  <div class="user-manager">
     <h2>User Management</h2>
 
-    <!-- Formulaire pour créer un nouvel utilisateur -->
-    <form @submit.prevent="createUser">
-      <input v-model="username" placeholder="Username" required />
-      <input v-model="email" type="email" placeholder="Email" required />
-      <button type="submit">Create User</button>
+    <!-- Form to add or edit a user -->
+    <form @submit.prevent="submitUser" class="user-form">
+      <h3 v-if="editingUser">Edit User</h3>
+      <h3 v-else>Add New User</h3>
+      <input v-model="formData.username" placeholder="Username" required />
+      <input v-model="formData.email" type="email" placeholder="Email" required />
+      <input v-if="!editingUser" v-model="formData.password" type="password" placeholder="Password" required minlength="6" />
+
+      <!-- Dropdown for role selection -->
+      <label for="role">Role:</label>
+      <select v-model="formData.role" required>
+        <option value="admin">Admin</option>
+        <option value="manager">Manager</option>
+        <option value="employee">Employee</option>
+      </select>
+
+      <button type="submit">{{ editingUser ? 'Update User' : 'Add User' }}</button>
     </form>
 
-    <input v-model="userId" placeholder="User ID" />
-    <button @click="getUser">Get User</button>
-    <button @click="updateUser">Update User</button>
-    <button @click="deleteUser">Delete User</button>
-
-    <!-- Affichage des détails de l'utilisateur -->
-    <div v-if="userData">
-      <h3>User Details:</h3>
-      <p><strong>Username:</strong> {{ userData.username }}</p>
-      <p><strong>Email:</strong> {{ userData.email }}</p>
-    </div>
-
-    <!-- Gestion des erreurs -->
-    <div v-if="errorMessage" class="error-message">
-      <p>Error: {{ errorMessage }}</p>
-    </div>
-
-    <!-- Tableau de tous les utilisateurs -->
-    <h3>Liste des utilisateurs :</h3>
-    <table v-if="users.length" class="user-table">
+    <!-- Display users in a table -->
+    <h3>Recently Created or Modified Users</h3>
+    <table class="user-table">
       <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Last Modified</th>
+          <th>Actions</th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <button @click="selectUser(user)">Sélectionner</button>
-          <button @click="deleteUser(user.id)">Supprimer</button>
-        </td>
-      </tr>
+        <tr v-for="user in recentUsers" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ formatDate(user.updated_at || user.created_at) }}</td>
+          <td>
+            <button @click="editUser(user)">Edit</button>
+            <button @click="deleteUser(user.id)">Delete</button>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-const apiUrl = process.env.VUE_APP_API_URL;
+import { toastController } from '@ionic/vue';
 
 export default {
+  name: 'UserManager',
   data() {
     return {
-      username: '',
-      email: '',
-      userId: '',
-      userData: null,
       users: [],
-      errorMessage: null,
+      recentUsers: [],
+      formData: {
+        username: '',
+        email: '',
+        password: '',
+        role: 'employee',
+      },
+      editingUser: null,
     };
   },
   methods: {
-    async createUser() {
-      try {
-        const response = await fetch(`${apiUrl}/users`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user: {
-              username: this.username,
-              email: this.email,
-            },
-          }),
-        });
-
-        const data = await response.json();
-        console.log('User created:', data);
-        this.users.push(data); // Ajouter le nouvel utilisateur au tableau
-        this.clearFields();
-      } catch (error) {
-        console.error('Failed to create user:', error);
-        this.errorMessage = 'Failed to create user. Please try again.';
-      }
-    },
-
-    async getUser() {
-      try {
-        const response = await fetch(`${apiUrl}/users/${this.userId}`);
-
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('User data:', data);
-        this.userData = data;
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        this.errorMessage = 'Failed to fetch user data. Please check the User ID.';
-      }
-    },
-
-    async updateUser() {
-      try {
-        const response = await fetch(`${apiUrl}/users/${this.userId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user: {
-              username: this.username,
-              email: this.email,
-            },
-          }),
-        });
-
-        const data = await response.json();
-        console.log('User updated:', data);
-        const index = this.users.findIndex(user => user.id === data.id);
-        if (index !== -1) {
-          this.$set(this.users, index, data); // Met à jour l'utilisateur dans le tableau
-        }
-        this.clearFields();
-      } catch (error) {
-        console.error('Failed to update user:', error);
-        this.errorMessage = 'Failed to update user. Please try again.';
-      }
-    },
-
-    async deleteUser(id) {
-      try {
-        const response = await fetch(`${apiUrl}/users/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-
-        console.log('User deleted successfully');
-        this.users = this.users.filter(user => user.id !== id); // Retirer l'utilisateur du tableau
-        this.clearFields();
-      } catch (error) {
-        console.error('Failed to delete user:', error);
-        this.errorMessage = 'Failed to delete user. Please check the User ID.';
-      }
-    },
-
-    selectUser(user) {
-      this.userId = user.id;
-      this.username = user.username;
-      this.email = user.email;
-    },
-
+    // Fetch all users
     async fetchUsers() {
       try {
-        const response = await fetch(`${apiUrl}/users`);
-        const data = await response.json();
-        this.users = data;
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');
+        }
+
+        this.users = await response.json();
+        this.updateRecentUsers();
       } catch (error) {
-        console.error('Failed to fetch users:', error);
-        this.errorMessage = 'Failed to load users.';
+        this.showToast('Error fetching users: ' + error.message, 'danger');
       }
     },
 
-    clearFields() {
-      this.username = '';
-      this.email = '';
-      this.userId = '';
-      this.userData = null;
-      this.errorMessage = null;
+    // Filter and display only the 5 most recently created or updated users
+    updateRecentUsers() {
+      this.recentUsers = this.users
+        .sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
+        .slice(0, 5);
+    },
+
+    // Add or update a user
+    async submitUser() {
+      try {
+        let response;
+        const userPayload = {
+          user: {
+            username: this.formData.username,
+            email: this.formData.email,
+            password: this.formData.password,
+            role: this.formData.role,
+          },
+        };
+
+        if (this.editingUser) {
+          // Update user
+          response = await fetch(`${process.env.VUE_APP_API_URL}/users/${this.editingUser.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(userPayload),
+          });
+        } else {
+          // Create new user
+          response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(userPayload),
+          });
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to submit user');
+        }
+
+        const user = await response.json();
+        if (this.editingUser) {
+          const index = this.users.findIndex((u) => u.id === user.id);
+          if (index !== -1) this.users.splice(index, 1, user);
+          this.showToast('User updated successfully!', 'success');
+        } else {
+          this.users.push(user);
+          this.showToast('User added successfully!', 'success');
+        }
+
+        this.editingUser = null;
+        this.formData = { username: '', email: '', password: '', role: 'employee' };
+        this.updateRecentUsers();
+      } catch (error) {
+        this.showToast('Error submitting user: ' + error.message, 'danger');
+      }
+    },
+
+    // Edit an existing user
+    editUser(user) {
+      this.editingUser = user;
+      this.formData = { ...user, password: '' };
+    },
+
+    // Delete a user
+    async deleteUser(userId) {
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/${userId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete user');
+        }
+
+        this.users = this.users.filter((user) => user.id !== userId);
+        this.showToast('User deleted successfully!', 'success');
+        this.updateRecentUsers();
+      } catch (error) {
+        this.showToast('Error deleting user: ' + error.message, 'danger');
+      }
+    },
+
+    // Affiche un toast
+    async showToast(message, color) {
+      const toast = await toastController.create({
+        message,
+        duration: 3000,
+        color: color || 'primary',
+        position: 'top',
+      });
+      return toast.present();
+    },
+
+    // Format date for display
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleString();
     },
   },
   mounted() {
-    this.fetchUsers(); // Charger les utilisateurs au montage du composant
+    this.fetchUsers();
   },
 };
 </script>
 
-<style>
-.user-component {
-  margin-top: 20px;
+<style scoped>
+.user-manager {
+  padding: 20px;
+}
+
+.user-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
 }
 
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
-.user-table th, .user-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
+.user-table th,
+.user-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
 .user-table th {
-  background-color: #f4f4f4;
+  background-color: #f2f2f2;
 }
 
 button {
-  margin-left: 10px;
+  background-color: white;
+  color: black;
+  border-radius: 10em;
+  font-size: 15px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+  box-shadow: 0 0 0 0 black;
+}
+
+button:hover {
+  transform: translateY(-2px) translateX(-1px);
+  box-shadow: 2px 4px 0 0 black;
+}
+
+button:active {
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 black;
 }
 </style>
