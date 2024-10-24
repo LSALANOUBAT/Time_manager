@@ -85,6 +85,8 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
+
+
   # Delete a user
   def delete(conn, %{"id" => id}) do
     case Accounts.get_user(id) do

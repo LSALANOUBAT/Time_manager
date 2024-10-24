@@ -27,9 +27,10 @@ defmodule TimeManager.Accounts do
   # Update a user
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
+
 
   # Delete a user
   def delete_user(%User{} = user) do
