@@ -89,76 +89,87 @@ export default {
 
     // Add or update a user
     async submitUser() {
-        try {
-          let response;
+      try {
+        let response;
 
-          if (this.editingUser) {
-            if (!this.editingUser.id) {
-              this.showToast('No user selected for editing', 'danger');
-              return; // Prevents request if no user is selected
-            }
-
-            // Update user without password
-            const userUpdate = {
-              user: {
-                username: this.formData.username,
-                email: this.formData.email,
-                role: this.formData.role,
-              },
-            };
-
-            response = await fetch(`${process.env.VUE_APP_API_URL}/users/${this.editingUser.id}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-              },
-              body: JSON.stringify(userUpdate),
-            });
-          } else {
-            // Create new user
-            const userPayload = {
-              user: {
-                username: this.formData.username,
-                email: this.formData.email,
-                role: this.formData.role,
-              },
-            };
-
-            response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-              },
-              body: JSON.stringify(userPayload),
-            });
+        if (this.editingUser) {
+          if (!this.editingUser.id) {
+            this.showToast('No user selected for editing', 'danger');
+            return; // Prevents request if no user is selected
           }
 
-          if (!response.ok) {
-            throw new Error('Failed to submit user');
-          }
+          // Update user without password
+          const userUpdate = {
+            user: {
+              username: this.formData.username,
+              email: this.formData.email,
+              role: this.formData.role,
+            },
+          };
 
-          const user = await response.json();
-          if (this.editingUser) {
-            const index = this.users.findIndex((u) => u.id === user.id);
-            if (index !== -1) this.users.splice(index, 1, user);
-            this.showToast('User updated successfully!', 'success');
-          } else {
-            this.users.push(user);
-            this.showToast('User added successfully!', 'success');
-          }
+          response = await fetch(`${process.env.VUE_APP_API_URL}/users/${this.editingUser.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(userUpdate),
+          });
+        } else {
+          // Create new user, include password
+          const userPayload = {
+            user: {
+              username: this.formData.username,
+              email: this.formData.email,
+              password: this.formData.password, // Include password for creation
+              role: this.formData.role,
+            },
+          };
 
-          this.editingUser = null;
-          this.formData = { username: '', email: '', role: 'employee' };
-          this.updateRecentUsers();
-          this.fetchUsers(); // Refresh users after creation or update
-        } catch (error) {
-          this.showToast('Error submitting user: ' + error.message, 'danger');
+          response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(userPayload),
+          });
         }
-      },
 
+        if (!response.ok) {
+          throw new Error('Failed to submit user');
+        }
 
+        const user = await response.json();
+        if (this.editingUser) {
+          const index = this.users.findIndex((u) => u.id === user.id);
+          if (index !== -1) this.users.splice(index, 1, user);
+          this.showToast('User updated successfully!', 'success');
+        } else {
+          this.users.push(user);
+          this.showToast('User added successfully!', 'success');
+        }
+
+        this.editingUser = null;
+        this.formData = { username: '', email: '', password: '', role: 'employee' };
+        this.updateRecentUsers();
+        this.fetchUsers(); // Refresh users after creation or update
+      } catch (error) {
+        this.showToast('Error submitting user: ' + error.message, 'danger');
+      }
+    },
+
+    // Method to select a user for editing
+    editUser(user) {
+      this.editingUser = user; // Set the editing user
+      // Populate the form with the selected user's data (except password)
+      this.formData = {
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        password: '', // Leave password empty, since it is not editable during update
+      };
+    },
 
     // Delete a user
     async deleteUser(userId) {
