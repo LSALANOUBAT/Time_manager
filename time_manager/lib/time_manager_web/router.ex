@@ -53,7 +53,7 @@ defmodule TimeManagerWeb.Router do
   scope "/api", TimeManagerWeb do
 
     pipe_through [:api, :auth]  # Routes that require authentication
-    resources "/users", UserController, only: [:index, :show]
+    resources "/users", UserController, only: [:index, :show], plug: Admin
 
     post "/users", UserController, :create, plug: AdminOrManager
     delete "/users/:id", UserController, :delete, plug: Admin

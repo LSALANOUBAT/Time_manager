@@ -4,9 +4,11 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManagerWeb.Auth.Guardian
 
 
-  alias TimeManagerWeb.Plugs.AdminOrManager  # Make sure you reference the plug here
+  alias TimeManagerWeb.Plugs.AdminOrManager
+  alias TimeManagerWeb.Plugs.Admin  # Make sure you reference the plug here
 
   plug AdminOrManager when action in [:create]
+  plug Admin when action in [:delete]
 
   # List all users
   def index(conn, params) do
