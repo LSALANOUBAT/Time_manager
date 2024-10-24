@@ -64,6 +64,8 @@ defmodule TimeManagerWeb.Router do
     put "/workingtime/:id", WorkingtimeController, :update, plug: AdminOrManager
     delete "/workingtime/:id", WorkingtimeController, :delete
     put "/update_password", PasswordController, :update_password
+    post "/workingtime/:userID/clock_in", WorkingtimeController, :clock_in
+    post "/workingtime/:userID/clock_out", WorkingtimeController, :clock_out
   end
 
   # Development routes
