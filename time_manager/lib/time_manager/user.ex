@@ -40,6 +40,14 @@ defmodule TimeManager.User do
     |> maybe_put_password_hash(attrs)
   end
 
+  def password_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_required([:password])
+    |> validate_length(:password, min: 6)
+    |> put_password_hash()
+  end
+
   # Function to hash the password if provided in updates
   defp maybe_put_password_hash(changeset, %{"password" => password}) when password != "" do
     changeset

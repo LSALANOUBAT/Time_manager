@@ -85,6 +85,13 @@ defmodule TimeManager.Accounts do
     Repo.delete(workingtime)
   end
 
+    # Function to update only the password
+  def update_user_password(%User{} = user, %{"password" => password}) do
+    user
+    |> User.password_changeset(%{"password" => password})
+    |> Repo.update()
+  end
+
   # List workingtimes for a user within a given time range
   def list_workingtimes(user_id, start_time, end_time) do
     query = from w in Workingtime,
