@@ -48,14 +48,21 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Histogram showing users created per day -->
+    <Histogram :users="users" />
   </div>
 </template>
 
 <script>
 import { toastController } from '@ionic/vue';
+import Histogram from './Histogram.vue'; // Import the Histogram component
 
 export default {
   name: 'UserManager',
+  components: {
+    Histogram, // Register the Histogram component
+  },
   data() {
     return {
       users: [],
@@ -147,6 +154,7 @@ export default {
         this.editingUser = null;
         this.formData = { username: '', email: '', password: '', role: 'employee' };
         this.updateRecentUsers();
+        this.fetchUsers(); // Refresh users after creation or update
       } catch (error) {
         this.showToast('Error submitting user: ' + error.message, 'danger');
       }
@@ -173,6 +181,7 @@ export default {
         this.users = this.users.filter((user) => user.id !== userId);
         this.showToast('User deleted successfully!', 'success');
         this.updateRecentUsers();
+        this.fetchUsers(); // Refresh users after deletion
       } catch (error) {
         this.showToast('Error deleting user: ' + error.message, 'danger');
       }
