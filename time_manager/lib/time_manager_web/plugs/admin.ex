@@ -1,4 +1,4 @@
-defmodule TimeManagerWeb.Plugs.AdminOrManager do
+defmodule TimeManagerWeb.Plugs.Admin do
   import Plug.Conn
   import Phoenix.Controller
 
@@ -23,5 +23,4 @@ defmodule TimeManagerWeb.Plugs.AdminOrManager do
         |> halt()
     end
   end
-
 end

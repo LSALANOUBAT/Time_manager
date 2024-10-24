@@ -25,4 +25,5 @@ defmodule TimeManagerWeb.Plugs.AdminOrManager do
         |> halt()
     end
   end
+
 end

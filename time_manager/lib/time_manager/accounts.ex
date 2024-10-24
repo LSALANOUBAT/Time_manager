@@ -13,6 +13,10 @@ defmodule TimeManager.Accounts do
   # Get a user by ID
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
   # Create a user with a hashed password and default role
   def create_user(attrs) do
     %User{}

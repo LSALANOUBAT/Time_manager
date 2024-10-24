@@ -26,6 +26,9 @@ defmodule TimeManagerWeb.Router do
     plug TimeManagerWeb.Plugs.AdminOrManager  # Authorization plug for admin/manager
   end
 
+  pipeline :admin do
+    plug TimeManagerWeb.Plugs.Admin  # Authorization plug for admin
+  end
   # Routes accessible via the browser
   scope "/", TimeManagerWeb do
     pipe_through :browser
@@ -42,19 +45,24 @@ defmodule TimeManagerWeb.Router do
     post "/sign_in", AuthController, :sign_in
 
     # User management routes (only index and show for unauthenticated users)
-    resources "/users", UserController, only: [:index, :show]
+
   end
 
 
   # Additional routes for authenticated users (working times, etc.)
   scope "/api", TimeManagerWeb do
+
     pipe_through [:api, :auth]  # Routes that require authentication
+    resources "/users", UserController, only: [:index, :show]
+
     post "/users", UserController, :create, plug: AdminOrManager
+    delete "/users/:id", UserController, :delete, plug: Admin
+    put "/users/:id", UserController, :update
     # Routes for working times
     get "/workingtime/:userID", WorkingtimeController, :index
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     post "/workingtime/:userID", WorkingtimeController, :create
-    put "/workingtime/:id", WorkingtimeController, :update
+    put "/workingtime/:id", WorkingtimeController, :update, plug: AdminOrManager
     delete "/workingtime/:id", WorkingtimeController, :delete
   end
 
