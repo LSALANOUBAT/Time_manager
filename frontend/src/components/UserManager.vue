@@ -8,7 +8,14 @@
       <h3 v-else>Add New User</h3>
       <input v-model="formData.username" placeholder="Username" required />
       <input v-model="formData.email" type="email" placeholder="Email" required />
-      <input v-if="!editingUser" v-model="formData.password" type="password" placeholder="Password" required minlength="6" />
+      <input
+        v-if="!editingUser"
+        v-model="formData.password"
+        type="password"
+        placeholder="Password"
+        required
+        minlength="6"
+      />
 
       <!-- Dropdown for role selection -->
       <label for="role">Role:</label>
@@ -21,33 +28,9 @@
       <button type="submit">{{ editingUser ? 'Update User' : 'Add User' }}</button>
     </form>
 
-    <!-- Display users in a table -->
+    <!-- Display users in a grid -->
     <h3>Recently Created or Modified Users</h3>
-    <table class="user-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Last Modified</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in recentUsers" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>{{ formatDate(user.updated_at || user.created_at) }}</td>
-          <td>
-            <button @click="editUser(user)">Edit</button>
-            <button @click="deleteUser(user.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <GridTable :users="recentUsers" @editUser="editUser" @deleteUser="deleteUser" />
 
     <!-- Histogram showing users created per day -->
     <Histogram :users="users" />
@@ -56,12 +39,14 @@
 
 <script>
 import { toastController } from '@ionic/vue';
-import Histogram from './Histogram.vue'; // Import the Histogram component
+import Histogram from './Histogram.vue';
+import GridTable from './GridTable.vue'; // Import GridTable component
 
 export default {
   name: 'UserManager',
   components: {
     Histogram, // Register the Histogram component
+    GridTable, // Register the GridTable component
   },
   data() {
     return {
@@ -106,27 +91,36 @@ export default {
     async submitUser() {
       try {
         let response;
-        const userPayload = {
-          user: {
-            username: this.formData.username,
-            email: this.formData.email,
-            password: this.formData.password,
-            role: this.formData.role,
-          },
-        };
 
         if (this.editingUser) {
-          // Update user
+          // Update user without password
+          const userUpdate = {
+            user: {
+              username: this.formData.username,
+              email: this.formData.email,
+              role: this.formData.role,
+            },
+          };
+
           response = await fetch(`${process.env.VUE_APP_API_URL}/users/${this.editingUser.id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            body: JSON.stringify(userPayload),
+            body: JSON.stringify(userUpdate),
           });
         } else {
           // Create new user
+          const userPayload = {
+            user: {
+              username: this.formData.username,
+              email: this.formData.email,
+              password: this.formData.password,
+              role: this.formData.role,
+            },
+          };
+
           response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
             method: 'POST',
             headers: {
@@ -163,7 +157,7 @@ export default {
     // Edit an existing user
     editUser(user) {
       this.editingUser = user;
-      this.formData = { ...user, password: '' };
+      this.formData = { ...user, password: '' }; // Exclude password on edit
     },
 
     // Delete a user
@@ -187,7 +181,7 @@ export default {
       }
     },
 
-    // Affiche un toast
+    // Show a toast message
     async showToast(message, color) {
       const toast = await toastController.create({
         message,
@@ -221,43 +215,5 @@ export default {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
-}
-
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 30px;
-}
-
-.user-table th,
-.user-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.user-table th {
-  background-color: #f2f2f2;
-}
-
-button {
-  background-color: white;
-  color: black;
-  border-radius: 10em;
-  font-size: 15px;
-  padding: 0.5em 1em;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  border: 1px solid black;
-  box-shadow: 0 0 0 0 black;
-}
-
-button:hover {
-  transform: translateY(-2px) translateX(-1px);
-  box-shadow: 2px 4px 0 0 black;
-}
-
-button:active {
-  transform: translateY(2px) translateX(1px);
-  box-shadow: 0 0 0 0 black;
 }
 </style>
