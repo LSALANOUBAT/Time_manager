@@ -27,9 +27,10 @@ defmodule TimeManager.Accounts do
   # Update a user
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
+
 
   # Delete a user
   def delete_user(%User{} = user) do
@@ -82,6 +83,13 @@ defmodule TimeManager.Accounts do
   # Delete a workingtime
   def delete_workingtime(%Workingtime{} = workingtime) do
     Repo.delete(workingtime)
+  end
+
+    # Function to update only the password
+  def update_user_password(%User{} = user, %{"password" => password}) do
+    user
+    |> User.password_changeset(%{"password" => password})
+    |> Repo.update()
   end
 
   # List workingtimes for a user within a given time range
