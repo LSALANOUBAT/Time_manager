@@ -1,8 +1,8 @@
 const { defineConfig } = require('@vue/cli-service');
+const TARGET=process.env.VUE_APP_API_TARGET;
 
 module.exports = defineConfig({
   transpileDependencies: true,
-
   // Development server configuration
   devServer: {
     webSocketServer: false,
@@ -18,7 +18,7 @@ module.exports = defineConfig({
     proxy: {
       // Proxy pour les appels API normaux
       '/api': {
-        target: 'https://web.orbesle.fr',  // Proxy vers ton backend API
+        target: TARGET,  // Proxy vers ton backend API
         changeOrigin: true,
         secure: false,
         ws: false  // Ajuste selon la configuration SSL de ton serveur
