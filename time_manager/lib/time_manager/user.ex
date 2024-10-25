@@ -10,6 +10,7 @@ defmodule TimeManager.User do
     field :email, :string
     field :hashed_password, :string
     field :role, :string, default: "employee"
+    field :hours_per_day, :integer, default: 8
     field :password, :string, virtual: true
 
     belongs_to :team, TimeManager.Team, foreign_key: :team_id  # Team association
