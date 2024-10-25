@@ -7,7 +7,7 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManagerWeb.Plugs.AdminOrManager
   alias TimeManagerWeb.Plugs.Admin  # Make sure you reference the plug here
 
-  plug AdminOrManager when action in [:create]
+  plug Admin when action in [:create]
   plug Admin when action in [:delete]
   plug Admin when action in [:update]
 

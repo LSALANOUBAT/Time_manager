@@ -3,7 +3,7 @@ defmodule TimeManager.Repo.Migrations.AddHoursPerWeek do
 
   def change do
     alter table(:users) do
-      add :hours_per_day, :integer, default: 8
+      add :hours_per_day, :float, default: 8.0
     end
   end
 end

@@ -50,30 +50,32 @@ defmodule TimeManagerWeb.Router do
       pipe_through :admin
     end
 
-    post "/users", UserController, :create, plug: AdminOrManager
+    post "/users", UserController, :create, plug: Admin
     delete "/users/:id", UserController, :delete, plug: Admin
     put "/users/:id", UserController, :update, plug: Admin
     put "/update_password", PasswordController, :update_password
 
     # Routes for working times
     scope "/workingtime" do
-      get "/", WorkingtimeController, :all, plug: AdminOrManager # Get all working times
-      get "/:userID", WorkingtimeController, :index, plug: AdminOrManager # List working times for a specific user
-      get "/:userID/:id", WorkingtimeController, :show, plug: AdminOrManager # Show specific working time entry for a user
-      post "/:userID", WorkingtimeController, :create, plug: AdminOrManager # Create a new working time for a user
-      put "/:id", WorkingtimeController, :update, plug: AdminOrManager # Update a specific working time entry
-      delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only)
-      post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required)
-      post "/:userID/clock_out", WorkingtimeController, :clock_out # Clock out for a user (no specific role required)
+      get "/", WorkingtimeController, :all, plug: Admin # Get all working times OK
+      get "/:userID", WorkingtimeController, :index # List working times for a specific user OK
+      get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK
+      post "/:userID", WorkingtimeController, :create, plug: Admin # Create a new working time for a user OK
+      put "/:id", WorkingtimeController, :update, plug: Admin # Update a specific working time entry OK
+      delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only) OK
+      post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required) OK
+      post "/:userID/clock_out", WorkingtimeController, :clock_out # Clock out for a user (no specific role required) OK
     end
 
-    # Admin routes for t
-    get "/teams/", AdminTeamController, :index
-    post "/teams/", AdminTeamController, :create
-    put "/teams/:id", AdminTeamController, :update
-    delete "/teams/:id", AdminTeamController, :delete
-    post "/teams/:team_id/assign_manager/:id", AdminTeamController, :assign_manager
-    post "/teams/:team_id/add_user/:id", AdminTeamController, :add_user
+    # Routes for teams
+    scope "/teams" do
+      get "", AdminTeamController, :all, plug: Admin #OK
+      post "", AdminTeamController, :create, plug: Admin #OK
+      put "/:id", AdminTeamController, :update_name, plug: Admin #OK
+      delete "/:id", AdminTeamController, :delete, plug: Admin #OK
+      put "/:team_id/assign_manager/:id", AdminTeamController, :assign_manager, plug: Admin #OK
+      put "/:team_id/add_employee/:id", AdminTeamController, :add_employee, plug: AdminorManager #
+    end
   end
 
   # Development routes

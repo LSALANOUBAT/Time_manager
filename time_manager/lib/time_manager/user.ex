@@ -2,7 +2,7 @@ defmodule TimeManager.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :username, :email, :role, :team_id, :inserted_at, :updated_at]}
+  @derive {Jason.Encoder, only: [:id, :username, :email, :role, :inserted_at, :updated_at]}
   @roles ~w(employee manager admin)
 
   schema "users" do
@@ -10,10 +10,8 @@ defmodule TimeManager.User do
     field :email, :string
     field :hashed_password, :string
     field :role, :string, default: "employee"
-    field :hours_per_day, :integer, default: 8
+    field :hours_per_day, :float, default: 8.0
     field :password, :string, virtual: true
-
-    belongs_to :team, TimeManager.Team, foreign_key: :team_id  # Team association
 
     timestamps(type: :utc_datetime)
   end
@@ -21,23 +19,21 @@ defmodule TimeManager.User do
   # Changeset for user creation (requires password)
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password, :role, :team_id])
+    |> cast(attrs, [:username, :email, :password, :role])
     |> validate_required([:username, :email, :password])
     |> validate_length(:password, min: 6)
     |> validate_inclusion(:role, @roles)
     |> unique_constraint(:email)
-    |> assoc_constraint(:team)
     |> put_password_hash()
   end
 
   # Changeset for user updates (password is optional)
   def update_changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :role, :team_id])
-    |> validate_required([:username, :email, :role])  # Password is not required here
+    |> cast(attrs, [:username, :email, :role])
+    |> validate_required([:username, :email, :role])
     |> validate_inclusion(:role, @roles)
     |> unique_constraint(:email)
-    |> assoc_constraint(:team)
     |> maybe_put_password_hash(attrs)
   end
 
