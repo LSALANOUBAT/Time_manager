@@ -57,15 +57,24 @@ defmodule TimeManagerWeb.Router do
     post "/users", UserController, :create, plug: AdminOrManager
     delete "/users/:id", UserController, :delete, plug: Admin
     put "/users/:id", UserController, :update, plug: Admin
-    # Routes for working times
-    get "/workingtime/:userID", WorkingtimeController, :index
-    get "/workingtime/:userID/:id", WorkingtimeController, :show
-    post "/workingtime/:userID", WorkingtimeController, :create
-    put "/workingtime/:id", WorkingtimeController, :update, plug: AdminOrManager
-    delete "/workingtime/:id", WorkingtimeController, :delete
     put "/update_password", PasswordController, :update_password
-    post "/workingtime/:userID/clock_in", WorkingtimeController, :clock_in
-    post "/workingtime/:userID/clock_out", WorkingtimeController, :clock_out
+
+    # Routes for working times
+    get "/workingtime/:userID", WorkingtimeController, :index # TO CHECK
+    get "/workingtime/:userID/:id", WorkingtimeController, :show # TO CHECK
+    post "/workingtime/:userID", WorkingtimeController, :create # TO CHECK
+    put "/workingtime/:id", WorkingtimeController, :update, plug: AdminOrManager # TO CHECK
+    delete "/workingtime/:id", WorkingtimeController, :delete # TO CHECK
+    post "/workingtime/:userID/clock_in", WorkingtimeController, :clock_in # CHECKED
+    post "/workingtime/:userID/clock_out", WorkingtimeController, :clock_out # CHECKED
+
+
+    get "/admin/teams", AdminTeamController, :index, plug: Admin # TO CHECK
+    post "/admin/teams", AdminTeamController, :create, plug: Admin # TO CHECK
+    put "/admin/teams/:id", AdminTeamController, :update, plug: Admin # TO CHECK
+    delete "/admin/teams/:id", AdminTeamController, :delete, plug: Admin # TO CHECK
+    post "/admin/teams/:team_id/assign_manager/:id", AdminTeamController, :assign_manager, plug: Admin # TO CHECK
+    post "/admin/teams/:team_id/add_user/:id", AdminTeamController, :add_user, plug: Admin # TO CHECK
   end
 
   # Development routes
