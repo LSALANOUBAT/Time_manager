@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 
 
-    mix run priv/repo/seeds.exs
+mix run priv/repo/seeds.exs

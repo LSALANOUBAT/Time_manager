@@ -29,30 +29,26 @@ defmodule TimeManagerWeb.Router do
   pipeline :admin do
     plug TimeManagerWeb.Plugs.Admin  # Authorization plug for admin
   end
+
   # Routes accessible via the browser
   scope "/", TimeManagerWeb do
     pipe_through :browser
-
-    # Define the root route
     get "/", PageController, :index
   end
 
   # Public API routes (without authentication)
   scope "/api", TimeManagerWeb do
     pipe_through :api
-
-    # Route for login (generates a JWT)
     post "/sign_in", AuthController, :sign_in
-
-    # User management routes (only index and show for unauthenticated users)
-
   end
-
 
   # Additional routes for authenticated users (working times, etc.)
   scope "/api", TimeManagerWeb do
-    pipe_through [:api, :auth]  # Routes that require authentication
-    resources "/users", UserController, only: [:index, :show], plug: Admin
+    pipe_through [:api, :auth]
+
+    resources "/users", UserController, only: [:index, :show] do
+      pipe_through :admin
+    end
 
     post "/users", UserController, :create, plug: AdminOrManager
     delete "/users/:id", UserController, :delete, plug: Admin
@@ -60,21 +56,24 @@ defmodule TimeManagerWeb.Router do
     put "/update_password", PasswordController, :update_password
 
     # Routes for working times
-    get "/workingtime/:userID", WorkingtimeController, :index # TO CHECK
-    get "/workingtime/:userID/:id", WorkingtimeController, :show # TO CHECK
-    post "/workingtime/:userID", WorkingtimeController, :create # TO CHECK
-    put "/workingtime/:id", WorkingtimeController, :update, plug: AdminOrManager # TO CHECK
-    delete "/workingtime/:id", WorkingtimeController, :delete # TO CHECK
-    post "/workingtime/:userID/clock_in", WorkingtimeController, :clock_in # CHECKED
-    post "/workingtime/:userID/clock_out", WorkingtimeController, :clock_out # CHECKED
+    scope "/workingtime" do
+      get "/", WorkingtimeController, :all, plug: AdminOrManager # Get all working times
+      get "/:userID", WorkingtimeController, :index, plug: AdminOrManager # List working times for a specific user
+      get "/:userID/:id", WorkingtimeController, :show, plug: AdminOrManager # Show specific working time entry for a user
+      post "/:userID", WorkingtimeController, :create, plug: AdminOrManager # Create a new working time for a user
+      put "/:id", WorkingtimeController, :update, plug: AdminOrManager # Update a specific working time entry
+      delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only)
+      post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required)
+      post "/:userID/clock_out", WorkingtimeController, :clock_out # Clock out for a user (no specific role required)
+    end
 
-
-    get "/admin/teams", AdminTeamController, :index, plug: Admin # TO CHECK
-    post "/admin/teams", AdminTeamController, :create, plug: Admin # TO CHECK
-    put "/admin/teams/:id", AdminTeamController, :update, plug: Admin # TO CHECK
-    delete "/admin/teams/:id", AdminTeamController, :delete, plug: Admin # TO CHECK
-    post "/admin/teams/:team_id/assign_manager/:id", AdminTeamController, :assign_manager, plug: Admin # TO CHECK
-    post "/admin/teams/:team_id/add_user/:id", AdminTeamController, :add_user, plug: Admin # TO CHECK
+    # Admin routes for t
+    get "/teams/", AdminTeamController, :index
+    post "/teams/", AdminTeamController, :create
+    put "/teams/:id", AdminTeamController, :update
+    delete "/teams/:id", AdminTeamController, :delete
+    post "/teams/:team_id/assign_manager/:id", AdminTeamController, :assign_manager
+    post "/teams/:team_id/add_user/:id", AdminTeamController, :add_user
   end
 
   # Development routes
@@ -83,7 +82,6 @@ defmodule TimeManagerWeb.Router do
 
     scope "/dev" do
       pipe_through :browser
-
       live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end

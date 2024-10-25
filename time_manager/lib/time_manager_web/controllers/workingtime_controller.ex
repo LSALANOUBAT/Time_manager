@@ -4,6 +4,11 @@ defmodule TimeManagerWeb.WorkingtimeController do
   alias TimeManager.Workingtime
   import Ecto.Query
 
+
+  def all(conn, _params) do
+    workingtimes = Repo.all(Workingtime)
+    json(conn, workingtimes)
+  end
   # Fetch working times for a user, with optional start and end time filters
   def index(conn, %{"userID" => user_id} = params) do
     # Handle optional start and end parameters

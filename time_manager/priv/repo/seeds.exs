@@ -100,9 +100,20 @@ admin_user = insert_user.(admin_user_params, "Admin user")
 manager_user = insert_user.(manager_user_params, "Manager user")
 employee_user = insert_user.(employee_user_params, "Employee user")
 
-# Insert team and associate manager and employee
 engineering_team = insert_team.(team_params, manager_user, employee_user)
 
+# Update manager and employee to associate with the Engineering team
+if engineering_team do
+  # Assign the Engineering team to both manager and employee
+  [manager_user, employee_user]
+  |> Enum.each(fn user ->
+    user
+    |> Ecto.Changeset.change(team_id: engineering_team.id)
+    |> Repo.update!()
+  end)
+
+  IO.puts("Manager and Employee assigned to Engineering team successfully.")
+end
 # Insert working times for the employee
 insert_working_time.(working_times_params_full, employee_user, "Working Time Full")
 insert_working_time.(working_times_params_less, employee_user, "Working Time Less")
