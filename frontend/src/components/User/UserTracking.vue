@@ -2,6 +2,12 @@
   <div class="user-tracking">
     <h2>Your Working Time Dashboard</h2>
 
+    <!-- Clock In/Out Component -->
+    <ClockInOut
+        :userId="user.id"
+        :token="token"
+        @session-updated="fetchUserDetails"
+    />
     <!-- Summary Metrics Section -->
     <div v-if="totalHours !== null" class="summary">
       <h3>Total Hours This Month: {{ totalHours }} hours</h3>
@@ -33,22 +39,23 @@
         </li>
       </ul>
     </section>
-
-    <!-- Calendar Manager (if you have one) -->
-    <!-- <calendar-manager :selected-user-id="user.id" /> -->
-
   </div>
 </template>
 
 <script>
 import { Chart, registerables } from 'chart.js';
+import ClockInOut from './ClockInOut.vue'; // Adjust path if needed
 Chart.register(...registerables);
 
 export default {
   name: 'UserTracking',
+  components: {
+    ClockInOut,
+  },
   data() {
     return {
       user: {},
+      token: localStorage.getItem('token'),
       workingTimes: [],
       totalHours: null,
       overtimeHours: null,
