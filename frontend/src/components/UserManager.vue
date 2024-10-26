@@ -9,12 +9,12 @@
       <input v-model="formData.username" placeholder="Username" required />
       <input v-model="formData.email" type="email" placeholder="Email" required />
       <input
-        v-if="!editingUser"
-        v-model="formData.password"
-        type="password"
-        placeholder="Password"
-        required
-        minlength="6"
+          v-if="!editingUser"
+          v-model="formData.password"
+          type="password"
+          placeholder="Password"
+          required
+          minlength="6"
       />
 
       <!-- Dropdown for role selection -->
@@ -83,8 +83,8 @@ export default {
     // Filter and display only the 5 most recently created or updated users
     updateRecentUsers() {
       this.recentUsers = this.users
-        .sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
-        .slice(0, 5);
+          .sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
+          .slice(0, 5);
     },
 
     // Add or update a user
@@ -160,7 +160,8 @@ export default {
     },
 
     // Method to select a user for editing
-    editUser(user) {
+    editUser(userId) {
+      const user = this.users.find((u) => u.id === userId);
       this.editingUser = user; // Set the editing user
       // Populate the form with the selected user's data (except password)
       this.formData = {

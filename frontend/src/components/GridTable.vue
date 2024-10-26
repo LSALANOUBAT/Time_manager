@@ -42,14 +42,14 @@ export default {
           {
             name: "Actions",
             formatter: (cell, row) => {
-              return h("div", { className: "action-buttons" }, [
+              return h("div", {className: "action-buttons"}, [
                 h("button", {
                   className: "btn btn-primary edit-button",
-                  onClick: () => this.$emit("editUser", row.cells[0].data), // Pass user ID for editing
+                  onClick: () => this.$emit("editUser", row._cells[0].data), // Pass user data for editing
                 }, "Edit"),
                 h("button", {
                   className: "btn btn-danger delete-button",
-                  onClick: () => this.$emit("deleteUser", row.cells[0].data), // Pass user ID for deletion
+                  onClick: () => this.$emit("deleteUser", row._cells[0].data), // Pass user ID for deletion
                 }, "Delete"),
               ]);
             },
