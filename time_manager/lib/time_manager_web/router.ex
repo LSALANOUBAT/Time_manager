@@ -86,6 +86,11 @@ defmodule TimeManagerWeb.Router do
       delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: Manager #OK
       get "/", TeamMembersController, :get_team_members, plug: Manager #OK
     end
+
+    scope "/metrics" do
+      get "/overtime_ratios", MetricsController, :overtime_ratio, plug: Manager
+      get "/night_ratios", MetricsController, :night_ratio, plug: Manager
+    end
   end
 
   # Development routes
