@@ -65,6 +65,27 @@ defmodule TimeManagerWeb.TeamController do
     end
   end
 
+  def delete(conn, %{"id" => id}) do
+    team = Repo.get(Team, id)
+    case team do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{message: "Team not found"})
+      team ->
+        case Repo.delete(team) do
+          {:ok, _deleted_team} ->
+            conn
+            |> put_status(:ok)
+            |> json(%{message: "Team successfully deleted"})
+          {:error, _changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{message: "Failed to delete team"})
+        end
+    end
+  end
+
   # Delete a team
   def assign_manager(conn, %{"team_id" => team_id, "id" => new_manager_id}) do
     team_id = String.to_integer(team_id)
@@ -125,14 +146,14 @@ defmodule TimeManagerWeb.TeamController do
               {:ok, _updated_team} ->
                 conn
                 |> put_status(:ok)
-                |> json(%{status: "success", message: "Manager successfully updated for the team"})
+                |> json(%{status: "success", message: "Manager successfully assigned to the team as both manager and team member"})
 
               {:error, changeset} ->
                 errors = format_changeset_errors(changeset)
 
                 conn
                 |> put_status(:conflict)
-                |> json(%{status: "error", message: "Failed to update manager assignment", errors: errors})
+                |> json(%{status: "error", message: "Manager has already a team", errors: errors})
             end
 
           _user ->
