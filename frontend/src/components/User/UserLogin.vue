@@ -6,12 +6,6 @@
       <input v-model="password" class="input" type="password" placeholder="Password" required />
       <button type="submit" class="btn">Login</button>
 
-      <!-- Button to navigate to the register page -->
-      <div class="register-link">
-        <p>Don't have an account?
-          <button @click="goToRegister">Register here</button>
-        </p>
-      </div>
     </form>
   </div>
 </template>
