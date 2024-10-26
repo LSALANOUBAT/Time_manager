@@ -14,9 +14,6 @@
     <user-manager v-if="user.role === 'admin'" />
     <team-manager v-if="user.role === 'admin'" :user-role="user.role" />
 
-    <!-- TeamTracker component for managers only -->
-
-
     <!-- Error message if the user is not authorized -->
     <div v-if="user.role === 'admin' && errorMessage">
       <p class="error">{{ errorMessage }}</p>
@@ -25,6 +22,7 @@
     <!-- User Tracking for Employees and Managers -->
     <user-tracking v-if="['employee', 'manager'].includes(user.role)" :is-manager="user.role === 'manager'" />
     <team-tracker v-if="user.role === 'manager'" />
+
     <!-- Display WorkingTimesGrid only for admin users -->
     <working-times-grid v-if="user.role === 'admin'" :working-times="workingTimes" @removeWorkingTime="removeWorkingTime" />
   </div>
@@ -36,7 +34,7 @@ import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
 import WorkingTimesGrid from './WorkingTimesGrid.vue';
-import TeamTracker from './Team/TeamTracker.vue';  // Import the TeamTracker component
+import TeamTracker from './Team/TeamTracker.vue';
 import HamburgerMenu from './HamburgerMenu.vue';
 import ModifyPasswordButton from './ModifyPasswordButton.vue';
 
@@ -48,7 +46,7 @@ export default {
     UserManager,
     TeamManager,
     WorkingTimesGrid,
-    TeamTracker, // Register the TeamTracker component
+    TeamTracker,
     HamburgerMenu,
     UserTracking,
     ModifyPasswordButton,
@@ -58,14 +56,15 @@ export default {
     return {
       user: {},
       errorMessage: '',
-      hasActiveSession: false,
       workingTimes: [],
     };
   },
+
   methods: {
     async fetchUserRole() {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+      console.log("Fetching user role...");
 
       try {
         const userResponse = await fetch(`${apiUrl}/users/${userId}`, {
@@ -78,29 +77,36 @@ export default {
 
         const userData = await userResponse.json();
         this.user = userData;
+        console.log("User data:", this.user);
+
+        if (this.user.role === 'admin') {
+          await this.fetchAllWorkingTimes();
+        }
       } catch (error) {
+        console.error("Error fetching user role:", error);
         this.showToast('Error fetching user data: ' + error.message, 'danger');
       }
     },
 
     async fetchAllWorkingTimes() {
       const token = localStorage.getItem('token');
+      console.log("Fetching all working times...");
 
       try {
         const response = await fetch(`${apiUrl}/workingtime`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) throw new Error('Failed to fetch all working times');
+        if (!response.ok) {
+          throw new Error('Failed to fetch all working times');
+        }
 
         this.workingTimes = await response.json();
+        console.log("Working times data:", this.workingTimes);
       } catch (error) {
+        console.error("Error fetching working times:", error);
         this.showToast('Error fetching working times: ' + error.message, 'danger');
       }
-    },
-
-    refreshWorkingTimes() {
-      this.fetchWorkingTimes();
     },
 
     async showToast(message, color) {
@@ -112,14 +118,10 @@ export default {
       });
       return toast.present();
     },
-
-    formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleString();
-    },
   },
-  mounted() {
-    this.fetchUserRole();
+
+  async mounted() {
+    await this.fetchUserRole();
   },
 };
 </script>
@@ -146,25 +148,6 @@ export default {
   margin-bottom: 30px;
 }
 
-.clock-section {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.clock-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.message {
-  margin-top: 10px;
-}
-
-.success {
-  color: green;
-}
-
 .error {
   color: red;
 }
@@ -179,15 +162,6 @@ export default {
 @media (max-width: 768px) {
   .dashboard {
     padding: 10px;
-  }
-
-  h2 {
-    font-size: 1.5em;
-  }
-
-  .clock-buttons {
-    flex-direction: column;
-    gap: 10px;
   }
 }
 

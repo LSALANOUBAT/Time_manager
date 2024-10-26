@@ -7,39 +7,20 @@
     <h3>Team Members</h3>
     <ul class="member-list">
       <li v-for="member in teamMembers" :key="member.id">
-        {{ member.username }} ({{ member.role }})
+        ID: {{ member.user_id }} - {{ member.username }} ({{ member.role }})
+        <button @click="editMember(member)" class="button-edit-member">Edit</button>
         <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
       </li>
     </ul>
+
     <!-- Graphs for Metrics -->
     <div class="metrics">
-      <div class="chart-container">
-        <h3>Overtime vs. Regular Hours</h3>
-        <canvas ref="overtimeChart"></canvas>
-        <p>Overtime Ratio: {{ (overtimeData.overtime_ratio * 100).toFixed(2) }}%</p>
-      </div>
-      <div class="chart-container">
-        <h3>Night Work Ratio</h3>
-        <canvas ref="nightRatioChart"></canvas>
-        <p>Night Work Ratio: {{ (nightData.night_ratio * 100).toFixed(2) }}%</p>
-      </div>
-      <div class="chart-container">
-        <h3>Undertime vs. On-Time Ratio</h3>
-        <canvas ref="undertimeChart"></canvas>
-        <p>Undertime Ratio: {{ (undertimeData.undertime_ratio * 100).toFixed(2) }}%</p>
-      </div>
-      <div class="chart-container">
-        <h3>Daily Working Times</h3>
-        <canvas ref="dailyWorkingTimeChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Hours Worked per Day</h3>
-        <canvas ref="hoursPerDayChart"></canvas>
+      <div class="chart-container" v-for="(chart, index) in chartConfigs" :key="index">
+        <h3>{{ chart.title }}</h3>
+        <canvas :ref="chart.ref"></canvas>
+        <p v-if="chart.ratio"> {{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
       </div>
     </div>
-
-    <!-- List of team members -->
-
   </div>
 </template>
 
@@ -57,12 +38,26 @@ export default {
       nightData: {},
       undertimeData: {},
       dailyWorkingTimes: [],
-      hoursPerWorkingTime: []
+      hoursPerWorkingTime: [],
+      chartConfigs: [
+        { title: 'Overtime vs. Regular Hours', ref: 'overtimeChart', label: 'Overtime Ratio', ratio: null },
+        { title: 'Night Work Ratio', ref: 'nightRatioChart', label: 'Night Work Ratio', ratio: null },
+        { title: 'Undertime vs. On-Time Ratio', ref: 'undertimeChart', label: 'Undertime Ratio', ratio: null },
+        { title: 'Daily Working Times', ref: 'dailyWorkingTimeChart' },
+        { title: 'Hours Worked per Day', ref: 'hoursPerDayChart' },
+      ],
     };
   },
   methods: {
+    editMember(member) {
+      console.log("Editing member:", member); // Log to verify the member details are passed
+      // Emit the event to the parent with member data, or set up your own editing UI logic here
+      this.$emit("editMember", member); // To handle in parent component
+    },
+
     async fetchMetrics() {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      console.log("Fetching metrics data...");
 
       try {
         const [overtimeResponse, nightResponse, undertimeResponse, dailyWorkingResponse, hoursPerDayResponse] = await Promise.all([
@@ -73,110 +68,74 @@ export default {
           fetch(`${process.env.VUE_APP_API_URL}/metrics/users_hours_per_working_time`, { headers })
         ]);
 
-        if (overtimeResponse.ok) this.overtimeData = await overtimeResponse.json();
-        if (nightResponse.ok) this.nightData = await nightResponse.json();
-        if (undertimeResponse.ok) this.undertimeData = await undertimeResponse.json();
-        if (dailyWorkingResponse.ok) this.dailyWorkingTimes = (await dailyWorkingResponse.json()).daily_working_times;
-        if (hoursPerDayResponse.ok) this.hoursPerWorkingTime = await hoursPerDayResponse.json();
+        this.overtimeData = overtimeResponse.ok ? await overtimeResponse.json() : {};
+        this.nightData = nightResponse.ok ? await nightResponse.json() : {};
+        this.undertimeData = undertimeResponse.ok ? await undertimeResponse.json() : {};
+        this.dailyWorkingTimes = dailyWorkingResponse.ok ? (await dailyWorkingResponse.json()).daily_working_times : [];
+        this.hoursPerWorkingTime = hoursPerDayResponse.ok ? await hoursPerDayResponse.json() : [];
+
+        this.chartConfigs[0].ratio = this.overtimeData.overtime_ratio || 0;
+        this.chartConfigs[1].ratio = this.nightData.night_ratio || 0;
+        this.chartConfigs[2].ratio = this.undertimeData.undertime_ratio || 0;
 
         this.renderCharts();
       } catch (error) {
+        console.error("Error fetching metrics:", error);
         this.showToast("Error fetching metrics: " + error.message, "danger");
       }
     },
 
     async fetchTeamMembers() {
-      try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      console.log("Fetching team members...");
 
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, { headers });
         if (!response.ok) throw new Error('Failed to fetch team members');
 
         const data = await response.json();
-        console.log("Team Data:", data); // Log response to verify structure
-        this.teamMembers = data.members;
-
-        // Set teamId based on the exact structure
+        console.log("Fetched team members:", data);
+        this.teamMembers = data.members || [];
         this.teamId = data.team_id || data.team;
       } catch (error) {
+        console.error("Error fetching team members:", error);
         this.showToast("Error fetching team members: " + error.message, "danger");
       }
     },
 
     renderCharts() {
-      // Overtime vs. Regular Hours Chart
-      new Chart(this.$refs.overtimeChart, {
-        type: 'doughnut',
-        data: {
-          labels: ['Overtime', 'Regular Hours'],
-          datasets: [{
-            data: [this.overtimeData.overtime_ratio, this.overtimeData.total_ratio],
-            backgroundColor: ['#ff6347', '#36a2eb']
-          }]
-        }
-      });
+      const chartData = [
+        { ref: 'overtimeChart', data: [this.overtimeData.overtime_ratio, this.overtimeData.total_ratio], labels: ['Overtime', 'Regular Hours'] },
+        { ref: 'nightRatioChart', data: [this.nightData.night_ratio, this.nightData.total_ratio], labels: ['Night Hours', 'Day Hours'] },
+        { ref: 'undertimeChart', data: [this.undertimeData.undertime_ratio, this.undertimeData.on_time_ratio], labels: ['Undertime', 'On-Time'] },
+        { ref: 'dailyWorkingTimeChart', data: this.dailyWorkingTimes.map(item => item.count), labels: this.dailyWorkingTimes.map(item => item.date) },
+        { ref: 'hoursPerDayChart', data: this.hoursPerWorkingTime.map(item => item.hours), labels: this.hoursPerWorkingTime.map(item => item.date) },
+      ];
 
-      // Night Work Ratio Chart
-      new Chart(this.$refs.nightRatioChart, {
-        type: 'pie',
-        data: {
-          labels: ['Night Hours', 'Day Hours'],
-          datasets: [{
-            data: [this.nightData.night_ratio, this.nightData.total_ratio],
-            backgroundColor: ['#ffa500', '#4bc0c0']
-          }]
-        }
-      });
-
-      // Undertime vs. On-Time Chart
-      new Chart(this.$refs.undertimeChart, {
-        type: 'pie',
-        data: {
-          labels: ['Undertime', 'On-Time'],
-          datasets: [{
-            data: [this.undertimeData.undertime_ratio, this.undertimeData.on_time_ratio],
-            backgroundColor: ['#ffcd56', '#ff9f40']
-          }]
-        }
-      });
-
-      // Daily Working Times Chart
-      new Chart(this.$refs.dailyWorkingTimeChart, {
-        type: 'bar',
-        data: {
-          labels: this.dailyWorkingTimes.map(item => item.date),
-          datasets: [{
-            label: 'Daily Working Times',
-            data: this.dailyWorkingTimes.map(item => item.count),
-            backgroundColor: '#42a5f5'
-          }]
-        }
-      });
-
-      // Hours Worked per Day Chart
-      new Chart(this.$refs.hoursPerDayChart, {
-        type: 'line',
-        data: {
-          labels: this.hoursPerWorkingTime.map(item => item.date),
-          datasets: [{
-            label: 'Hours per Day',
-            data: this.hoursPerWorkingTime.map(item => item.hours),
-            backgroundColor: '#66bb6a'
-          }]
+      chartData.forEach((chart, index) => {
+        if (this.$refs[chart.ref]) {
+          new Chart(this.$refs[chart.ref], {
+            type: index === 3 ? 'bar' : index === 4 ? 'line' : 'pie',
+            data: {
+              labels: chart.labels,
+              datasets: [{
+                data: chart.data,
+                backgroundColor: index < 3 ? ['#ff6347', '#36a2eb'] : ['#42a5f5', '#66bb6a'],
+              }]
+            }
+          });
         }
       });
     },
 
     async deleteMember(userId) {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      console.log(`Deleting member with ID: ${userId}`);
+
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/`, {
           method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+          headers,
         });
 
         if (!response.ok) throw new Error('Failed to delete member');
@@ -184,6 +143,7 @@ export default {
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
         this.showToast("Member removed successfully!", "success");
       } catch (error) {
+        console.error("Error deleting member:", error);
         this.showToast("Error deleting member: " + error.message, "danger");
       }
     },
@@ -197,6 +157,7 @@ export default {
       return toast.present();
     }
   },
+
   mounted() {
     this.fetchTeamMembers();
     this.fetchMetrics();
@@ -236,5 +197,17 @@ export default {
 }
 .button-delete-member:hover {
   background-color: #d9452a;
+}
+.button-edit-member {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.button-edit-member:hover {
+  background-color: #388E3C;
 }
 </style>
