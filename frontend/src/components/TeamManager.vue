@@ -19,19 +19,23 @@
     <!-- Form to add a user to a team -->
     <div class="user-assignment">
       <h3>Assign User to Team</h3>
-      <select v-model="userAssignment.userId" required>
-        <option value="" disabled>Select User</option>
+      <label for="user-select">Select User:</label>
+      <select v-model="userAssignment.userId" id="user-select" required>
+        <option value="" disabled>Select User (ID shown)</option>
         <option v-for="user in users" :key="user.id" :value="user.id">
-          {{ user.username }}
+          {{ user.username }} (ID: {{ user.id }})
         </option>
       </select>
-      <select v-model="userAssignment.teamId" required>
-        <option value="" disabled>Select Team</option>
+
+      <label for="team-select">Select Team:</label>
+      <select v-model="userAssignment.teamId" id="team-select" required>
+        <option value="" disabled>Select Team (ID shown)</option>
         <option v-for="team in teams" :key="team.id" :value="team.id">
-          {{ team.name }}
+          {{ team.name }} (ID: {{ team.id }})
         </option>
       </select>
-      <button @click="assignUserToTeam">Assign User</button>
+
+      <button @click="assignUserToTeam" class="assign-button">Assign User</button>
     </div>
   </div>
 </template>
@@ -62,9 +66,7 @@ export default {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch teams');
-        }
+        if (!response.ok) throw new Error('Failed to fetch teams');
         this.teams = (await response.json()).teams;
       } catch (error) {
         this.showToast("Error fetching teams: " + error.message, "danger");
@@ -78,9 +80,7 @@ export default {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
+        if (!response.ok) throw new Error('Failed to fetch users');
         this.users = await response.json();
       } catch (error) {
         this.showToast("Error fetching users: " + error.message, "danger");
@@ -108,9 +108,7 @@ export default {
           this.fetchTeams(); // Refresh the list of teams
           this.teamData.name = "";
           this.editingTeam = null;
-        } else {
-          throw new Error("Failed to submit team");
-        }
+        } else throw new Error("Failed to submit team");
       } catch (error) {
         this.showToast("Error submitting team: " + error.message, "danger");
       }
@@ -136,9 +134,7 @@ export default {
         if (response.ok) {
           this.showToast("Team deleted successfully.", "success");
           this.fetchTeams();
-        } else {
-          throw new Error("Failed to delete team");
-        }
+        } else throw new Error("Failed to delete team");
       } catch (error) {
         this.showToast("Error deleting team: " + error.message, "danger");
       }
@@ -146,13 +142,16 @@ export default {
 
     async assignUserToTeam() {
       const { teamId, userId } = this.userAssignment;
+
+      // Log IDs before sending the request for debugging
+      console.log("Assigning User to Team with IDs:", { userId, teamId });
+
       if (!teamId || !userId) {
         this.showToast("Please select both a team and a user.", "danger");
         return;
       }
 
       try {
-        // Ensure the request is a POST as expected by the router
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/${teamId}`, {
           method: "POST",
           headers: {
@@ -166,7 +165,8 @@ export default {
           this.userAssignment.teamId = null;
           this.userAssignment.userId = null;
         } else {
-          throw new Error("Failed to assign user to team");
+          const errorData = await response.json();
+          this.showToast(`Error assigning user: ${errorData.errors.team_id.join(', ')}`, "danger");
         }
       } catch (error) {
         this.showToast("Error assigning user to team: " + error.message, "danger");
@@ -202,5 +202,21 @@ export default {
 }
 .user-assignment select {
   margin-right: 10px;
+  padding: 8px;
+  font-size: 1em;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+.assign-button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.assign-button:hover {
+  background-color: #0056b3;
 }
 </style>

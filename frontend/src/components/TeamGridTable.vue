@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { Grid, h } from "gridjs";
+import {Grid, h} from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
 
 export default {
@@ -59,7 +59,7 @@ export default {
           {
             name: "Actions",
             formatter: (cell, row) => {
-              return h("div", { className: "action-buttons" }, [
+              return h("div", {className: "action-buttons"}, [
                 h("button", {
                   className: "button button-edit",
                   onClick: () => this.$emit("editTeam", row.cells[0].data),
@@ -89,7 +89,7 @@ export default {
         search: true,
         sort: true,
         language: {
-          search: { placeholder: "Search..." },
+          search: {placeholder: "Search..."},
           pagination: {
             previous: "Previous",
             next: "Next",
@@ -101,14 +101,23 @@ export default {
     },
 
     async fetchTeamMembers(teamId, teamName) {
+      if (!teamId) {
+        console.error("Error: teamId is missing.");
+        return;
+      }
+
       this.activeTeamId = teamId;
       this.activeTeamName = teamName;
+
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members?team_id=${teamId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await fetch(
+            `${process.env.VUE_APP_API_URL}/team_members/${teamId}`, // Using teamId in URL path
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+        );
         if (!response.ok) throw new Error("Failed to fetch team members");
 
         const data = await response.json();
@@ -120,17 +129,27 @@ export default {
     },
 
     async deleteMember(memberId) {
+      if (!this.activeTeamId) {
+        console.error("Error: activeTeamId is missing for deletion.");
+        return;
+      }
+
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${memberId}/team/${this.activeTeamId}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await fetch(
+            `${process.env.VUE_APP_API_URL}/team_members/${memberId}/team/${this.activeTeamId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+        );
         if (!response.ok) throw new Error("Failed to delete member");
 
         // Remove member from local list on success
-        this.teamMembers = this.teamMembers.filter(member => member.id !== memberId);
+        this.teamMembers = this.teamMembers.filter(
+            (member) => member.id !== memberId
+        );
       } catch (error) {
         console.error("Error deleting member:", error);
       }
@@ -169,34 +188,43 @@ export default {
 
 /* Button styles */
 .button-edit {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
+
 .button-edit:hover {
-  background-color: #388E3C;
+  background-color: #388e3c;
 }
+
 .button-delete {
-  background-color: #F44336;
+  background-color: #f44336;
 }
+
 .button-delete:hover {
-  background-color: #D32F2F;
+  background-color: #d32f2f;
 }
+
 .button-view-members {
-  background-color: #007BFF;
+  background-color: #007bff;
 }
+
 .button-view-members:hover {
   background-color: #0056b3;
 }
+
 .button-delete-member {
-  background-color: #FF6347;
+  background-color: #ff6347;
   margin-left: 10px;
 }
+
 .button-delete-member:hover {
   background-color: #d9452a;
 }
+
 .button-close {
   margin-top: 15px;
   background-color: #6c757d;
 }
+
 .button-close:hover {
   background-color: #5a6268;
 }
@@ -213,6 +241,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .modal-content {
   background: white;
   padding: 20px;
@@ -220,10 +249,12 @@ export default {
   max-width: 500px;
   width: 90%;
 }
+
 .member-list {
   list-style-type: none;
   padding: 0;
 }
+
 .member-list li {
   margin: 10px 0;
   display: flex;
