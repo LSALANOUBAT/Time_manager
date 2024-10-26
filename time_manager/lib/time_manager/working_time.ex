@@ -1,10 +1,10 @@
 defmodule TimeManager.Workingtime do
   use Ecto.Schema
   import Ecto.Changeset
-  alias TimeManager.Repo
   import Ecto.Query
+  alias TimeManager.{Repo, User}
 
-  @derive {Jason.Encoder, only: [:id, :start, :end, :night_time, :user_id, :hours_worked, :overtime, :overtime_hours, :night_hours]}
+  @derive {Jason.Encoder, only: [:id, :start, :end, :night_time, :user_id, :hours_worked, :overtime, :overtime_hours, :night_hours, :undertime]}
 
   schema "workingtimes" do
     field :start, :utc_datetime
@@ -14,6 +14,7 @@ defmodule TimeManager.Workingtime do
     field :overtime, :boolean, default: false
     field :overtime_hours, :float
     field :night_hours, :float
+    field :undertime, :boolean, default: false
 
     belongs_to :user, TimeManager.User
     timestamps(type: :utc_datetime)
@@ -34,21 +35,36 @@ defmodule TimeManager.Workingtime do
   defp calculate_hours_worked(changeset) do
     case {get_field(changeset, :start), get_field(changeset, :end)} do
       {start, end_time} when not is_nil(start) and not is_nil(end_time) ->
+        # Calculate hours worked based on start and end times
         hours = DateTime.diff(end_time, start) / 3600
         changeset = put_change(changeset, :hours_worked, hours)
 
-        if hours > get_user_hours_per_day(changeset) do
-          put_change(changeset, :overtime, true)
+        # Get the user's defined hours per day
+        hours_per_day = get_user_hours_per_day(changeset)
+
+        # Set overtime and undertime based on hours worked
+        changeset =
+          if hours > hours_per_day do
+            put_change(changeset, :overtime, true)
+          else
+            put_change(changeset, :overtime, false)
+          end
+
+        if hours < hours_per_day do
+          put_change(changeset, :undertime, true)
         else
-          put_change(changeset, :overtime, false)
+          put_change(changeset, :undertime, false)
         end
 
+      # If start or end is missing, set default values for hours_worked, overtime, and undertime
       _ ->
         changeset
         |> put_change(:hours_worked, nil)
         |> put_change(:overtime, false)
+        |> put_change(:undertime, false)
     end
   end
+
 
   # Set night_time to true if start or end is after 9 PM
   defp calculate_night_time(changeset) do
@@ -148,4 +164,6 @@ defmodule TimeManager.Workingtime do
         put_change(changeset, :night_hours, 0.0)
     end
   end
+
+
 end

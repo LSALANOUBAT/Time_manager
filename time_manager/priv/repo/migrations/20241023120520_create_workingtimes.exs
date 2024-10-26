@@ -11,8 +11,9 @@ defmodule TimeManager.Repo.Migrations.CreateWorkingtimes do
       add :night_time, :boolean, default: false
       add :overtime_hours, :float
       add :night_hours, :float
-
+      add :undertime, :boolean, default: false
       timestamps(type: :utc_datetime)
+
     end
 
     create index(:workingtimes, [:user_id])
