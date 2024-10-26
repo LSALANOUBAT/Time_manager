@@ -85,6 +85,40 @@ defmodule TimeManagerWeb.TeamMembersController do
     end
   end
 
+
+  def delete_team_member_admin(conn, %{"team_id" => team_id, "id" => employee_id}) do
+    team_id = String.to_integer(team_id)
+    employee_id = String.to_integer(employee_id)
+
+    # Check if the employee is a member of the given team
+    case Repo.get_by(TeamMembers, team_id: team_id, employee_id: employee_id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{status: "error", message: "Team member not found in the specified team"})
+
+      %TeamMembers{} = team_member ->
+        # Retrieve the user's role to ensure only employees can be deleted
+        case Repo.get(User, employee_id) do
+          %User{role: "employee"} ->
+            Repo.delete!(team_member)
+            conn
+            |> put_status(:ok)
+            |> json(%{status: "success", message: "Team member successfully deleted"})
+
+          %User{role: "manager"} ->
+            conn
+            |> put_status(:forbidden)
+            |> json(%{status: "error", message: "Cannot delete a manager from the team, delete the team instead"})
+
+          nil ->
+            conn
+            |> put_status(:not_found)
+            |> json(%{status: "error", message: "User not found"})
+        end
+    end
+  end
+
   # Get all members of a team
   def get_team_members_token(conn, _params) do
     team_id = conn.assigns[:team_id]
