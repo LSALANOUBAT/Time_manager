@@ -82,10 +82,11 @@ defmodule TimeManagerWeb.Router do
     end
 
     scope "/team_members" do #OK
-      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminOrManager #OK
+      post "/:id/team/", TeamMembersController, :add_employee, plug: AdminOrManager #OK
       delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminOrManager #OK
       get "/", TeamMembersController, :get_team_members_token, plug: AdminOrManager #OK
       get "/:team_id", TeamMembersController, :get_team_members_id, plug: AdminOrManager #OK
+      post "/:id/team/:team_id", TeamMembersController, :add_employee_admin, plug: AdminOrManager #OK
     end
 
     scope "/metrics" do

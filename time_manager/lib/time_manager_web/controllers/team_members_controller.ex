@@ -131,4 +131,38 @@ defmodule TimeManagerWeb.TeamMembersController do
         |> json(%{status: "success", team: team.name, members: members})
     end
   end
+  def add_employee_admin(conn, %{"id" => employee_id, "team_id" => team_id}) do
+    team_id = String.to_integer(team_id)
+    employee_id = String.to_integer(employee_id)
+
+    case Repo.get(User, employee_id) do
+      %User{role: "employee"} = employee ->
+        changeset = TeamMembers.changeset(%TeamMembers{}, %{team_id: team_id, employee_id: employee.id})
+
+        case Repo.insert(changeset) do
+          {:ok, _team_member} ->
+            conn
+            |> put_status(:created)
+            |> json(%{message: "Team member successfully added"})
+
+          {:error, %Ecto.Changeset{errors: [employee_id: {"Employee is already assigned to another team", _}]}} ->
+            conn
+            |> put_status(:conflict)
+            |> json(%{status: "error", message: "This employee is already assigned to another team"})
+
+          {:error, changeset} ->
+            errors = format_changeset_errors(changeset)
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{status: "error", errors: errors})
+        end
+
+      _ ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{status: "error", message: "Only employees can be added to the team"})
+    end
+  end
+
+
 end
