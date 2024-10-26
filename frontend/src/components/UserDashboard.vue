@@ -29,10 +29,10 @@
 import UserTracking from './User/UserTracking.vue';
 import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
-import TeamManager from './TeamManager.vue';
-import WorkingTimesGrid from './WorkingTimesGrid.vue';
+import TeamManager from './Team/TeamManager.vue';
+import WorkingTimesGrid from './WorkingTime/WorkingTimesGrid.vue';
 import TeamTracker from './Team/TeamTracker.vue';
-import HamburgerMenu from './HamburgerMenu.vue';
+import HamburgerMenu from './element/HamburgerMenu.vue';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 

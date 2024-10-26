@@ -3,25 +3,25 @@
     <input class="checkbox" type="checkbox" v-model="isChecked" />
     <svg fill="none" viewBox="0 0 50 50" height="50" width="50">
       <path
-        class="lineTop line"
-        stroke-linecap="round"
-        stroke-width="4"
-        stroke="black"
-        d="M6 11L44 11"
+          class="lineTop line"
+          stroke-linecap="round"
+          stroke-width="4"
+          stroke="black"
+          d="M6 11L44 11"
       ></path>
       <path
-        stroke-linecap="round"
-        stroke-width="4"
-        stroke="black"
-        d="M6 24H43"
-        class="lineMid line"
+          stroke-linecap="round"
+          stroke-width="4"
+          stroke="black"
+          d="M6 24H43"
+          class="lineMid line"
       ></path>
       <path
-        stroke-linecap="round"
-        stroke-width="4"
-        stroke="black"
-        d="M6 37H43"
-        class="lineBottom line"
+          stroke-linecap="round"
+          stroke-width="4"
+          stroke="black"
+          d="M6 37H43"
+          class="lineBottom line"
       ></path>
     </svg>
 
@@ -46,10 +46,8 @@
 <script>
 import { toastController } from "@ionic/vue";
 import { defineCustomElements } from "@ionic/core/loader";
-import { IonIcon } from "@ionic/vue";
 
 export default {
-  components: { 'ion-icon': IonIcon },
   data() {
     return {
       isChecked: false,
@@ -71,7 +69,7 @@ export default {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ password: this.newPassword }),
+          body: JSON.stringify({password: this.newPassword}),
         });
 
         if (response.ok) {
@@ -92,7 +90,7 @@ export default {
         color: color,
         position: "top",
       });
-      toast.present();
+      await toast.present();
     },
     closeModal() {
       this.showModal = false;
@@ -188,7 +186,7 @@ export default {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 100%; /* Ensure the buttons are the same width */
+  width: 100%;
   margin-bottom: 10px;
   text-align: center;
 }

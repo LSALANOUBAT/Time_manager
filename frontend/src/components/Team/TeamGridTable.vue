@@ -20,6 +20,8 @@
 import { Grid, h } from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
 
+
+
 export default {
   name: "TeamGridTable",
   props: {

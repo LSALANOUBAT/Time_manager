@@ -43,6 +43,7 @@
 <script>
 import { Grid, h } from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
+import { toastController } from "@ionic/vue";
 
 export default {
   name: "WorkingTimesGrid",
@@ -92,16 +93,24 @@ export default {
             name: "Actions",
             formatter: (cell, row) => {
               return h("div", { className: "action-buttons" }, [
-                h("button", {
-                  className: "button button-edit",
-                  onClick: () => {
-                    this.openEditModal(row.cells[0].data);
-                  },
-                }, "Edit"),
-                h("button", {
-                  className: "button button-delete",
-                  onClick: () => this.deleteWorkingTime(row.cells[0].data),
-                }, "Delete"),
+                h(
+                    "button",
+                    {
+                      className: "button button-edit",
+                      onClick: () => {
+                        this.openEditModal(row.cells[0].data);
+                      },
+                    },
+                    "Edit"
+                ),
+                h(
+                    "button",
+                    {
+                      className: "button button-delete",
+                      onClick: () => this.deleteWorkingTime(row.cells[0].data),
+                    },
+                    "Delete"
+                ),
               ]);
             },
           },
@@ -231,11 +240,14 @@ export default {
         color,
         position: "top",
       });
-      return toast.present();
+      await toast.present();
     },
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .grid-wrapper {
