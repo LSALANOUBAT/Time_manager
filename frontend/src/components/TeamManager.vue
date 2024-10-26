@@ -3,10 +3,10 @@
     <h2>Team Management</h2>
 
     <!-- Form to create or update a team -->
-    <form @submit.prevent="submitTeam" class="team-form">
+    <form v-if="userRole === 'admin'" @submit.prevent="submitTeam" class="team-form">
       <h3>{{ editingTeam ? 'Edit Team' : 'Create New Team' }}</h3>
       <input v-model="teamData.name" placeholder="Team Name" required />
-      <button type="submit" :class="editingTeam ? 'button button-update' : 'button button-create'">
+      <button type="submit" class="button-submit">
         {{ editingTeam ? 'Update Team' : 'Create Team' }}
       </button>
     </form>
@@ -21,7 +21,6 @@
       <form @submit.prevent="assignUserToTeam">
         <select v-model="userAssignment.userId" required>
           <option disabled value="">Select User</option>
-          <!-- Display user name or username -->
           <option v-for="user in users" :key="user.id" :value="user.id">
             {{ user.id }} - {{ user.name || user.username }}
           </option>
@@ -48,6 +47,12 @@ export default {
   name: "TeamManager",
   components: {
     TeamGridTable,
+  },
+  props: {
+    userRole: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -88,12 +93,12 @@ export default {
     },
 
     async submitTeam() {
+      if (this.userRole !== 'admin') return; // Prevent team creation for non-admin roles
       try {
         const url = this.editingTeam
             ? `${process.env.VUE_APP_API_URL}/teams/${this.editingTeam.id}`
             : `${process.env.VUE_APP_API_URL}/teams`;
         const method = this.editingTeam ? "PUT" : "POST";
-
         const response = await fetch(url, {
           method,
           headers: {
@@ -143,9 +148,6 @@ export default {
     async assignUserToTeam() {
       const { teamId, userId } = this.userAssignment;
 
-      // Log the current teamId and userId to verify they're set
-      console.log("Assigning User to Team:", { teamId, userId });
-
       if (!teamId || !userId) {
         this.showToast("Please select both a user and a team.", "warning");
         return;
@@ -160,7 +162,6 @@ export default {
           },
         });
 
-        // Check if the response was successful
         if (response.ok) {
           this.showToast("User assigned to team successfully.", "success");
           this.userAssignment.teamId = null;
@@ -168,7 +169,6 @@ export default {
           this.fetchTeams(); // Optionally refresh teams to reflect new assignment
         } else {
           const errorData = await response.json();
-          console.error("API Error:", errorData);
           throw new Error(errorData.message || "Failed to assign user to team");
         }
       } catch (error) {
@@ -202,6 +202,18 @@ export default {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+}
+.button-submit {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.button-submit:hover {
+  background-color: #0056b3;
 }
 .user-assignment select {
   margin-right: 10px;

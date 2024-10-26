@@ -7,7 +7,7 @@
 
     <!-- Display UserManager and TeamManager only if the user is not an employee -->
     <user-manager v-if="isAllowedToManageUsers" />
-    <team-manager v-if="isAllowedToManageTeams" />
+    <team-manager v-if="isAllowedToManageTeams" :user-role="user.role" />
 
 
 
