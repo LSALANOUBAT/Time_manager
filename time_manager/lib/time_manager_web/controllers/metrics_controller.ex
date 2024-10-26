@@ -4,8 +4,8 @@ defmodule TimeManagerWeb.MetricsController do
   alias TimeManager.{Repo, Workingtime, TeamMembers}
   alias TimeManagerWeb.Plugs.{Manager, FetchTeamID}
 
-  plug Manager when action in [:overtime_ratio, :night_ratio, :undertime_ratio]
-  plug FetchTeamID when action in [:overtime_ratio, :night_ratio, :undertime_ratio]
+  plug Manager when action in [:overtime_ratio, :night_ratio, :undertime_ratio, :time_per_over_overtime]
+  plug FetchTeamID when action in [:overtime_ratio, :night_ratio, :undertime_ratio, :time_per_over_overtime]
 
   # Private helper function to calculate overtime hours sum
   defp calculate_overtime_hours_sum(team_id, start_of_month) do
@@ -158,6 +158,37 @@ defmodule TimeManagerWeb.MetricsController do
         undertime_ratio: Float.round(undertime_ratio, 4),
         on_time_ratio: Float.round(on_time_ratio, 4)
       })
+    end
+  end
+
+
+  def time_per_over_overtime(conn, _params) do
+    # Get the team_id from the connection assigns (usually set by a plug like Manager)
+    team_id = conn.assigns[:team_id]
+
+    # Validate that a team_id is present
+    if is_nil(team_id) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{error: "Manager does not have an assigned team"})
+    else
+      # Define the start of the current month
+      start_of_month = Timex.beginning_of_month(Timex.now())
+
+      # Query to count working times per day for team members since the beginning of the month
+      daily_working_times =
+        from(w in Workingtime,
+          join: tm in TeamMembers, on: w.user_id == tm.employee_id,
+          where: tm.team_id == ^team_id and w.start >= ^start_of_month,
+          group_by: fragment("DATE(?)", w.start),
+          select: %{date: fragment("DATE(?)", w.start), count: count(w.id)}
+        )
+        |> Repo.all()
+
+      # Format the result into JSON
+      conn
+      |> put_status(:ok)
+      |> json(%{daily_working_times: daily_working_times})
     end
   end
 end
