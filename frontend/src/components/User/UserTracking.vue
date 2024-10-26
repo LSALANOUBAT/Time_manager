@@ -12,7 +12,6 @@
     <div v-if="totalHours !== null" class="summary">
       <h3>Total Hours This Month: {{ totalHours }} hours</h3>
       <p>Overtime Hours: {{ overtimeHours }} | Night Hours: {{ nightHours }}</p>
-      <p>Undertime Sessions: {{ undertimeSessions }}</p>
     </div>
 
     <!-- Visualization Section with Charts -->
@@ -60,7 +59,6 @@ export default {
       totalHours: null,
       overtimeHours: null,
       nightHours: null,
-      undertimeSessions: null,
       errorMessage: '',
     };
   },
@@ -90,21 +88,17 @@ export default {
 
     async fetchUserMetrics(token) {
       try {
-        const [overtime, night, undertime] = await Promise.all([
+        const [overtime, night] = await Promise.all([
           fetch(`${process.env.VUE_APP_API_URL}/metrics/users_overtime_hours_sum`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {Authorization: `Bearer ${token}`},
           }).then((res) => res.json()),
           fetch(`${process.env.VUE_APP_API_URL}/metrics/users_night_hours_sum`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }).then((res) => res.json()),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {Authorization: `Bearer ${token}`},
           }).then((res) => res.json()),
         ]);
 
         this.overtimeHours = overtime.overtime_hours_sum.toFixed(2);
         this.nightHours = night.night_hours_sum.toFixed(2);
-        this.undertimeSessions = undertime.undertime_workingtimes || 0;
         this.totalHours = this.calculateTotalHours();
       } catch (error) {
         this.errorMessage = "Error fetching metrics: " + error.message;
@@ -145,15 +139,15 @@ export default {
           maintainAspectRatio: false,
           scales: {
             x: {
-              title: { display: true, text: 'Date' },
+              title: {display: true, text: 'Date'},
             },
             y: {
-              title: { display: true, text: 'Hours Worked' },
+              title: {display: true, text: 'Hours Worked'},
               beginAtZero: true,
             },
           },
           plugins: {
-            tooltip: { enabled: true },
+            tooltip: {enabled: true},
           },
         },
       });
@@ -188,16 +182,16 @@ export default {
           scales: {
             x: {
               stacked: true,
-              title: { display: true, text: 'Date' },
+              title: {display: true, text: 'Date'},
             },
             y: {
               stacked: true,
-              title: { display: true, text: 'Hours' },
+              title: {display: true, text: 'Hours'},
               beginAtZero: true,
             },
           },
           plugins: {
-            tooltip: { enabled: true },
+            tooltip: {enabled: true},
           },
         },
       });
@@ -209,9 +203,9 @@ export default {
     },
 
     formatDate(dateStr, type = 'datetime') {
-      const options = type === 'date' ? { year: 'numeric', month: 'short', day: 'numeric' } :
-          type === 'time' ? { hour: '2-digit', minute: '2-digit' } :
-              { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      const options = type === 'date' ? {year: 'numeric', month: 'short', day: 'numeric'} :
+          type === 'time' ? {hour: '2-digit', minute: '2-digit'} :
+              {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
       const date = new Date(dateStr);
       return date.toLocaleString(undefined, options);
     },

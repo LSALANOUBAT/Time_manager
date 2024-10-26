@@ -16,42 +16,9 @@
       <p class="error">{{ errorMessage }}</p>
     </div>
     <!-- User Tracking for Employees -->
-    <user-tracking v-if="user.role === 'employee'" />
+    <user-tracking v-if="['employee', 'manager'].includes(user.role)" :is-manager="user.role === 'manager'" />
 
 
-    <!-- Clocks Section -->
-    <section>
-      <h3>Your Clocks</h3>
-      <ul>
-        <li v-for="clock in clocks" :key="clock.id">
-          <strong>Status:</strong> {{ clock.status ? 'In' : 'Out' }} |
-          <strong>Time:</strong> {{ formatDate(clock.time) }}
-        </li>
-      </ul>
-    </section>
-
-    <!-- Clock Manager Component -->
-    <clock-manager :user-id="user.id"></clock-manager>
-
-    <!-- Working Times Section -->
-    <section>
-      <h3>Your Working Times</h3>
-      <ul>
-        <li v-for="wt in workingTimes" :key="wt.id">
-          <strong>Start:</strong> {{ formatDate(wt.start) }} |
-          <strong>End:</strong> {{ formatDate(wt.end) }}
-        </li>
-      </ul>
-    </section>
-
-    <!-- Working Time Management Component -->
-    <working-time :user-id="user.id"></working-time>
-
-    <!-- Chart Manager Section -->
-    <chart-manager v-if="user.id" :selected-user-id="user.id"></chart-manager>
-
-    <!-- Calendar Manager Section -->
-    <calendar-manager v-if="user.id" :selected-user-id="user.id"></calendar-manager>
   </div>
 </template>
 
