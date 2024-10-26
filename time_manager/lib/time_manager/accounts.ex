@@ -3,6 +3,8 @@ defmodule TimeManager.Accounts do
   alias TimeManager.User   # Correct path to the User schema
   alias TimeManager.Workingtime   # Correct path to the Workingtime schema
   import Ecto.Query
+  alias TimeManager.Team
+  alias TimeManager.TeamMembers
   alias Bcrypt  # Updated alias to use `Bcrypt` from `bcrypt_elixir`
 
   # List all users
@@ -10,6 +12,35 @@ defmodule TimeManager.Accounts do
     Repo.all(User)
   end
 
+  def list_unassigned_managers do
+    from(u in User,
+      left_join: t in Team,
+      on: u.id == t.manager_id,
+      where: u.role == "manager" and is_nil(t.manager_id),
+      select: u
+    )
+    |> Repo.all()
+  end
+
+
+  def list_unassigned_employees do
+    from(u in User,
+      left_join: tm in TeamMembers, on: u.id == tm.employee_id,
+      where: u.role == "employee" and is_nil(tm.team_id),
+      select: u
+    )
+    |> Repo.all()
+  end
+
+  def list_unassigned_employees do
+    from(u in User,
+      left_join: t in Team,
+      on: u.id == t.manager_id,
+      where: u.role == "employee" and is_nil(t.manager_id),
+      select: u
+    )
+    |> Repo.all()
+  end
   # Get a user by ID
   def get_user!(id), do: Repo.get!(User, id)
 

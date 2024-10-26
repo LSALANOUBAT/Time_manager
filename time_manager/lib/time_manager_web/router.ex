@@ -50,6 +50,9 @@ defmodule TimeManagerWeb.Router do
     pipe_through [:api, :auth]
 
     # Routes for users
+    get "/users/unsigned_employee", UserController, :list_unassigned_employees, plug: Manager #
+    get "/users/managers", UserController, :list_managers, plug: Admin #
+    get "/users/unassigned_managers", UserController, :unasign_managers, plug: Admin #
     get "/users", UserController, :index, plug: AdminOrManager
     get "/users/:id", UserController, :show
     post "/users", UserController, :create, plug: Admin
