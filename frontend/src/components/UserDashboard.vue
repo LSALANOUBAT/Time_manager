@@ -1,4 +1,3 @@
-<!-- src/components/Dashboard.vue -->
 <template>
   <div class="dashboard">
     <!-- Hamburger Menu -->
@@ -6,10 +5,11 @@
 
     <h2 class="dashboard-title">User Management Dashboard</h2>
 
-    <!-- Afficher UserManager seulement si l'utilisateur n'est pas un employé -->
+    <!-- Display UserManager and TeamManager only if the user is not an employee -->
     <user-manager v-if="isAllowedToManageUsers" />
+    <team-manager v-if="isAllowedToManageTeams" />
 
-    <!-- Section Clock In / Clock Out pour les employés -->
+    <!-- Section Clock In / Clock Out for employees -->
     <div v-else class="clock-section">
       <h3>Manage Your Working Time</h3>
       <div class="clock-buttons">
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <!-- Message d'erreur si l'utilisateur n'est pas autorisé -->
+    <!-- Error message if the user is not authorized -->
     <div v-if="isAllowedToManageUsers && errorMessage">
       <p class="error">{{ errorMessage }}</p>
     </div>
@@ -49,7 +49,7 @@
     </section>
 
     <!-- Working Time Management Component -->
-    <working-time :user-id="user.id"></working-time> <!-- Include WorkingTime component -->
+    <working-time :user-id="user.id"></working-time>
 
     <!-- Chart Manager Section -->
     <chart-manager v-if="user.id" :selected-user-id="user.id"></chart-manager>
@@ -61,42 +61,42 @@
 
 <script>
 import { toastController } from '@ionic/vue';
-import UserManager from './UserManager.vue'; // Import the UserManager component
-import HamburgerMenu from './HamburgerMenu.vue'; // Import HamburgerMenu component
-import ClockIn from './ClockIn.vue'; // Import ClockIn component
-import ClockOut from './ClockOut.vue'; // Import ClockOut component
+import UserManager from './User/UserManager.vue';
+import TeamManager from './TeamManager.vue';
+import HamburgerMenu from './HamburgerMenu.vue';
+import ClockIn from './ClockIn.vue';
+import ClockOut from './ClockOut.vue';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
   name: 'UserDashboard',
   components: {
-    UserManager, // Register UserManager component
-    HamburgerMenu, // Register HamburgerMenu component
-    ClockIn, // Register ClockIn component
-    ClockOut, // Register ClockOut component
+    UserManager,
+    TeamManager,
+    HamburgerMenu,
+    ClockIn,
+    ClockOut,
   },
   data() {
     return {
       user: {},
-      isAllowedToManageUsers: false, // Flag to determine if the user can access UserManager
+      isAllowedToManageUsers: false,
+      isAllowedToManageTeams: false,
       clocks: [],
       workingTimes: [],
       errorMessage: '',
-      hasActiveSession: false, // Flag to determine if user has an active clock in
+      hasActiveSession: false,
     };
   },
   methods: {
     async fetchUserRole() {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId'); // Assuming you store the user ID after login
+      const userId = localStorage.getItem('userId');
 
       try {
-        // Fetch user information
         const userResponse = await fetch(`${apiUrl}/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!userResponse.ok) {
@@ -106,16 +106,9 @@ export default {
         const userData = await userResponse.json();
         this.user = userData;
 
-        // Set flag based on user's role
-        if (userData.role !== 'employee') {
-          this.isAllowedToManageUsers = true;
-        } else {
-          this.isAllowedToManageUsers = false;
-          this.showToast('You do not have permission to access the User Manager.', 'danger');
-        }
-
-        // Fetch working times to determine active session
-        await this.fetchWorkingTimes();
+        // Set permissions based on user's role
+        this.isAllowedToManageUsers = userData.role !== 'employee';
+        this.isAllowedToManageTeams = userData.role === 'admin' || userData.role === 'manager';
       } catch (error) {
         this.showToast('Error fetching user data: ' + error.message, 'danger');
       }
@@ -127,9 +120,7 @@ export default {
 
       try {
         const response = await fetch(`${apiUrl}/workingtime/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -138,8 +129,6 @@ export default {
 
         const data = await response.json();
         this.workingTimes = data;
-
-        // Vérifier s'il y a une session active (sans end)
         this.hasActiveSession = data.some(wt => !wt.end);
       } catch (error) {
         this.showToast('Error fetching working times: ' + error.message, 'danger');
@@ -150,7 +139,6 @@ export default {
       this.fetchWorkingTimes();
     },
 
-    // Function to show a toast message
     async showToast(message, color) {
       const toast = await toastController.create({
         message,
@@ -173,15 +161,13 @@ export default {
 </script>
 
 <style scoped>
-/* Style global pour le dashboard */
 .dashboard {
   padding: 20px;
-  height: 100vh; /* Full viewport height */
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  height: 100vh;
+  overflow-y: auto;
   background-color: #f4f4f4;
 }
 
-/* Titre principal */
 .dashboard-title {
   font-size: 2em;
   color: #333;
@@ -189,7 +175,6 @@ export default {
   margin-bottom: 30px;
 }
 
-/* Section Clock In / Clock Out */
 .clock-section {
   margin-bottom: 30px;
   text-align: center;
@@ -213,22 +198,20 @@ export default {
   color: red;
 }
 
-/* Hamburger menu styling */
 .hamburger-menu {
-  position: absolute; /* Prevent it from pushing other content */
+  position: absolute;
   top: 20px;
   left: 20px;
-  z-index: 1000; /* Ensure it stays on top */
+  z-index: 1000;
 }
 
-/* Responsive layout adjustments */
 @media (max-width: 768px) {
   .dashboard {
-    padding: 10px; /* Reduce padding on smaller screens */
+    padding: 10px;
   }
 
   h2 {
-    font-size: 1.5em; /* Smaller font size for mobile */
+    font-size: 1.5em;
   }
 
   .clock-buttons {

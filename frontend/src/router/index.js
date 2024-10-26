@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import UserLogin from '../components/UserLogin.vue'; // Updated name for Login component
-import UserRegister from '../components/UserRegister.vue'; // Updated name for Register component
+import UserLogin from '../components/User/UserLogin.vue'; // Updated name for Login component
+import UserRegister from '../components/User/UserRegister.vue'; // Updated name for Register component
 import UserDashboard from '../components/UserDashboard.vue'; // Updated name for Dashboard component
 import { isAuthenticated } from './auth'; // Import of the authentication function
 

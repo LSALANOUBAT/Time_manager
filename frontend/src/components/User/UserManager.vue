@@ -42,7 +42,7 @@
 
 <script>
 import { toastController } from '@ionic/vue';
-import Histogram from './Histogram.vue';
+import Histogram from '../Histogram.vue';
 import GridTable from './GridTable.vue'; // Import GridTable component
 
 export default {
