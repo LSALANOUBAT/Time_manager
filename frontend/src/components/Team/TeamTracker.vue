@@ -44,7 +44,7 @@
     <div class="metrics">
       <div class="chart-container" v-for="(chart, index) in chartConfigs" :key="index">
         <h3>{{ chart.title }}</h3>
-        <canvas :ref="chart.ref"></canvas>
+        <canvas :ref="chart.ref" width="200" height="200"></canvas>
         <p v-if="chart.ratio"> {{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
       </div>
     </div>
@@ -125,12 +125,14 @@ export default {
           type: 'bar',
           data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
           labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
+          label: 'Working Times Count'
         },
         {
           ref: 'hoursPerDayChart',
           type: 'line',
           data: hoursPerDayData.map(item => item.hours) || [],
           labels: hoursPerDayData.map(item => item.date) || [],
+          label: 'Hours Worked'
         }
       ];
 
@@ -141,9 +143,21 @@ export default {
             data: {
               labels: chart.labels,
               datasets: [{
+                label: chart.label || '',
                 data: chart.data,
                 backgroundColor: ['#ff6347', '#36a2eb', '#42a5f5', '#66bb6a'],
+                borderColor: '#42a5f5',
+                fill: chart.type !== 'line',
               }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: chart.type !== 'bar' || chart.type !== 'line'
+                }
+              }
             }
           });
         }
@@ -220,10 +234,9 @@ export default {
     this.fetchTeamMembers();
     this.fetchUnassignedEmployees();
     this.fetchMetrics();
-  }
+  },
 };
 </script>
-
 <style scoped>
 .team-manager {
   padding: 20px;
@@ -300,15 +313,29 @@ export default {
 .metrics {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 25px;
+  margin-top: 25px;
+  justify-content: space-around;
 }
 
 .chart-container {
-  flex: 1 1 45%;
+  flex: 1 1 48%;
+  max-width: 400px;
+  min-width: 300px;
+  height: 400px;
   background-color: #fff;
-  padding: 15px;
+  padding: 25px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 300px;
 }
 </style>
