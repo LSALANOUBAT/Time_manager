@@ -21,7 +21,7 @@
       <form @submit.prevent="assignUserToTeam">
         <select v-model="userAssignment.userId" required>
           <option disabled value="">Select User</option>
-          <option v-for="user in users" :key="user.id" :value="user.id">
+          <option v-for="user in unassignedUsers" :key="user.id" :value="user.id">
             {{ user.id }} - {{ user.name || user.username }}
           </option>
         </select>
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       teams: [],
-      users: [],
+      unassignedUsers: [], // Updated to store only unassigned users
       teamData: { name: "" },
       editingTeam: null,
       userAssignment: { teamId: null, userId: null },
@@ -78,17 +78,17 @@ export default {
       }
     },
 
-    async fetchUsers() {
+    async fetchUnassignedUsers() {
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/unsigned_employee`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        if (!response.ok) throw new Error('Failed to fetch users');
-        this.users = await response.json();
+        if (!response.ok) throw new Error('Failed to fetch unassigned employees');
+        this.unassignedUsers = await response.json(); // Updated to fetch unassigned employees only
       } catch (error) {
-        this.showToast("Error fetching users: " + error.message, "danger");
+        this.showToast("Error fetching unassigned employees: " + error.message, "danger");
       }
     },
 
@@ -167,6 +167,7 @@ export default {
           this.userAssignment.teamId = null;
           this.userAssignment.userId = null;
           this.fetchTeams(); // Optionally refresh teams to reflect new assignment
+          this.fetchUnassignedUsers(); // Refresh the list of unassigned users
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || "Failed to assign user to team");
@@ -187,7 +188,7 @@ export default {
   },
   mounted() {
     this.fetchTeams();
-    this.fetchUsers();
+    this.fetchUnassignedUsers(); // Fetch unassigned users on component mount
   },
 };
 </script>
@@ -196,6 +197,7 @@ export default {
 .team-manager {
   padding: 20px;
 }
+
 .team-form, .user-assignment {
   background-color: #fff;
   padding: 20px;
@@ -203,6 +205,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+
 .button-submit {
   background-color: #007bff;
   color: white;
@@ -212,9 +215,11 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 .button-submit:hover {
   background-color: #0056b3;
 }
+
 .user-assignment select {
   margin-right: 10px;
   padding: 8px;
@@ -222,6 +227,7 @@ export default {
   border-radius: 4px;
   border: 1px solid #ddd;
 }
+
 .assign-button {
   background-color: #007bff;
   color: white;
@@ -231,6 +237,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 .assign-button:hover {
   background-color: #0056b3;
 }
