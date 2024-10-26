@@ -65,7 +65,7 @@ defmodule TimeManagerWeb.Router do
       get "/", WorkingtimeController, :all, plug: Admin # Get all working times OK
       get "/:userID", WorkingtimeController, :index # List working times for a specific user OK => use bearer token
       get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK => use bearer token
-      post "/:userID", WorkingtimeController, :create, plug: Admin # Create a new working time for a user OK
+      post "/:userID", WorkingtimeController, :create # Create a new working time for a user OK
       put "/:id", WorkingtimeController, :update, plug: Admin # Update a specific working time entry OK
       delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only) OK
       post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required) OK
@@ -83,10 +83,12 @@ defmodule TimeManagerWeb.Router do
 
     scope "/team_members" do #OK
       post "/:id/team/", TeamMembersController, :add_employee, plug: AdminOrManager #OK
-      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminOrManager #OK
+      delete "/:id/team/", TeamMembersController, :delete_team_member, plug: AdminOrManager #OK
       get "/", TeamMembersController, :get_team_members_token, plug: AdminOrManager #OK
       get "/:team_id", TeamMembersController, :get_team_members_id, plug: AdminOrManager #OK
       post "/:id/team/:team_id", TeamMembersController, :add_employee_admin, plug: AdminOrManager #OK
+      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member_admin, plug: AdminOrManager #OK
+
     end
 
     scope "/metrics" do
