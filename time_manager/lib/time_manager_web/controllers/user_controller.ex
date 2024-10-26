@@ -4,11 +4,14 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManagerWeb.Auth.Guardian
 
 
-  alias TimeManagerWeb.Plugs.Admin  # Make sure you reference the plug here
-
+  alias TimeManagerWeb.Plugs.Admin
+  alias TimeManagerWeb.Plugs.Manager
   plug Admin when action in [:create]
   plug Admin when action in [:delete]
   plug Admin when action in [:update]
+  plug Admin when action in [:list_managers]
+  plug Admin when action in [:unasign_managers]
+  plug Manager when action in [:list_unassigned_employees]
 
   # List all users
   def index(conn, params) do
@@ -31,6 +34,29 @@ defmodule TimeManagerWeb.UserController do
       end
 
     json(conn, users)
+  end
+
+  def list_unassigned_employees(conn, _params) do
+    unassigned_employees = Accounts.list_unassigned_employees()
+    json(conn, unassigned_employees)
+  end
+
+  def unasign_managers(conn, _params) do
+    unassigned_managers = Accounts.list_unassigned_managers()
+    json(conn, unassigned_managers)
+  end
+
+  def list_managers(conn, _params) do
+    managers = Accounts.list_users()
+               |> Enum.filter(fn user -> user.role == "manager" end)
+
+    json(conn, managers)
+  end
+
+  # Show a single user by ID
+  def show(conn, %{"id" => id}) do
+    user = Accounts.get_user!(id)
+    json(conn, user)
   end
 
   # Show a single user by ID
