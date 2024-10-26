@@ -23,20 +23,20 @@
     <h3>Team Members</h3>
     <table class="team-members-table">
       <thead>
-      <tr>
-        <th>Username</th>
-        <th>Role</th>
-        <th>Actions</th>
-      </tr>
+        <tr>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
       </thead>
       <tbody>
-      <tr v-for="member in teamMembers" :key="member.id">
-        <td>{{ member.username }}</td>
-        <td>{{ member.role }}</td>
-        <td>
-          <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
-        </td>
-      </tr>
+        <tr v-for="member in teamMembers" :key="member.id">
+          <td>{{ member.username }}</td>
+          <td>{{ member.role }}</td>
+          <td>
+            <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
+          </td>
+        </tr>
       </tbody>
     </table>
 
@@ -45,7 +45,7 @@
       <div class="chart-container" v-for="(chart, index) in chartConfigs" :key="index">
         <h3>{{ chart.title }}</h3>
         <canvas :ref="chart.ref" width="200" height="200"></canvas>
-        <p v-if="chart.ratio"> {{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
+        <p v-if="chart.ratio">{{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
       </div>
     </div>
   </div>
@@ -68,8 +68,7 @@ export default {
         { title: 'Overtime vs. Regular Hours', ref: 'overtimeChart', label: 'Overtime Ratio', ratio: null },
         { title: 'Night Work Ratio', ref: 'nightRatioChart', label: 'Night Work Ratio', ratio: null },
         { title: 'Undertime vs. On-Time Ratio', ref: 'undertimeChart', label: 'Undertime Ratio', ratio: null },
-        { title: 'Daily Working Times', ref: 'dailyWorkingTimeChart' },
-        { title: 'Hours Worked per Day', ref: 'hoursPerDayChart' },
+        { title: 'Daily Working Times', ref: 'dailyWorkingTimeChart' }
       ],
     };
   },
@@ -82,43 +81,42 @@ export default {
           fetch(`${process.env.VUE_APP_API_URL}/metrics/overtime_ratios`, { headers }),
           fetch(`${process.env.VUE_APP_API_URL}/metrics/night_ratios`, { headers }),
           fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/time_per_over_overtime`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/users_hours_per_working_time`, { headers })
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/time_per_over_overtime`, { headers })
         ]);
 
-        const [overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData] = await Promise.all(
-            responses.map(response => response.ok ? response.json() : {})
+        const [overtimeData, nightData, undertimeData, dailyWorkingData] = await Promise.all(
+          responses.map(response => response.ok ? response.json() : {})
         );
 
         this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
         this.chartConfigs[1].ratio = nightData.night_ratio || 0;
         this.chartConfigs[2].ratio = undertimeData.undertime_ratio || 0;
 
-        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData);
+        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData);
       } catch (error) {
         console.error("Error fetching metrics:", error);
         this.showToast("Error fetching metrics: " + error.message, "danger");
       }
     },
-    initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData) {
+    initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
       const chartDefinitions = [
         {
           ref: 'overtimeChart',
           type: 'doughnut',
           data: [overtimeData.overtime_hours_sum || 0, overtimeData.total_hours_sum || 0],
-          labels: ['Overtime Hours', 'Regular Hours'],
+          labels: ['Overtime Hours', 'Regular Hours']
         },
         {
           ref: 'nightRatioChart',
           type: 'pie',
           data: [nightData.night_hours_sum || 0, nightData.total_hours_sum || 0],
-          labels: ['Night Hours', 'Day Hours'],
+          labels: ['Night Hours', 'Day Hours']
         },
         {
           ref: 'undertimeChart',
           type: 'pie',
           data: [undertimeData.undertime_workingtimes || 0, undertimeData.total_workingtimes || 0],
-          labels: ['Undertime', 'On-Time'],
+          labels: ['Undertime', 'On-Time']
         },
         {
           ref: 'dailyWorkingTimeChart',
@@ -126,13 +124,6 @@ export default {
           data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
           labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
           label: 'Working Times Count'
-        },
-        {
-          ref: 'hoursPerDayChart',
-          type: 'line',
-          data: hoursPerDayData.map(item => item.hours) || [],
-          labels: hoursPerDayData.map(item => item.date) || [],
-          label: 'Hours Worked'
         }
       ];
 
@@ -155,7 +146,7 @@ export default {
               maintainAspectRatio: false,
               plugins: {
                 legend: {
-                  display: chart.type !== 'bar' || chart.type !== 'line'
+                  display: chart.type !== 'bar'
                 }
               }
             }
@@ -180,7 +171,7 @@ export default {
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${this.selectedEmployee}/team/`, {
           method: 'POST',
-          headers,
+          headers
         });
         if (!response.ok) throw new Error('Failed to add employee to the team');
         this.fetchTeamMembers();
@@ -210,7 +201,7 @@ export default {
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/`, {
           method: 'DELETE',
-          headers,
+          headers
         });
         if (!response.ok) throw new Error('Failed to delete member');
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
@@ -224,7 +215,7 @@ export default {
       const toast = await toastController.create({
         message,
         duration: 3000,
-        color,
+        color
       });
       return toast.present();
     }
@@ -234,9 +225,10 @@ export default {
     this.fetchTeamMembers();
     this.fetchUnassignedEmployees();
     this.fetchMetrics();
-  },
+  }
 };
 </script>
+
 <style scoped>
 .team-manager {
   padding: 20px;
