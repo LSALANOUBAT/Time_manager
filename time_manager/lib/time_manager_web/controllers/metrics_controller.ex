@@ -3,6 +3,7 @@ defmodule TimeManagerWeb.MetricsController do
   import Ecto.Query
   alias TimeManager.{Repo, Workingtime, TeamMembers}
   alias TimeManagerWeb.Plugs.{Manager, FetchTeamID}
+  alias TimeManagerWeb.Auth.Guardian
 
   plug Manager when action in [:overtime_ratio, :night_ratio, :undertime_ratio, :time_per_over_overtime]
   plug FetchTeamID when action in [:overtime_ratio, :night_ratio, :undertime_ratio, :time_per_over_overtime]
@@ -190,5 +191,26 @@ defmodule TimeManagerWeb.MetricsController do
       |> put_status(:ok)
       |> json(%{daily_working_times: daily_working_times})
     end
+  end
+
+  def sum_user_overtime_hours(conn, _params) do
+    # Extract user_id from the bearer token
+    user_id = Guardian.Plug.current_resource(conn).id
+
+    # Get the start of the current month
+    start_of_month = Timex.beginning_of_month(Timex.now())
+
+    # Calculate the sum of overtime hours for the user since the beginning of the month
+    overtime_hours_sum =
+      from(w in Workingtime,
+        where: w.user_id == ^user_id and w.start >= ^start_of_month,
+        select: sum(w.overtime_hours)
+      )
+      |> Repo.one() || 0.0
+
+    # Return the result as JSON
+    conn
+    |> put_status(:ok)
+    |> json(%{overtime_hours_sum: overtime_hours_sum})
   end
 end

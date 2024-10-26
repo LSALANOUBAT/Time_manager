@@ -92,6 +92,7 @@ defmodule TimeManagerWeb.Router do
       get "/night_ratios", MetricsController, :night_ratio, plug: Manager
       get "/undertime_ratios", MetricsController, :undertime_ratio, plug: Manager
       get "/time_per_over_overtime", MetricsController, :time_per_over_overtime, plug: Manager
+      get "/users_overtime_hours_sum", MetricsController, :sum_user_overtime_hours
     end
   end
 

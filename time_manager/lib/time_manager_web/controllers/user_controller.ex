@@ -5,13 +5,13 @@ defmodule TimeManagerWeb.UserController do
 
 
   alias TimeManagerWeb.Plugs.Admin
-  alias TimeManagerWeb.Plugs.Manager
+  alias TimeManagerWeb.Plugs.AdminOrManager
   plug Admin when action in [:create]
   plug Admin when action in [:delete]
   plug Admin when action in [:update]
   plug Admin when action in [:list_managers]
   plug Admin when action in [:unasign_managers]
-  plug Manager when action in [:list_unassigned_employees]
+  plug AdminOrManager when action in [:list_unassigned_employees]
 
   # List all users
   def index(conn, params) do

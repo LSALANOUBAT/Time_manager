@@ -2,10 +2,10 @@ defmodule TimeManagerWeb.TeamMembersController do
   use TimeManagerWeb, :controller
   import Ecto.Query, only: [from: 2]
   alias TimeManager.{Repo, User, TeamMembers}
-  alias TimeManagerWeb.Plugs.{Manager, FetchTeamID}
+  alias TimeManagerWeb.Plugs.{AdminOrManager, FetchTeamID}
 
   # Ensure Admin or Manager role for specific actions
-  plug Manager when action in [:add_employee, :delete_team_member, :get_team_members]
+  plug AdminOrManager when action in [:add_employee, :delete_team_member, :get_team_members]
   plug FetchTeamID when action in [:add_employee, :delete_team_member, :get_team_members]
 
   # Add employee to the team
