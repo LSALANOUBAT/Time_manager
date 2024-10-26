@@ -4,7 +4,13 @@
 
     <!-- Display Team ID -->
     <p v-if="teamId" class="team-id">Team ID: {{ teamId }}</p>
-
+    <h3>Team Members</h3>
+    <ul class="member-list">
+      <li v-for="member in teamMembers" :key="member.id">
+        {{ member.username }} ({{ member.role }})
+        <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
+      </li>
+    </ul>
     <!-- Graphs for Metrics -->
     <div class="metrics">
       <div class="chart-container">
@@ -33,13 +39,7 @@
     </div>
 
     <!-- List of team members -->
-    <h3>Team Members</h3>
-    <ul class="member-list">
-      <li v-for="member in teamMembers" :key="member.id">
-        {{ member.username }} ({{ member.role }})
-        <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
-      </li>
-    </ul>
+
   </div>
 </template>
 
@@ -96,7 +96,10 @@ export default {
         if (!response.ok) throw new Error('Failed to fetch team members');
 
         const data = await response.json();
+        console.log("Team Data:", data); // Log response to verify structure
         this.teamMembers = data.members;
+
+        // Set teamId based on the exact structure
         this.teamId = data.team_id || data.team;
       } catch (error) {
         this.showToast("Error fetching team members: " + error.message, "danger");

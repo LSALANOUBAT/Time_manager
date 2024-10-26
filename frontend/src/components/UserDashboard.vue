@@ -15,7 +15,7 @@
     <team-manager v-if="user.role === 'admin'" :user-role="user.role" />
 
     <!-- TeamTracker component for managers only -->
-    <team-tracker v-if="user.role === 'manager'" />
+
 
     <!-- Error message if the user is not authorized -->
     <div v-if="user.role === 'admin' && errorMessage">
@@ -24,6 +24,9 @@
 
     <!-- User Tracking for Employees and Managers -->
     <user-tracking v-if="['employee', 'manager'].includes(user.role)" :is-manager="user.role === 'manager'" />
+    <team-tracker v-if="user.role === 'manager'" />
+    <!-- Display WorkingTimesGrid only for admin users -->
+    <working-times-grid v-if="user.role === 'admin'" :working-times="workingTimes" @removeWorkingTime="removeWorkingTime" />
   </div>
 </template>
 
@@ -32,6 +35,7 @@ import UserTracking from './User/UserTracking.vue';
 import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
+import WorkingTimesGrid from './WorkingTimesGrid.vue';
 import TeamTracker from './Team/TeamTracker.vue';  // Import the TeamTracker component
 import HamburgerMenu from './HamburgerMenu.vue';
 import ModifyPasswordButton from './ModifyPasswordButton.vue';
@@ -43,6 +47,7 @@ export default {
   components: {
     UserManager,
     TeamManager,
+    WorkingTimesGrid,
     TeamTracker, // Register the TeamTracker component
     HamburgerMenu,
     UserTracking,
@@ -78,22 +83,17 @@ export default {
       }
     },
 
-    async fetchWorkingTimes() {
+    async fetchAllWorkingTimes() {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
 
       try {
-        const response = await fetch(`${apiUrl}/workingtime/${userId}`, {
+        const response = await fetch(`${apiUrl}/workingtime`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch working times');
-        }
+        if (!response.ok) throw new Error('Failed to fetch all working times');
 
-        const data = await response.json();
-        this.workingTimes = data;
-        this.hasActiveSession = data.some(wt => !wt.end);
+        this.workingTimes = await response.json();
       } catch (error) {
         this.showToast('Error fetching working times: ' + error.message, 'danger');
       }
