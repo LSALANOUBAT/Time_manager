@@ -3,6 +3,8 @@ import { IonicVue } from '@ionic/vue';
 import App from './App.vue';
    // import router for web
 import router from '../src/router/index';
+import "@/assets/styles.css"; // ou le chemin vers ton fichier CSS global
+
 
    // Import Ionic Core and the basic CSS
 import '@ionic/vue/css/core.css';

@@ -25,7 +25,10 @@
         <option value="employee">Employee</option>
       </select>
 
-      <button type="submit">{{ editingUser ? 'Update User' : 'Add User' }}</button>
+      <!-- Submit button (Add or Update) -->
+      <button type="submit" :class="editingUser ? 'button button-update' : 'button button-add'">
+        {{ editingUser ? 'Update User' : 'Add User' }}
+      </button>
     </form>
 
     <!-- Display users in a grid -->
@@ -215,7 +218,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .user-manager {
   padding: 20px;
@@ -227,5 +229,62 @@ export default {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
+}
+
+/* Base style for all buttons */
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Style on hover */
+.button:hover {
+  transform: translateY(-2px);
+}
+
+/* Add User button */
+.button-add {
+  background-color: #007bff;
+}
+.button-add:hover {
+  background-color: #0056b3;
+}
+
+/* Update User button */
+.button-update {
+  background-color: #28a745;
+}
+.button-update:hover {
+  background-color: #218838;
+}
+
+/* Edit button */
+.button-edit {
+  background-color: #007bff;
+}
+.button-edit:hover {
+  background-color: #0056b3;
+}
+
+/* Delete button */
+.button-delete {
+  background-color: crimson;
+}
+.button-delete:hover {
+  background-color: darkred;
+}
+
+/* Disabled button state */
+.button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 </style>

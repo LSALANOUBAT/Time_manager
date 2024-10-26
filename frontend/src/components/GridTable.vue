@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import { Grid, h } from "gridjs"; // Import Grid and h from gridjs
-import "gridjs/dist/theme/mermaid.css"; // Import the Grid.js theme
+import { Grid, h } from "gridjs";
+import "gridjs/dist/theme/mermaid.css";
 
 export default {
   name: "GridTable",
@@ -15,23 +15,19 @@ export default {
     },
   },
   mounted() {
-    // Initialize the Grid.js table when the component is mounted
     this.renderGrid();
   },
   watch: {
-    // Re-render the Grid.js table when the users array changes
     users() {
       this.renderGrid();
     },
   },
   methods: {
     renderGrid() {
-      // Destroy the existing grid if it exists
       if (this.grid) {
         this.grid.destroy();
       }
 
-      // Render a new grid instance
       this.grid = new Grid({
         columns: [
           "ID",
@@ -44,12 +40,12 @@ export default {
             formatter: (cell, row) => {
               return h("div", {className: "action-buttons"}, [
                 h("button", {
-                  className: "btn btn-primary edit-button",
-                  onClick: () => this.$emit("editUser", row._cells[0].data), // Pass user data for editing
+                  className: "button button-edit",
+                  onClick: () => this.$emit("editUser", row._cells[0].data),
                 }, "Edit"),
                 h("button", {
-                  className: "btn btn-danger delete-button",
-                  onClick: () => this.$emit("deleteUser", row._cells[0].data), // Pass user ID for deletion
+                  className: "button button-delete",
+                  onClick: () => this.$emit("deleteUser", row._cells[0].data),
                 }, "Delete"),
               ]);
             },
@@ -66,18 +62,11 @@ export default {
           enabled: true,
           limit: 5,
         },
-        search: true, // Enable the search bar
-        sort: true,   // Enable column sorting
+        search: true,
+        sort: true,
         language: {
-          search: {
-            placeholder: 'Search...',
-          },
-          pagination: {
-            previous: 'Previous',
-            next: 'Next',
-            showing: 'Showing',
-            results: () => 'rows',
-          },
+          search: {placeholder: 'Search...'},
+          pagination: {previous: 'Previous', next: 'Next', showing: 'Showing', results: () => 'rows'},
         },
       }).render(this.$refs.wrapper);
     },
@@ -90,34 +79,49 @@ export default {
   margin-top: 20px;
 }
 
+/* Base style for action buttons */
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  transition: background-color 0.3s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover and active effects */
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Edit button style */
+.button-edit {
+  background-color: #4CAF50;
+}
+
+.button-edit:hover {
+  background-color: #388E3C;
+}
+
+/* Delete button style */
+.button-delete {
+  background-color: #F44336;
+}
+
+.button-delete:hover {
+  background-color: #D32F2F;
+}
+
+/* Action buttons layout */
 .action-buttons {
   display: flex;
-  justify-content: flex-start; /* Align buttons to the start */
-  gap: 10px; /* Space between buttons */
-}
-
-.edit-button, .delete-button {
-  padding: 5px 10px; /* Padding for buttons */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-}
-
-.edit-button {
-  background-color: #007bff; /* Primary color for edit button */
-  color: white; /* Text color for edit button */
-}
-
-.edit-button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-}
-
-.delete-button {
-  background-color: crimson; /* Red for delete button */
-  color: white; /* Text color for delete button */
-}
-
-.delete-button:hover {
-  background-color: darkred; /* Darker shade on hover */
+  gap: 10px;
 }
 </style>

@@ -1,0 +1,39 @@
+/* Global styles for action buttons in GridTable */
+.button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: background-color 0.3s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.button-edit {
+    background-color: #4CAF50;
+}
+.button-edit:hover {
+    background-color: #388E3C;
+}
+
+.button-delete {
+    background-color: #F44336;
+}
+.button-delete:hover {
+    background-color: #D32F2F;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
