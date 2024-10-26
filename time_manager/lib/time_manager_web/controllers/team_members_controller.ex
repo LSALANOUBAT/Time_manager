@@ -5,8 +5,8 @@ defmodule TimeManagerWeb.TeamMembersController do
   alias TimeManagerWeb.Plugs.{AdminOrManager, FetchTeamID}
 
   # Ensure Admin or Team role for specific actions
-  plug AdminOrManager when action in [:add_employee, :delete_team_member, :get_team_members]
-  plug FetchTeamID when action in [:add_employee, :delete_team_member, :get_team_members]
+  plug AdminOrManager when action in [:add_employee, :delete_team_member, :get_team_members_token]
+  plug FetchTeamID when action in [:add_employee, :delete_team_member, :get_team_members_token]
 
   # Add employee to the team
   def add_employee(conn, %{"id" => employee_id}) do
