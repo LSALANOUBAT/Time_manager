@@ -1,5 +1,19 @@
 <template>
   <div ref="wrapper" class="grid-wrapper"></div>
+
+  <!-- Modal for displaying team members -->
+  <div v-if="showMembersModal" class="modal-overlay" @click.self="closeMembersModal">
+    <div class="modal-content">
+      <h3>Team Members of {{ activeTeamName }}</h3>
+      <ul class="member-list">
+        <li v-for="member in teamMembers" :key="member.id">
+          {{ member.username }} ({{ member.role }})
+          <button class="button button-delete-member" @click="deleteMember(member.id)">Remove</button>
+        </li>
+      </ul>
+      <button class="button button-close" @click="closeMembersModal">Close</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -13,6 +27,14 @@ export default {
       type: Array,
       required: true,
     },
+  },
+  data() {
+    return {
+      showMembersModal: false,
+      teamMembers: [],
+      activeTeamId: null,
+      activeTeamName: "",
+    };
   },
   mounted() {
     this.renderGrid();
@@ -46,6 +68,10 @@ export default {
                   className: "button button-delete",
                   onClick: () => this.$emit("deleteTeam", row.cells[0].data),
                 }, "Delete"),
+                h("button", {
+                  className: "button button-view-members",
+                  onClick: () => this.fetchTeamMembers(row.cells[0].data, row.cells[1].data),
+                }, "View Members"),
               ]);
             },
           },
@@ -73,6 +99,49 @@ export default {
         },
       }).render(this.$refs.wrapper);
     },
+
+    async fetchTeamMembers(teamId, teamName) {
+      this.activeTeamId = teamId;
+      this.activeTeamName = teamName;
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members?team_id=${teamId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch team members");
+
+        const data = await response.json();
+        this.teamMembers = data.members;
+        this.showMembersModal = true;
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+      }
+    },
+
+    async deleteMember(memberId) {
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${memberId}/team/${this.activeTeamId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to delete member");
+
+        // Remove member from local list on success
+        this.teamMembers = this.teamMembers.filter(member => member.id !== memberId);
+      } catch (error) {
+        console.error("Error deleting member:", error);
+      }
+    },
+
+    closeMembersModal() {
+      this.showMembersModal = false;
+      this.teamMembers = [];
+      this.activeTeamId = null;
+      this.activeTeamName = "";
+    },
   },
 };
 </script>
@@ -82,7 +151,11 @@ export default {
   margin-top: 20px;
 }
 
-/* Base style for action buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .button {
   padding: 8px 16px;
   border: none;
@@ -94,37 +167,67 @@ export default {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover and active effects */
-.button:hover {
-  transform: translateY(-2px);
-}
-
-.button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-/* Edit button style */
+/* Button styles */
 .button-edit {
   background-color: #4CAF50;
 }
-
 .button-edit:hover {
   background-color: #388E3C;
 }
-
-/* Delete button style */
 .button-delete {
   background-color: #F44336;
 }
-
 .button-delete:hover {
   background-color: #D32F2F;
 }
+.button-view-members {
+  background-color: #007BFF;
+}
+.button-view-members:hover {
+  background-color: #0056b3;
+}
+.button-delete-member {
+  background-color: #FF6347;
+  margin-left: 10px;
+}
+.button-delete-member:hover {
+  background-color: #d9452a;
+}
+.button-close {
+  margin-top: 15px;
+  background-color: #6c757d;
+}
+.button-close:hover {
+  background-color: #5a6268;
+}
 
-/* Action buttons layout */
-.action-buttons {
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+}
+.member-list {
+  list-style-type: none;
+  padding: 0;
+}
+.member-list li {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>
