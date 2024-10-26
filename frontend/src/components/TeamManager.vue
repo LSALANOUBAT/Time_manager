@@ -15,7 +15,7 @@
     <h3>Teams</h3>
     <TeamGridTable :teams="teams" @editTeam="setEditingTeam" @deleteTeam="deleteTeam" />
 
-    <!-- Form to assign a user to a team -->
+    <!-- Form to assign an employee to a team -->
     <div class="user-assignment">
       <h3>Assign Employee to Team</h3>
       <form @submit.prevent="assignUserToTeam">
@@ -34,6 +34,28 @@
         </select>
 
         <button type="submit" class="assign-button">Assign to Team</button>
+      </form>
+    </div>
+
+    <!-- Form to assign a manager to a team -->
+    <div class="manager-assignment" v-if="userRole === 'admin'">
+      <h3>Assign Manager to Team</h3>
+      <form @submit.prevent="assignManagerToTeam">
+        <select v-model="managerAssignment.managerId" required>
+          <option disabled value="">Select Manager</option>
+          <option v-for="manager in unassignedManagers" :key="manager.id" :value="manager.id">
+            {{ manager.id }} - {{ manager.name || manager.username }}
+          </option>
+        </select>
+
+        <select v-model="managerAssignment.teamId" required>
+          <option disabled value="">Select Team</option>
+          <option v-for="team in teams" :key="team.id" :value="team.id">
+            {{ team.id }} - {{ team.name }}
+          </option>
+        </select>
+
+        <button type="submit" class="assign-button">Assign Manager</button>
       </form>
     </div>
   </div>
@@ -57,10 +79,12 @@ export default {
   data() {
     return {
       teams: [],
-      unassignedUsers: [], // Updated to store only unassigned users
+      unassignedUsers: [],
+      unassignedManagers: [], // Added to store only unassigned managers
       teamData: { name: "" },
       editingTeam: null,
       userAssignment: { teamId: null, userId: null },
+      managerAssignment: { teamId: null, managerId: null }, // Added for manager assignment
     };
   },
   methods: {
@@ -86,14 +110,28 @@ export default {
           }
         });
         if (!response.ok) throw new Error('Failed to fetch unassigned employees');
-        this.unassignedUsers = await response.json(); // Updated to fetch unassigned employees only
+        this.unassignedUsers = await response.json();
       } catch (error) {
         this.showToast("Error fetching unassigned employees: " + error.message, "danger");
       }
     },
 
+    async fetchUnassignedManagers() {
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/unassigned_managers`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch unassigned managers');
+        this.unassignedManagers = await response.json();
+      } catch (error) {
+        this.showToast("Error fetching unassigned managers: " + error.message, "danger");
+      }
+    },
+
     async submitTeam() {
-      if (this.userRole !== 'admin') return; // Prevent team creation for non-admin roles
+      if (this.userRole !== 'admin') return;
       try {
         const url = this.editingTeam
             ? `${process.env.VUE_APP_API_URL}/teams/${this.editingTeam.id}`
@@ -110,7 +148,7 @@ export default {
 
         if (response.ok) {
           this.showToast(`Team ${this.editingTeam ? "updated" : "created"} successfully.`, "success");
-          this.fetchTeams(); // Refresh the list of teams
+          this.fetchTeams();
           this.teamData.name = "";
           this.editingTeam = null;
         } else throw new Error("Failed to submit team");
@@ -166,14 +204,46 @@ export default {
           this.showToast("User assigned to team successfully.", "success");
           this.userAssignment.teamId = null;
           this.userAssignment.userId = null;
-          this.fetchTeams(); // Optionally refresh teams to reflect new assignment
-          this.fetchUnassignedUsers(); // Refresh the list of unassigned users
+          this.fetchTeams();
+          this.fetchUnassignedUsers();
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || "Failed to assign user to team");
         }
       } catch (error) {
         this.showToast("Error assigning user to team: " + error.message, "danger");
+      }
+    },
+
+    async assignManagerToTeam() {
+      const { teamId, managerId } = this.managerAssignment;
+
+      if (!teamId || !managerId) {
+        this.showToast("Please select both a manager and a team.", "warning");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/teams/${teamId}/assign_manager/${managerId}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          this.showToast("Manager assigned to team successfully.", "success");
+          this.managerAssignment.teamId = null;
+          this.managerAssignment.managerId = null;
+          this.fetchTeams();
+          this.fetchUnassignedManagers();
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to assign manager to team");
+        }
+      } catch (error) {
+        this.showToast("Error assigning manager to team: " + error.message, "danger");
       }
     },
 
@@ -188,7 +258,8 @@ export default {
   },
   mounted() {
     this.fetchTeams();
-    this.fetchUnassignedUsers(); // Fetch unassigned users on component mount
+    this.fetchUnassignedUsers();
+    this.fetchUnassignedManagers();
   },
 };
 </script>
@@ -198,7 +269,7 @@ export default {
   padding: 20px;
 }
 
-.team-form, .user-assignment {
+.team-form, .user-assignment, .manager-assignment {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -206,7 +277,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.button-submit {
+.button-submit, .assign-button {
   background-color: #007bff;
   color: white;
   padding: 8px 12px;
@@ -216,29 +287,15 @@ export default {
   transition: background-color 0.3s;
 }
 
-.button-submit:hover {
+.button-submit:hover, .assign-button:hover {
   background-color: #0056b3;
 }
 
-.user-assignment select {
+select {
   margin-right: 10px;
   padding: 8px;
   font-size: 1em;
   border-radius: 4px;
   border: 1px solid #ddd;
-}
-
-.assign-button {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.assign-button:hover {
-  background-color: #0056b3;
 }
 </style>
