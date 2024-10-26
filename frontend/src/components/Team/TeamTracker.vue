@@ -2,18 +2,45 @@
   <div class="team-manager">
     <h2>Team Management & Metrics</h2>
 
-    <!-- Display Team ID -->
-    <p v-if="teamId" class="team-id">Team ID: {{ teamId }}</p>
-    <h3>Team Members</h3>
-    <ul class="member-list">
-      <li v-for="member in teamMembers" :key="member.id">
-        ID: {{ member.user_id }} - {{ member.username }} ({{ member.role }})
-        <button @click="editMember(member)" class="button-edit-member">Edit</button>
-        <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
-      </li>
-    </ul>
+    <!-- Display Team Name -->
+    <p v-if="teamId" class="team-id">Team Name: {{ teamId }}</p>
 
-    <!-- Graphs for Metrics -->
+    <!-- Section to Add Unassigned Employee -->
+    <div class="add-employee-section">
+      <h3>Add Unassigned Employee</h3>
+      <div class="employee-select">
+        <select v-model="selectedEmployee" class="employee-dropdown">
+          <option disabled value="">Select an Employee</option>
+          <option v-for="employee in unassignedEmployees" :key="employee.id" :value="employee.id">
+            {{ employee.username }}
+          </option>
+        </select>
+        <button @click="addEmployeeToTeam" :disabled="!selectedEmployee" class="button-add-employee">Add to Team</button>
+      </div>
+    </div>
+
+    <!-- Team Members Table -->
+    <h3>Team Members</h3>
+    <table class="team-members-table">
+      <thead>
+      <tr>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="member in teamMembers" :key="member.id">
+        <td>{{ member.username }}</td>
+        <td>{{ member.role }}</td>
+        <td>
+          <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Metrics Charts -->
     <div class="metrics">
       <div class="chart-container" v-for="(chart, index) in chartConfigs" :key="index">
         <h3>{{ chart.title }}</h3>
@@ -34,11 +61,9 @@ export default {
     return {
       teamId: null,
       teamMembers: [],
-      overtimeData: {},
-      nightData: {},
-      undertimeData: {},
-      dailyWorkingTimes: [],
-      hoursPerWorkingTime: [],
+      unassignedEmployees: [],
+      selectedEmployee: null,
+      charts: {},
       chartConfigs: [
         { title: 'Overtime vs. Regular Hours', ref: 'overtimeChart', label: 'Overtime Ratio', ratio: null },
         { title: 'Night Work Ratio', ref: 'nightRatioChart', label: 'Night Work Ratio', ratio: null },
@@ -49,18 +74,11 @@ export default {
     };
   },
   methods: {
-    editMember(member) {
-      console.log("Editing member:", member); // Log to verify the member details are passed
-      // Emit the event to the parent with member data, or set up your own editing UI logic here
-      this.$emit("editMember", member); // To handle in parent component
-    },
-
     async fetchMetrics() {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      console.log("Fetching metrics data...");
 
       try {
-        const [overtimeResponse, nightResponse, undertimeResponse, dailyWorkingResponse, hoursPerDayResponse] = await Promise.all([
+        const responses = await Promise.all([
           fetch(`${process.env.VUE_APP_API_URL}/metrics/overtime_ratios`, { headers }),
           fetch(`${process.env.VUE_APP_API_URL}/metrics/night_ratios`, { headers }),
           fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, { headers }),
@@ -68,59 +86,63 @@ export default {
           fetch(`${process.env.VUE_APP_API_URL}/metrics/users_hours_per_working_time`, { headers })
         ]);
 
-        this.overtimeData = overtimeResponse.ok ? await overtimeResponse.json() : {};
-        this.nightData = nightResponse.ok ? await nightResponse.json() : {};
-        this.undertimeData = undertimeResponse.ok ? await undertimeResponse.json() : {};
-        this.dailyWorkingTimes = dailyWorkingResponse.ok ? (await dailyWorkingResponse.json()).daily_working_times : [];
-        this.hoursPerWorkingTime = hoursPerDayResponse.ok ? await hoursPerDayResponse.json() : [];
+        const [overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData] = await Promise.all(
+            responses.map(response => response.ok ? response.json() : {})
+        );
 
-        this.chartConfigs[0].ratio = this.overtimeData.overtime_ratio || 0;
-        this.chartConfigs[1].ratio = this.nightData.night_ratio || 0;
-        this.chartConfigs[2].ratio = this.undertimeData.undertime_ratio || 0;
+        this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
+        this.chartConfigs[1].ratio = nightData.night_ratio || 0;
+        this.chartConfigs[2].ratio = undertimeData.undertime_ratio || 0;
 
-        this.renderCharts();
+        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData);
       } catch (error) {
         console.error("Error fetching metrics:", error);
         this.showToast("Error fetching metrics: " + error.message, "danger");
       }
     },
-
-    async fetchTeamMembers() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      console.log("Fetching team members...");
-
-      try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, { headers });
-        if (!response.ok) throw new Error('Failed to fetch team members');
-
-        const data = await response.json();
-        console.log("Fetched team members:", data);
-        this.teamMembers = data.members || [];
-        this.teamId = data.team_id || data.team;
-      } catch (error) {
-        console.error("Error fetching team members:", error);
-        this.showToast("Error fetching team members: " + error.message, "danger");
-      }
-    },
-
-    renderCharts() {
-      const chartData = [
-        { ref: 'overtimeChart', data: [this.overtimeData.overtime_ratio, this.overtimeData.total_ratio], labels: ['Overtime', 'Regular Hours'] },
-        { ref: 'nightRatioChart', data: [this.nightData.night_ratio, this.nightData.total_ratio], labels: ['Night Hours', 'Day Hours'] },
-        { ref: 'undertimeChart', data: [this.undertimeData.undertime_ratio, this.undertimeData.on_time_ratio], labels: ['Undertime', 'On-Time'] },
-        { ref: 'dailyWorkingTimeChart', data: this.dailyWorkingTimes.map(item => item.count), labels: this.dailyWorkingTimes.map(item => item.date) },
-        { ref: 'hoursPerDayChart', data: this.hoursPerWorkingTime.map(item => item.hours), labels: this.hoursPerWorkingTime.map(item => item.date) },
+    initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData, hoursPerDayData) {
+      const chartDefinitions = [
+        {
+          ref: 'overtimeChart',
+          type: 'doughnut',
+          data: [overtimeData.overtime_hours_sum || 0, overtimeData.total_hours_sum || 0],
+          labels: ['Overtime Hours', 'Regular Hours'],
+        },
+        {
+          ref: 'nightRatioChart',
+          type: 'pie',
+          data: [nightData.night_hours_sum || 0, nightData.total_hours_sum || 0],
+          labels: ['Night Hours', 'Day Hours'],
+        },
+        {
+          ref: 'undertimeChart',
+          type: 'pie',
+          data: [undertimeData.undertime_workingtimes || 0, undertimeData.total_workingtimes || 0],
+          labels: ['Undertime', 'On-Time'],
+        },
+        {
+          ref: 'dailyWorkingTimeChart',
+          type: 'bar',
+          data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
+          labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
+        },
+        {
+          ref: 'hoursPerDayChart',
+          type: 'line',
+          data: hoursPerDayData.map(item => item.hours) || [],
+          labels: hoursPerDayData.map(item => item.date) || [],
+        }
       ];
 
-      chartData.forEach((chart, index) => {
-        if (this.$refs[chart.ref]) {
-          new Chart(this.$refs[chart.ref], {
-            type: index === 3 ? 'bar' : index === 4 ? 'line' : 'pie',
+      chartDefinitions.forEach((chart) => {
+        if (this.$refs[chart.ref] && !this.charts[chart.ref]) {
+          this.charts[chart.ref] = new Chart(this.$refs[chart.ref], {
+            type: chart.type,
             data: {
               labels: chart.labels,
               datasets: [{
                 data: chart.data,
-                backgroundColor: index < 3 ? ['#ff6347', '#36a2eb'] : ['#42a5f5', '#66bb6a'],
+                backgroundColor: ['#ff6347', '#36a2eb', '#42a5f5', '#66bb6a'],
               }]
             }
           });
@@ -128,22 +150,58 @@ export default {
       });
     },
 
+    async fetchUnassignedEmployees() {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/unsigned_employee`, { headers });
+        if (!response.ok) throw new Error('Failed to fetch unassigned employees');
+        this.unassignedEmployees = await response.json();
+      } catch (error) {
+        this.showToast("Error fetching unassigned employees: " + error.message, "danger");
+      }
+    },
+
+    async addEmployeeToTeam() {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${this.selectedEmployee}/team/`, {
+          method: 'POST',
+          headers,
+        });
+        if (!response.ok) throw new Error('Failed to add employee to the team');
+        this.fetchTeamMembers();
+        this.fetchUnassignedEmployees();
+        this.selectedEmployee = null;
+        this.showToast("Employee added to team successfully!", "success");
+      } catch (error) {
+        this.showToast("Error adding employee: " + error.message, "danger");
+      }
+    },
+
+    async fetchTeamMembers() {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, { headers });
+        if (!response.ok) throw new Error('Failed to fetch team members');
+        const data = await response.json();
+        this.teamMembers = data.members || [];
+        this.teamId = data.team_id || data.team;
+      } catch (error) {
+        this.showToast("Error fetching team members: " + error.message, "danger");
+      }
+    },
+
     async deleteMember(userId) {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-      console.log(`Deleting member with ID: ${userId}`);
-
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/`, {
           method: 'DELETE',
           headers,
         });
-
         if (!response.ok) throw new Error('Failed to delete member');
-
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
         this.showToast("Member removed successfully!", "success");
       } catch (error) {
-        console.error("Error deleting member:", error);
         this.showToast("Error deleting member: " + error.message, "danger");
       }
     },
@@ -160,8 +218,9 @@ export default {
 
   mounted() {
     this.fetchTeamMembers();
+    this.fetchUnassignedEmployees();
     this.fetchMetrics();
-  },
+  }
 };
 </script>
 
@@ -173,20 +232,58 @@ export default {
   font-weight: bold;
   margin-bottom: 10px;
 }
-.metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-.chart-container {
-  flex: 1 1 45%;
-  background-color: #fff;
+
+.add-employee-section {
+  background-color: #f9f9f9;
   padding: 15px;
+  margin-bottom: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.employee-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.employee-dropdown {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-add-employee {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-add-employee:hover {
+  background-color: #0056b3;
+}
+
+.team-members-table {
+  width: 100%;
+  border-collapse: collapse;
   margin-bottom: 20px;
 }
+
+.team-members-table th,
+.team-members-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.team-members-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
 .button-delete-member {
   background-color: #ff6347;
   color: white;
@@ -195,19 +292,23 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+
 .button-delete-member:hover {
   background-color: #d9452a;
 }
-.button-edit-member {
-  background-color: #4CAF50;
-  color: white;
-  padding: 5px 10px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
 }
-.button-edit-member:hover {
-  background-color: #388E3C;
+
+.chart-container {
+  flex: 1 1 45%;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
