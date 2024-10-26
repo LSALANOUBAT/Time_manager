@@ -3,33 +3,34 @@
     <!-- Hamburger Menu -->
     <HamburgerMenu />
 
+    <!-- Top-right corner for Modify Password button -->
+    <div class="top-right">
+      <ModifyPasswordButton />
+    </div>
+
     <h2 class="dashboard-title">User Management Dashboard</h2>
 
     <!-- Display UserManager and TeamManager only if the user is not an employee -->
     <user-manager v-if="isAllowedToManageUsers" />
     <team-manager v-if="isAllowedToManageTeams" :user-role="user.role" />
 
-
-
     <!-- Error message if the user is not authorized -->
     <div v-if="isAllowedToManageUsers && errorMessage">
       <p class="error">{{ errorMessage }}</p>
     </div>
+
     <!-- User Tracking for Employees -->
     <user-tracking v-if="['employee', 'manager'].includes(user.role)" :is-manager="user.role === 'manager'" />
-
-
   </div>
 </template>
 
 <script>
 import UserTracking from './User/UserTracking.vue';
-
 import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
 import HamburgerMenu from './HamburgerMenu.vue';
-
+import ModifyPasswordButton from './ModifyPasswordButton.vue';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -40,6 +41,7 @@ export default {
     TeamManager,
     HamburgerMenu,
     UserTracking,
+    ModifyPasswordButton,
   },
 
   data() {
@@ -130,6 +132,13 @@ export default {
   height: 100vh;
   overflow-y: auto;
   background-color: #f4f4f4;
+}
+
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1001; /* Ensures it's above other elements */
 }
 
 .dashboard-title {
