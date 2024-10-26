@@ -40,13 +40,12 @@
 
 <script>
 import { toastController } from '@ionic/vue';
-import Histogram from '../chart/Histogram.vue';
+
 import GridTable from './GridTable.vue'; // Import GridTable component
 
 export default {
   name: 'UserManager',
   components: {
-    Histogram, // Register the Histogram component
     GridTable, // Register the GridTable component
   },
   data() {

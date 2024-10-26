@@ -122,8 +122,7 @@ defmodule TimeManagerWeb.WorkingtimeController do
 
       changeset = Workingtime.changeset(%Workingtime{}, %{
         "start" => current_time,
-        "user_id" => user_id,
-        "night_time" => is_night_time(current_time)
+        "user_id" => user_id
       })
 
       case Repo.insert(changeset) do
@@ -140,6 +139,7 @@ defmodule TimeManagerWeb.WorkingtimeController do
     end
   end
 
+
   # Action pour Clock Out
   def clock_out(conn, %{"userID" => user_id}) do
     # Trouver la session active (sans end)
@@ -149,8 +149,7 @@ defmodule TimeManagerWeb.WorkingtimeController do
       current_time = DateTime.utc_now() |> DateTime.truncate(:second)
 
       changeset = Workingtime.changeset(active_session, %{
-        "end" => current_time,
-        "night_time" => active_session.start.hour >= 20 || active_session.start.hour < 6
+        "end" => current_time
       })
 
       case Repo.update(changeset) do
@@ -166,8 +165,8 @@ defmodule TimeManagerWeb.WorkingtimeController do
       end
     else
       conn
-      |> put_status(:unprocessable_entity)
-      |> json(%{error: "Aucune session active trouvée. Veuillez clock in avant de clock out."})
+      |> put_status(:not_found)
+      |> json(%{error: "No active session found for user #{user_id}"})
     end
   end
 

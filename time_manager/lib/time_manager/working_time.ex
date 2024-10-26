@@ -26,7 +26,7 @@ defmodule TimeManager.Workingtime do
     |> validate_required([:start, :user_id])
     |> calculate_hours_worked()
     |> calculate_night_time()
-    |> validate_min_gap()
+
     |> calculate_overtime_hours()
     |> calculate_night_hours()
   end
@@ -100,29 +100,29 @@ defmodule TimeManager.Workingtime do
   end
 
   # Validate minimum gap of 16 hours between shifts
-  defp validate_min_gap(changeset) do
-    user_id = get_field(changeset, :user_id)
-    start_time = get_field(changeset, :start)
+  #defp validate_min_gap(changeset) do
+   # user_id = get_field(changeset, :user_id)
+    #start_time = get_field(changeset, :start)
 
-    if user_id && start_time do
-      last_workingtime =
-        Repo.one(
-          from(w in __MODULE__,
-            where: w.user_id == ^user_id,
-            order_by: [desc: w.end],
-            limit: 1
-          )
-        )
+#    if user_id && start_time do
+ #     last_workingtime =
+  #     Repo.one(
+   #       from(w in __MODULE__,
+    #        where: w.user_id == ^user_id,
+     #       order_by: [desc: w.end],
+      #      limit: 1
+       #   )
+        #)
 
-      if last_workingtime && DateTime.diff(start_time, last_workingtime.end) < 16 * 3600 do
-        add_error(changeset, :start, "must be at least 16 hours after the previous shift end")
-      else
-        changeset
-      end
-    else
-      changeset
-    end
-  end
+     # if last_workingtime && DateTime.diff(start_time, last_workingtime.end) < 16 * 3600 do
+     #   add_error(changeset, :start, "must be at least 16 hours after the previous shift end")
+      #else
+       # changeset
+      #end
+    #else
+     # changeset
+    #end
+  #end
 
   # Calculate overtime hours based on hours worked
   defp calculate_overtime_hours(changeset) do
