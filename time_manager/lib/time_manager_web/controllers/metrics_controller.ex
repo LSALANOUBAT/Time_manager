@@ -234,4 +234,25 @@ defmodule TimeManagerWeb.MetricsController do
     |> put_status(:ok)
     |> json(%{night_hours_sum: night_hours_sum})
   end
+
+  def hours_per_working_time(conn, _params) do
+    # Extract user_id from the bearer token
+    user_id = Guardian.Plug.current_resource(conn).id
+
+    # Get the start of the current month
+    start_of_month = Timex.beginning_of_month(Timex.now())
+
+    # Query to get the date and hours for each working time entry since the start of the month
+    working_times =
+      from(w in Workingtime,
+        where: w.user_id == ^user_id and w.start >= ^start_of_month,
+        select: %{date: fragment("DATE(?)", w.start), hours: w.hours_worked}
+      )
+      |> Repo.all()
+
+    # Format response as a JSON array with date and hours
+    conn
+    |> put_status(:ok)
+    |> json(working_times)
+  end
 end
