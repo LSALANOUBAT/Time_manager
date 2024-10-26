@@ -213,4 +213,25 @@ defmodule TimeManagerWeb.MetricsController do
     |> put_status(:ok)
     |> json(%{overtime_hours_sum: overtime_hours_sum})
   end
+
+  def sum_user_night_hours(conn, _params) do
+    # Extract user_id from the bearer token
+    user_id = Guardian.Plug.current_resource(conn).id
+
+    # Get the start of the current month
+    start_of_month = Timex.beginning_of_month(Timex.now())
+
+    # Calculate the sum of night hours for the user since the beginning of the month
+    night_hours_sum =
+      from(w in Workingtime,
+        where: w.user_id == ^user_id and w.start >= ^start_of_month,
+        select: sum(w.night_hours)
+      )
+      |> Repo.one() || 0.0
+
+    # Return the result as JSON
+    conn
+    |> put_status(:ok)
+    |> json(%{night_hours_sum: night_hours_sum})
+  end
 end
