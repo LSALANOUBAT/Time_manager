@@ -30,7 +30,7 @@
     <section>
       <h3>Your Detailed Working Times</h3>
       <ul>
-        <li v-for="wt in workingTimes" :key="wt.id">
+        <li v-for="wt in limitedWorkingTimes" :key="wt.id">
           <strong>Date:</strong> {{ formatDate(wt.start, 'date') }} |
           <strong>Start:</strong> {{ formatDate(wt.start, 'time') }} |
           <strong>End:</strong> {{ wt.end ? formatDate(wt.end, 'time') : "In Progress" }} |
@@ -61,6 +61,14 @@ export default {
       nightHours: null,
       errorMessage: '',
     };
+  },
+  computed: {
+    // Compute the last 10 working times sorted by 'end' date
+    limitedWorkingTimes() {
+      return [...this.workingTimes]
+        .sort((a, b) => new Date(b.end) - new Date(a.end))
+        .slice(0, 10);
+    },
   },
   methods: {
     async fetchUserDetails() {
