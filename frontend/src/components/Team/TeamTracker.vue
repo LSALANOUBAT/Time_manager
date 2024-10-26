@@ -87,7 +87,7 @@ export default {
 
     async fetchTeamMembers() {
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

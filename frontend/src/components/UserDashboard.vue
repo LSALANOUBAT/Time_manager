@@ -4,9 +4,6 @@
     <HamburgerMenu />
 
     <!-- Top-right corner for Modify Password button -->
-    <div class="top-right">
-      <ModifyPasswordButton />
-    </div>
 
     <h2 class="dashboard-title">User Management Dashboard</h2>
 
@@ -34,7 +31,6 @@ import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
 import TeamTracker from './Team/TeamTracker.vue';  // Import the TeamTracker component
 import HamburgerMenu from './HamburgerMenu.vue';
-import ModifyPasswordButton from './ModifyPasswordButton.vue';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -46,7 +42,6 @@ export default {
     TeamTracker, // Register the TeamTracker component
     HamburgerMenu,
     UserTracking,
-    ModifyPasswordButton,
   },
 
   data() {
