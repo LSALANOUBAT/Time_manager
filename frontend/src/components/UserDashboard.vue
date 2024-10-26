@@ -9,14 +9,7 @@
     <user-manager v-if="isAllowedToManageUsers" />
     <team-manager v-if="isAllowedToManageTeams" />
 
-    <!-- Section Clock In / Clock Out for employees -->
-    <div v-else class="clock-section">
-      <h3>Manage Your Working Time</h3>
-      <div class="clock-buttons">
-        <ClockIn v-if="!hasActiveSession" @clock-in="refreshWorkingTimes" />
-        <ClockOut v-if="hasActiveSession" @clock-out="refreshWorkingTimes" />
-      </div>
-    </div>
+
 
     <!-- Error message if the user is not authorized -->
     <div v-if="isAllowedToManageUsers && errorMessage">
@@ -69,8 +62,7 @@ import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
 import HamburgerMenu from './HamburgerMenu.vue';
-import ClockIn from './ClockIn.vue';
-import ClockOut from './ClockOut.vue';
+
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -80,8 +72,6 @@ export default {
     UserManager,
     TeamManager,
     HamburgerMenu,
-    ClockIn,
-    ClockOut,
     UserTracking,
   },
 
