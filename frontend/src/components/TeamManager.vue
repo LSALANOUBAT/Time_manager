@@ -6,7 +6,6 @@
     <form @submit.prevent="submitTeam" class="team-form">
       <h3>{{ editingTeam ? 'Edit Team' : 'Create New Team' }}</h3>
       <input v-model="teamData.name" placeholder="Team Name" required />
-
       <button type="submit" :class="editingTeam ? 'button button-update' : 'button button-create'">
         {{ editingTeam ? 'Update Team' : 'Create Team' }}
       </button>
@@ -16,26 +15,27 @@
     <h3>Teams</h3>
     <TeamGridTable :teams="teams" @editTeam="setEditingTeam" @deleteTeam="deleteTeam" />
 
-    <!-- Form to add a user to a team -->
+    <!-- Form to assign a user to a team -->
     <div class="user-assignment">
-      <h3>Assign User to Team</h3>
-      <label for="user-select">Select User:</label>
-      <select v-model="userAssignment.userId" id="user-select" required>
-        <option value="" disabled>Select User (ID shown)</option>
-        <option v-for="user in users" :key="user.id" :value="user.id">
-          {{ user.username }} (ID: {{ user.id }})
-        </option>
-      </select>
+      <h3>Assign Employee to Team</h3>
+      <form @submit.prevent="assignUserToTeam">
+        <select v-model="userAssignment.userId" required>
+          <option disabled value="">Select User</option>
+          <!-- Display user name or username -->
+          <option v-for="user in users" :key="user.id" :value="user.id">
+            {{ user.id }} - {{ user.name || user.username }}
+          </option>
+        </select>
 
-      <label for="team-select">Select Team:</label>
-      <select v-model="userAssignment.teamId" id="team-select" required>
-        <option value="" disabled>Select Team (ID shown)</option>
-        <option v-for="team in teams" :key="team.id" :value="team.id">
-          {{ team.name }} (ID: {{ team.id }})
-        </option>
-      </select>
+        <select v-model="userAssignment.teamId" required>
+          <option disabled value="">Select Team</option>
+          <option v-for="team in teams" :key="team.id" :value="team.id">
+            {{ team.id }} - {{ team.name }}
+          </option>
+        </select>
 
-      <button @click="assignUserToTeam" class="assign-button">Assign User</button>
+        <button type="submit" class="assign-button">Assign to Team</button>
+      </form>
     </div>
   </div>
 </template>
@@ -143,11 +143,11 @@ export default {
     async assignUserToTeam() {
       const { teamId, userId } = this.userAssignment;
 
-      // Log IDs before sending the request for debugging
-      console.log("Assigning User to Team with IDs:", { userId, teamId });
+      // Log the current teamId and userId to verify they're set
+      console.log("Assigning User to Team:", { teamId, userId });
 
       if (!teamId || !userId) {
-        this.showToast("Please select both a team and a user.", "danger");
+        this.showToast("Please select both a user and a team.", "warning");
         return;
       }
 
@@ -155,18 +155,21 @@ export default {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/${teamId}`, {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem('token')}`
           },
         });
 
+        // Check if the response was successful
         if (response.ok) {
           this.showToast("User assigned to team successfully.", "success");
           this.userAssignment.teamId = null;
           this.userAssignment.userId = null;
+          this.fetchTeams(); // Optionally refresh teams to reflect new assignment
         } else {
           const errorData = await response.json();
-          this.showToast(`Error assigning user: ${errorData.errors.team_id.join(', ')}`, "danger");
+          console.error("API Error:", errorData);
+          throw new Error(errorData.message || "Failed to assign user to team");
         }
       } catch (error) {
         this.showToast("Error assigning user to team: " + error.message, "danger");
@@ -184,7 +187,7 @@ export default {
   },
   mounted() {
     this.fetchTeams();
-    this.fetchUsers(); // Fetch users for the dropdown
+    this.fetchUsers();
   },
 };
 </script>

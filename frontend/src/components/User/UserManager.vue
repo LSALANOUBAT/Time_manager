@@ -35,8 +35,6 @@
     <h3>Recently Created or Modified Users</h3>
     <GridTable :users="recentUsers" @editUser="editUser" @deleteUser="deleteUser" />
 
-    <!-- Histogram showing users created per day -->
-    <Histogram :users="users" />
   </div>
 </template>
 

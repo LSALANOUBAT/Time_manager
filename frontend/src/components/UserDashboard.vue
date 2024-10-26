@@ -22,6 +22,9 @@
     <div v-if="isAllowedToManageUsers && errorMessage">
       <p class="error">{{ errorMessage }}</p>
     </div>
+    <!-- User Tracking for Employees -->
+    <user-tracking v-if="user.role === 'employee'" />
+
 
     <!-- Clocks Section -->
     <section>
@@ -60,6 +63,8 @@
 </template>
 
 <script>
+import UserTracking from './User/UserTracking.vue';
+
 import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
@@ -77,7 +82,9 @@ export default {
     HamburgerMenu,
     ClockIn,
     ClockOut,
+    UserTracking,
   },
+
   data() {
     return {
       user: {},
