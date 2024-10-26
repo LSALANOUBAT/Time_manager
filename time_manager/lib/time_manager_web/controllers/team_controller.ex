@@ -1,4 +1,4 @@
-defmodule TimeManagerWeb.AdminTeamController do
+defmodule TimeManagerWeb.TeamController do
   use TimeManagerWeb, :controller
 
   alias TimeManager.{Team, Repo, User}  # Use TimeManager.Repo here
@@ -6,7 +6,6 @@ defmodule TimeManagerWeb.AdminTeamController do
 
 
   plug Admin when action in [:create, :delete, :update_name, :assign_manager]
-  plug AdminOrManager when action in [:add_user]
 
 
   # List all teams
@@ -159,57 +158,5 @@ defmodule TimeManagerWeb.AdminTeamController do
   # Helper function to format changeset errors without `apply_action`
   defp format_changeset_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)
-  end
-
-
-
-
-
-
-
-
-  # Add a user to a team
-  def add_employee(conn, %{"team_id" => team_id, "id" => employee_id}) do
-    # Convert team_id and employee_id to integers
-    team_id = String.to_integer(team_id)
-    employee_id = String.to_integer(employee_id)
-
-    # Find the team by its ID
-    case Repo.get(Team, team_id) do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{status: "error", message: "Team not found"})
-
-      team ->
-        # Check if the employee exists
-        case Repo.get(User, employee_id) do
-          nil ->
-            conn
-            |> put_status(:not_found)
-            |> json(%{status: "error", message: "Employee not found"})
-
-          %User{role: "employee"} = employee ->
-            # Start a transaction to update both the team and the user's team_id
-            Repo.transaction(fn ->
-              # Update the team with the new employee_id
-              team_changeset = Ecto.Changeset.change(team, employee_id: employee.id)
-              Repo.update!(team_changeset)
-
-              # Update the user’s team_id field
-              user_changeset = Ecto.Changeset.change(employee, team_id: team_id)
-              Repo.update!(user_changeset)
-            end)
-
-            conn
-            |> put_status(:ok)
-            |> json(%{status: "success", message: "Employee successfully added to the team"})
-
-          _ ->
-            conn
-            |> put_status(:unprocessable_entity)
-            |> json(%{status: "error", message: "User is not an employee"})
-        end
-    end
   end
 end

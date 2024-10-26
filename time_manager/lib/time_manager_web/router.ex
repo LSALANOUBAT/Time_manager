@@ -69,12 +69,17 @@ defmodule TimeManagerWeb.Router do
 
     # Routes for teams
     scope "/teams" do
-      get "", AdminTeamController, :all, plug: Admin #OK
-      post "", AdminTeamController, :create, plug: Admin #OK
-      put "/:id", AdminTeamController, :update_name, plug: Admin #OK
-      delete "/:id", AdminTeamController, :delete, plug: Admin #OK
-      put "/:team_id/assign_manager/:id", AdminTeamController, :assign_manager, plug: Admin #OK
-      put "/:team_id/add_employee/:id", AdminTeamController, :add_employee, plug: AdminorManager #
+      get "", TeamController, :all, plug: Admin #OK
+      post "", TeamController, :create, plug: Admin #OK
+      put "/:id", TeamController, :update_name, plug: Admin #OK
+      delete "/:id", TeamController, :delete, plug: Admin #OK
+      post "/:team_id/assign_manager/:id", TeamController, :assign_manager, plug: Admin #OK
+    end
+
+    scope "/team_members" do
+      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminorManager #
+      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminorManager #
+      get "/:team_id/members", TeamMembersController, :get_team_members, plug: Admin
     end
   end
 

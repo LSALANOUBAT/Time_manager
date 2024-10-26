@@ -52,25 +52,31 @@ manager_user = insert_user.(manager_user_params, "Manager")
 employee1_user = insert_user.(employee1_user_params, "Employee 1")
 employee2_user = insert_user.(employee2_user_params, "Employee 2")
 
+# Insert team and assign the manager
 team_changeset = Team.changeset(%Team{}, Map.put(team_params, :manager_id, manager_user.id))
 gotham_pd_team = Repo.insert!(team_changeset)
 IO.puts("Team #{gotham_pd_team.name} created successfully.")
 
-for employee <- [employee1_user, employee2_user] do
-  team_member_changeset = %TeamMembers{team_id: gotham_pd_team.id, employee_id: employee.id}
+# Add the manager and employees to team members
+all_team_members = [manager_user, employee1_user, employee2_user]
+
+for member <- all_team_members do
+  team_member_changeset = %TeamMembers{team_id: gotham_pd_team.id, employee_id: member.id}
   case Repo.insert(team_member_changeset) do
     {:ok, _team_member} ->
-      IO.puts("#{employee.username} assigned to team #{gotham_pd_team.name} successfully.")
+      IO.puts("#{member.username} assigned to team #{gotham_pd_team.name} successfully.")
     {:error, changeset} ->
-      IO.inspect(changeset.errors, label: "Failed to assign #{employee.username} to team")
+      IO.inspect(changeset.errors, label: "Failed to assign #{member.username} to team")
   end
 end
 
+# Define working times
 working_times_params = [
   %{start: ~U[2023-10-01 14:00:00Z], end: ~U[2023-10-01 23:00:00Z], user_id: employee1_user.id},
   %{start: ~U[2023-10-02 09:00:00Z], end: ~U[2023-10-02 17:00:00Z], user_id: employee2_user.id}
 ]
 
+# Helper function to insert working times
 insert_working_time = fn params, label ->
   changeset = Workingtime.changeset(%Workingtime{}, params)
   case Repo.insert(changeset) do

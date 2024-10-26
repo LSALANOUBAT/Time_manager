@@ -13,6 +13,7 @@ defmodule TimeManager.TeamMembers do
     team_employee
     |> cast(attrs, [:team_id, :employee_id])
     |> validate_required([:team_id, :employee_id])
-    |> unique_constraint(:employee_id, message: "Employee can only belong to one team")
+    |> unique_constraint(:employee_id, name: :unique_employee_team, message: "Employee is already assigned to another team")
+    |> unique_constraint(:employee_id, name: :team_members_employee_id_index, message: "Employee is already assigned to another team")
   end
 end
