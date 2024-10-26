@@ -12,40 +12,40 @@
     <!-- Visualization Section with Charts -->
     <div class="chart-section">
       <div class="chart-container">
-        <h4>Weekly Overtime Trend</h4>
-        <canvas ref="overtimeChart"></canvas>
+        <h4>Hours Worked Over Time</h4>
+        <canvas ref="hoursWorkedChart"></canvas>
       </div>
       <div class="chart-container">
-        <h4>Night Hours Distribution</h4>
-        <canvas ref="nightHoursChart"></canvas>
+        <h4>Overtime and Night Hours</h4>
+        <canvas ref="overtimeNightChart"></canvas>
       </div>
     </div>
-
-    <!-- Working Time Calendar -->
-    <calendar-manager :selected-user-id="user.id" />
 
     <!-- Detailed List of Working Times -->
     <section>
       <h3>Your Detailed Working Times</h3>
       <ul>
         <li v-for="wt in workingTimes" :key="wt.id">
-          <strong>Start:</strong> {{ formatDate(wt.start) }} |
-          <strong>End:</strong> {{ wt.end ? formatDate(wt.end) : "In Progress" }}
+          <strong>Date:</strong> {{ formatDate(wt.start, 'date') }} |
+          <strong>Start:</strong> {{ formatDate(wt.start, 'time') }} |
+          <strong>End:</strong> {{ wt.end ? formatDate(wt.end, 'time') : "In Progress" }} |
+          <strong>Hours Worked:</strong> {{ wt.hours_worked.toFixed(2) }}
         </li>
       </ul>
     </section>
+
+    <!-- Calendar Manager (if you have one) -->
+    <!-- <calendar-manager :selected-user-id="user.id" /> -->
+
   </div>
 </template>
 
 <script>
-
 import { Chart, registerables } from 'chart.js';
-
 Chart.register(...registerables);
 
 export default {
   name: 'UserTracking',
-
   data() {
     return {
       user: {},
@@ -54,9 +54,6 @@ export default {
       overtimeHours: null,
       nightHours: null,
       undertimeSessions: null,
-      overtimeData: [],
-      nightHoursData: [],
-      labels: [],
       errorMessage: '',
     };
   },
@@ -66,41 +63,41 @@ export default {
       const userId = localStorage.getItem('userId');
       this.user.id = userId;
 
-      // Fetch working times and metrics
       try {
-        const [workingTimes, metrics] = await Promise.all([
-          fetch(`${process.env.VUE_APP_API_URL}/workingtime/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }).then((res) => res.json()),
-          this.fetchUserMetrics(userId, token),
-        ]);
+        // Fetch working times
+        const workingTimesResponse = await fetch(`${process.env.VUE_APP_API_URL}/workingtime/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!workingTimesResponse.ok) throw new Error('Failed to fetch working times');
+        this.workingTimes = await workingTimesResponse.json();
 
-        this.workingTimes = workingTimes;
+        // Fetch user metrics
+        await this.fetchUserMetrics(token);
+
+        // Generate charts
         this.generateChartData();
       } catch (error) {
         this.errorMessage = "Error fetching data: " + error.message;
       }
     },
 
-    async fetchUserMetrics(userId, token) {
+    async fetchUserMetrics(token) {
       try {
-        const urls = [
-          `/metrics/users_overtime_hours_sum`,
-          `/metrics/users_night_hours_sum`,
-          `/metrics/undertime_ratios`,
-        ];
+        const [overtime, night, undertime] = await Promise.all([
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/users_overtime_hours_sum`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((res) => res.json()),
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/users_night_hours_sum`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((res) => res.json()),
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }).then((res) => res.json()),
+        ]);
 
-        const [overtime, night, undertime] = await Promise.all(
-            urls.map((url) =>
-                fetch(`${process.env.VUE_APP_API_URL}${url}`, {
-                  headers: { Authorization: `Bearer ${token}` },
-                }).then((res) => res.json())
-            )
-        );
-
-        this.overtimeHours = overtime.overtime_hours_sum;
-        this.nightHours = night.night_hours_sum;
-        this.undertimeSessions = undertime.undertime_workingtimes;
+        this.overtimeHours = overtime.overtime_hours_sum.toFixed(2);
+        this.nightHours = night.night_hours_sum.toFixed(2);
+        this.undertimeSessions = undertime.undertime_workingtimes || 0;
         this.totalHours = this.calculateTotalHours();
       } catch (error) {
         this.errorMessage = "Error fetching metrics: " + error.message;
@@ -108,49 +105,71 @@ export default {
     },
 
     generateChartData() {
-      this.labels = this.workingTimes.map((wt, index) => `Session ${index + 1}`);
-      this.overtimeData = this.workingTimes.map(wt => wt.overtime_hours || 0);
-      this.nightHoursData = this.workingTimes.map(wt => wt.night_hours || 0);
+      // Prepare data for charts
+      const labels = this.workingTimes.map(wt => this.formatDate(wt.start, 'date'));
+      const hoursWorkedData = this.workingTimes.map(wt => wt.hours_worked || 0);
+      const overtimeData = this.workingTimes.map(wt => wt.overtime_hours || 0);
+      const nightHoursData = this.workingTimes.map(wt => wt.night_hours || 0);
 
-      this.renderCharts();
+      // Render charts
+      this.renderHoursWorkedChart(labels, hoursWorkedData);
+      this.renderOvertimeNightChart(labels, overtimeData, nightHoursData);
     },
 
-    renderCharts() {
-      const overtimeCtx = this.$refs.overtimeChart.getContext('2d');
-      const nightHoursCtx = this.$refs.nightHoursChart.getContext('2d');
-
-      new Chart(overtimeCtx, {
+    renderHoursWorkedChart(labels, data) {
+      const ctx = this.$refs.hoursWorkedChart.getContext('2d');
+      new Chart(ctx, {
         type: 'line',
         data: {
-          labels: this.labels,
+          labels,
           datasets: [
             {
-              label: 'Overtime Hours',
-              data: this.overtimeData,
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
+              label: 'Hours Worked',
+              data,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 2,
+              fill: true,
             },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'Date' },
+            },
+            y: {
+              title: { display: true, text: 'Hours Worked' },
+              beginAtZero: true,
+            },
+          },
           plugins: {
             tooltip: { enabled: true },
           },
         },
       });
+    },
 
-      new Chart(nightHoursCtx, {
+    renderOvertimeNightChart(labels, overtimeData, nightHoursData) {
+      const ctx = this.$refs.overtimeNightChart.getContext('2d');
+      new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: this.labels,
+          labels,
           datasets: [
             {
+              label: 'Overtime Hours',
+              data: overtimeData,
+              backgroundColor: 'rgba(255, 159, 64, 0.6)',
+              borderColor: 'rgba(255, 159, 64, 1)',
+              borderWidth: 1,
+            },
+            {
               label: 'Night Hours',
-              data: this.nightHoursData,
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              data: nightHoursData,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
               borderColor: 'rgba(54, 162, 235, 1)',
               borderWidth: 1,
             },
@@ -159,6 +178,17 @@ export default {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+              title: { display: true, text: 'Date' },
+            },
+            y: {
+              stacked: true,
+              title: { display: true, text: 'Hours' },
+              beginAtZero: true,
+            },
+          },
           plugins: {
             tooltip: { enabled: true },
           },
@@ -167,17 +197,16 @@ export default {
     },
 
     calculateTotalHours() {
-      return this.workingTimes.reduce((acc, wt) => {
-        const start = new Date(wt.start);
-        const end = wt.end ? new Date(wt.end) : new Date();
-        const duration = (end - start) / (1000 * 60 * 60);
-        return acc + duration;
-      }, 0).toFixed(2);
+      const total = this.workingTimes.reduce((acc, wt) => acc + (wt.hours_worked || 0), 0);
+      return total.toFixed(2);
     },
 
-    formatDate(dateStr) {
+    formatDate(dateStr, type = 'datetime') {
+      const options = type === 'date' ? { year: 'numeric', month: 'short', day: 'numeric' } :
+          type === 'time' ? { hour: '2-digit', minute: '2-digit' } :
+              { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       const date = new Date(dateStr);
-      return date.toLocaleString();
+      return date.toLocaleString(undefined, options);
     },
   },
   mounted() {
@@ -189,7 +218,7 @@ export default {
 <style scoped>
 .user-tracking {
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #fff;
   border-radius: 10px;
 }
 
@@ -199,33 +228,57 @@ export default {
 }
 
 .summary {
-  background-color: #e3f2fd;
+  background-color: #e0f7fa;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
   text-align: center;
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 
 .chart-section {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 20px;
 }
 
 .chart-container {
-  width: 45%;
-  height: 250px;
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
   background: #fff;
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  text-align: center;
+  margin: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .chart-container h4 {
-  margin-bottom: 15px;
-  font-size: 1.1em;
+  margin-bottom: 10px;
+  font-size: 1em;
   color: #333;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+li strong {
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    width: 100%;
+  }
 }
 </style>
