@@ -65,7 +65,7 @@ defmodule TimeManagerWeb.Router do
       get "/", WorkingtimeController, :all, plug: Admin # Get all working times OK
       get "/:userID", WorkingtimeController, :index # List working times for a specific user OK => use bearer token
       get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK => use bearer token
-      post "/:userID", WorkingtimeController, :create, plug: Admin # Create a new working time for a user OK
+      post "/:userID", WorkingtimeController, :create # Create a new working time for a user OK
       put "/:id", WorkingtimeController, :update, plug: Admin # Update a specific working time entry OK
       delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only) OK
       post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required) OK
