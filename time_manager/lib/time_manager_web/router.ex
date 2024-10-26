@@ -26,6 +26,9 @@ defmodule TimeManagerWeb.Router do
     plug TimeManagerWeb.Plugs.AdminOrManager  # Authorization plug for admin/manager
   end
 
+  pipeline :manager do
+    plug TimeManagerWeb.Plugs.Manager  # Authorization plug for admin/manager
+  end
   pipeline :admin do
     plug TimeManagerWeb.Plugs.Admin  # Authorization plug for admin
   end
@@ -46,10 +49,9 @@ defmodule TimeManagerWeb.Router do
   scope "/api", TimeManagerWeb do
     pipe_through [:api, :auth]
 
-    resources "/users", UserController, only: [:index, :show] do
-      pipe_through :admin
-    end
-
+    # Routes for users
+    get "/users", UserController, :index, plug: AdminOrManager
+    get "/users/:id", UserController, :show
     post "/users", UserController, :create, plug: Admin
     delete "/users/:id", UserController, :delete, plug: Admin
     put "/users/:id", UserController, :update, plug: Admin
@@ -58,8 +60,8 @@ defmodule TimeManagerWeb.Router do
     # Routes for working times
     scope "/workingtime" do
       get "/", WorkingtimeController, :all, plug: Admin # Get all working times OK
-      get "/:userID", WorkingtimeController, :index # List working times for a specific user OK
-      get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK
+      get "/:userID", WorkingtimeController, :index # List working times for a specific user OK => use bearer token
+      get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK => use bearer token
       post "/:userID", WorkingtimeController, :create, plug: Admin # Create a new working time for a user OK
       put "/:id", WorkingtimeController, :update, plug: Admin # Update a specific working time entry OK
       delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only) OK
@@ -69,17 +71,17 @@ defmodule TimeManagerWeb.Router do
 
     # Routes for teams
     scope "/teams" do
-      get "", TeamController, :all, plug: Admin #OK
-      post "", TeamController, :create, plug: Admin #OK
+      get "/", TeamController, :all, plug: Admin #OK
+      post "/", TeamController, :create, plug: Admin #OK
       put "/:id", TeamController, :update_name, plug: Admin #OK
       delete "/:id", TeamController, :delete, plug: Admin #OK
       post "/:team_id/assign_manager/:id", TeamController, :assign_manager, plug: Admin #OK
     end
 
-    scope "/team_members" do
-      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminorManager #OK
-      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminorManager #OK
-      get "/:team_id/members", TeamMembersController, :get_team_members, plug: Admin #OK
+    scope "/team_members" do #OK
+      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: Manager #OK
+      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: Manager #OK
+      get "/", TeamMembersController, :get_team_members, plug: Manager #OK
     end
   end
 

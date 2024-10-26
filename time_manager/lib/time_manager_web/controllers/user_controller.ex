@@ -4,7 +4,6 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManagerWeb.Auth.Guardian
 
 
-  alias TimeManagerWeb.Plugs.AdminOrManager
   alias TimeManagerWeb.Plugs.Admin  # Make sure you reference the plug here
 
   plug Admin when action in [:create]
@@ -42,7 +41,7 @@ defmodule TimeManagerWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> put_status(:created)
         |> json(%{message: "User has been created"})

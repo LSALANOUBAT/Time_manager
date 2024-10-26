@@ -1,18 +1,22 @@
 defmodule TimeManagerWeb.TeamMembersController do
   use TimeManagerWeb, :controller
   import Ecto.Query, only: [from: 2]
-  alias TimeManager.{Team, Repo, User, TeamMembers}
-  alias TimeManagerWeb.Plugs.AdminOrManager
+  alias TimeManager.{Repo, User, TeamMembers}
+  alias TimeManagerWeb.Plugs.{Manager, FetchTeamID}
 
-  plug AdminOrManager when action in [:add_employee, :delete_team_member]
+  # Ensure Admin or Manager role for specific actions
+  plug Manager when action in [:add_employee, :delete_team_member, :get_team_members]
+  plug FetchTeamID when action in [:add_employee, :delete_team_member, :get_team_members]
 
-  def add_employee(conn, %{"team_id" => team_id, "id" => employee_id}) do
-    team_id = String.to_integer(team_id)
+  # Add employee to the team
+  def add_employee(conn, %{"id" => employee_id}) do
+    team_id = conn.assigns[:team_id]
     employee_id = String.to_integer(employee_id)
 
-    case Repo.get(TimeManager.User, employee_id) do
-      %TimeManager.User{role: "employee"} = employee ->
+    case Repo.get(User, employee_id) do
+      %User{role: "employee"} = employee ->
         changeset = TeamMembers.changeset(%TeamMembers{}, %{team_id: team_id, employee_id: employee.id})
+
         case Repo.insert(changeset) do
           {:ok, _team_member} ->
             conn
@@ -38,6 +42,7 @@ defmodule TimeManagerWeb.TeamMembersController do
     end
   end
 
+  # Helper function to format errors in a readable format
   defp format_changeset_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
       Enum.reduce(opts, msg, fn {key, value}, acc ->
@@ -46,11 +51,9 @@ defmodule TimeManagerWeb.TeamMembersController do
     end)
   end
 
-
-
-
-  def delete_team_member(conn, %{"team_id" => team_id, "id" => employee_id}) do
-    team_id = String.to_integer(team_id)
+  # Delete a team member
+  def delete_team_member(conn, %{"id" => employee_id}) do
+    team_id = conn.assigns[:team_id]
     employee_id = String.to_integer(employee_id)
 
     # Check if the employee is a member of the given team
@@ -62,14 +65,14 @@ defmodule TimeManagerWeb.TeamMembersController do
 
       %TeamMembers{} = team_member ->
         # Retrieve the user's role to ensure only employees can be deleted
-        case Repo.get(TimeManager.User, employee_id) do
-          %TimeManager.User{role: "employee"} ->
+        case Repo.get(User, employee_id) do
+          %User{role: "employee"} ->
             Repo.delete!(team_member)
             conn
             |> put_status(:ok)
             |> json(%{status: "success", message: "Team member successfully deleted"})
 
-          %TimeManager.User{role: "manager"} ->
+          %User{role: "manager"} ->
             conn
             |> put_status(:forbidden)
             |> json(%{status: "error", message: "Cannot delete a manager from the team, delete the team instead"})
@@ -82,9 +85,9 @@ defmodule TimeManagerWeb.TeamMembersController do
     end
   end
 
-
-  def get_team_members(conn, %{"team_id" => team_id}) do
-    team_id = String.to_integer(team_id)
+  # Get all members of a team
+  def get_team_members(conn, _params) do
+    team_id = conn.assigns[:team_id]
 
     case Repo.get(TimeManager.Team, team_id) do
       nil ->
@@ -95,7 +98,7 @@ defmodule TimeManagerWeb.TeamMembersController do
       team ->
         members =
           Repo.all(
-            from tm in TimeManager.TeamMembers,
+            from tm in TeamMembers,
             where: tm.team_id == ^team_id,
             join: user in assoc(tm, :user),
             select: %{id: user.id, username: user.username, email: user.email, role: user.role}
@@ -106,8 +109,4 @@ defmodule TimeManagerWeb.TeamMembersController do
         |> json(%{status: "success", team: team.name, members: members})
     end
   end
-
-
-
-
 end
