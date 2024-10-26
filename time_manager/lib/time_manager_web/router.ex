@@ -50,7 +50,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through [:api, :auth]
 
     # Routes for users
-    get "/users/unsigned_employee", UserController, :list_unassigned_employees, plug: Manager #
+    get "/users/unsigned_employee", UserController, :list_unassigned_employees, plug: AdminOrManager #
     get "/users/managers", UserController, :list_managers, plug: Admin #
     get "/users/unassigned_managers", UserController, :unasign_managers, plug: Admin #
     get "/users", UserController, :index, plug: AdminOrManager
@@ -82,9 +82,9 @@ defmodule TimeManagerWeb.Router do
     end
 
     scope "/team_members" do #OK
-      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: Manager #OK
-      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: Manager #OK
-      get "/", TeamMembersController, :get_team_members, plug: Manager #OK
+      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminOrManager #OK
+      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminOrManager #OK
+      get "/", TeamMembersController, :get_team_members, plug: AdminOrManager #OK
     end
 
     scope "/metrics" do
