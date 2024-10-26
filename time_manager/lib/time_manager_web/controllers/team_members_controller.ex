@@ -86,9 +86,31 @@ defmodule TimeManagerWeb.TeamMembersController do
   end
 
   # Get all members of a team
-  def get_team_members(conn, _params) do
+  def get_team_members_token(conn, _params) do
     team_id = conn.assigns[:team_id]
 
+    case Repo.get(TimeManager.Team, team_id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{status: "error", message: "Team not found"})
+
+      team ->
+        members =
+          Repo.all(
+            from tm in TeamMembers,
+            where: tm.team_id == ^team_id,
+            join: user in assoc(tm, :user),
+            select: %{id: user.id, username: user.username, email: user.email, role: user.role}
+          )
+
+        conn
+        |> put_status(:ok)
+        |> json(%{status: "success", team: team.name, members: members})
+    end
+  end
+
+  def get_team_members_id(conn, %{"team_id" => team_id}) do
     case Repo.get(TimeManager.Team, team_id) do
       nil ->
         conn
