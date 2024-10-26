@@ -90,6 +90,7 @@ defmodule TimeManagerWeb.Router do
     scope "/metrics" do
       get "/overtime_ratios", MetricsController, :overtime_ratio, plug: Manager
       get "/night_ratios", MetricsController, :night_ratio, plug: Manager
+      get "/undertime_ratios", MetricsController, :undertime_ratio, plug: Manager
     end
   end
 

@@ -4,8 +4,8 @@ defmodule TimeManagerWeb.MetricsController do
   alias TimeManager.{Repo, Workingtime, TeamMembers}
   alias TimeManagerWeb.Plugs.{Manager, FetchTeamID}
 
-  plug Manager when action in [:overtime_ratio, :night_ratio]
-  plug FetchTeamID when action in [:overtime_ratio, :night_ratio]
+  plug Manager when action in [:overtime_ratio, :night_ratio, :undertime_ratio]
+  plug FetchTeamID when action in [:overtime_ratio, :night_ratio, :undertime_ratio]
 
   # Private helper function to calculate overtime hours sum
   defp calculate_overtime_hours_sum(team_id, start_of_month) do
@@ -105,6 +105,58 @@ defmodule TimeManagerWeb.MetricsController do
         total_hours_sum: total_hours_sum,
         night_ratio: night_ratio,
         total_ratio: total_ratio
+      })
+    end
+  end
+
+  defp count_undertime_workingtimes(team_id, start_of_month) do
+    from(w in Workingtime,
+      join: tm in TeamMembers, on: w.user_id == tm.employee_id,
+      where: tm.team_id == ^team_id and w.start >= ^start_of_month and w.undertime == true,
+      select: count(w.id)
+    )
+    |> Repo.one() || 0
+  end
+
+  # Helper function to count total working times for a team in the current month
+  defp count_total_workingtimes(team_id, start_of_month) do
+    from(w in Workingtime,
+      join: tm in TeamMembers, on: w.user_id == tm.employee_id,
+      where: tm.team_id == ^team_id and w.start >= ^start_of_month,
+      select: count(w.id)
+    )
+    |> Repo.one() || 0
+  end
+
+  # Public action to return undertime and total working time counts and their ratios
+  def undertime_ratio(conn, _params) do
+    # Get the team_id from the connection assigns (usually set by a plug)
+    team_id = conn.assigns[:team_id]
+
+    if is_nil(team_id) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{error: "Manager does not have an assigned team"})
+    else
+      # Define the start of the current month
+      start_of_month = Timex.beginning_of_month(Timex.now())
+
+      # Calculate the undertime and total working time counts
+      undertime_count = count_undertime_workingtimes(team_id, start_of_month)
+      total_count = count_total_workingtimes(team_id, start_of_month)
+
+      # Calculate the undertime and on-time ratios
+      undertime_ratio = if total_count > 0, do: undertime_count / total_count, else: 0.0
+      on_time_ratio = 1 - undertime_ratio
+
+      # Return the metrics
+      conn
+      |> put_status(:ok)
+      |> json(%{
+        undertime_workingtimes: undertime_count,
+        total_workingtimes: total_count,
+        undertime_ratio: Float.round(undertime_ratio, 4),
+        on_time_ratio: Float.round(on_time_ratio, 4)
       })
     end
   end
