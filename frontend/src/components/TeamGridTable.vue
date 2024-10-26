@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {Grid, h} from "gridjs";
+import { Grid, h } from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
 
 export default {
@@ -59,7 +59,7 @@ export default {
           {
             name: "Actions",
             formatter: (cell, row) => {
-              return h("div", {className: "action-buttons"}, [
+              return h("div", { className: "action-buttons" }, [
                 h("button", {
                   className: "button button-edit",
                   onClick: () => this.$emit("editTeam", row.cells[0].data),
@@ -68,10 +68,12 @@ export default {
                   className: "button button-delete",
                   onClick: () => this.$emit("deleteTeam", row.cells[0].data),
                 }, "Delete"),
+                // Assurez-vous que cela est présent dans renderGrid
                 h("button", {
-                  className: "button button-view-members",
+                  className: "button button-view-members", // Vérifiez bien cette ligne
                   onClick: () => this.fetchTeamMembers(row.cells[0].data, row.cells[1].data),
-                }, "View Members"),
+                }, "View Members")
+
               ]);
             },
           },
@@ -111,7 +113,7 @@ export default {
 
       try {
         const response = await fetch(
-            `${process.env.VUE_APP_API_URL}/team_members/${teamId}`, // Using teamId in URL path
+            `${process.env.VUE_APP_API_URL}/team_members/${teamId}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -144,6 +146,7 @@ export default {
               },
             }
         );
+
         if (!response.ok) throw new Error("Failed to delete member");
 
         // Remove member from local list on success
@@ -203,13 +206,16 @@ export default {
   background-color: #d32f2f;
 }
 
+/* CSS */
 .button-view-members {
-  background-color: #007bff;
+  background-color: #007bff !important; /* Force la couleur bleue */
+  color: white !important;
 }
 
 .button-view-members:hover {
-  background-color: #0056b3;
+  background-color: #0056b3 !important; /* Couleur bleu foncé au survol */
 }
+
 
 .button-delete-member {
   background-color: #ff6347;
