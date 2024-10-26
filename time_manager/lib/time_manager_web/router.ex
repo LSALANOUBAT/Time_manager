@@ -77,9 +77,9 @@ defmodule TimeManagerWeb.Router do
     end
 
     scope "/team_members" do
-      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminorManager #
-      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminorManager #
-      get "/:team_id/members", TeamMembersController, :get_team_members, plug: Admin
+      post "/:id/team/:team_id", TeamMembersController, :add_employee, plug: AdminorManager #OK
+      delete "/:id/team/:team_id", TeamMembersController, :delete_team_member, plug: AdminorManager #OK
+      get "/:team_id/members", TeamMembersController, :get_team_members, plug: Admin #OK
     end
   end
 
