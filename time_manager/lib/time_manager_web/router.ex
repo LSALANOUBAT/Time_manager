@@ -55,7 +55,7 @@ defmodule TimeManagerWeb.Router do
     get "/users/unassigned_managers", UserController, :unasign_managers, plug: Admin #
     get "/users", UserController, :index, plug: AdminOrManager
     get "/users/:id", UserController, :show
-    post "/users", UserController, :create, plug: Admin
+    post "/users", UserController, :create, plug: AdminOrManager
     delete "/users/:id", UserController, :delete, plug: Admin
     put "/users/:id", UserController, :update, plug: Admin
     put "/update_password", PasswordController, :update_password

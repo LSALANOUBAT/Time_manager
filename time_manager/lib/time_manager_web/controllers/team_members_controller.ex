@@ -4,7 +4,7 @@ defmodule TimeManagerWeb.TeamMembersController do
   alias TimeManager.{Repo, User, TeamMembers}
   alias TimeManagerWeb.Plugs.{AdminOrManager, FetchTeamID}
 
-  # Ensure Admin or Manager role for specific actions
+  # Ensure Admin or Team role for specific actions
   plug AdminOrManager when action in [:add_employee, :delete_team_member, :get_team_members]
   plug FetchTeamID when action in [:add_employee, :delete_team_member, :get_team_members]
 

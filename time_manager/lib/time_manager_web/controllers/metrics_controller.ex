@@ -48,7 +48,7 @@ defmodule TimeManagerWeb.MetricsController do
     if is_nil(team_id) do
       conn
       |> put_status(:bad_request)
-      |> json(%{error: "Manager does not have an assigned team"})
+      |> json(%{error: "Team does not have an assigned team"})
     else
       # Get the start of the current month
       start_of_month = Timex.beginning_of_month(Timex.now())
@@ -83,7 +83,7 @@ defmodule TimeManagerWeb.MetricsController do
     if is_nil(team_id) do
       conn
       |> put_status(:bad_request)
-      |> json(%{error: "Manager does not have an assigned team"})
+      |> json(%{error: "Team does not have an assigned team"})
     else
       # Get the start of the current month
       start_of_month = Timex.beginning_of_month(Timex.now())
@@ -137,7 +137,7 @@ defmodule TimeManagerWeb.MetricsController do
     if is_nil(team_id) do
       conn
       |> put_status(:bad_request)
-      |> json(%{error: "Manager does not have an assigned team"})
+      |> json(%{error: "Team does not have an assigned team"})
     else
       # Define the start of the current month
       start_of_month = Timex.beginning_of_month(Timex.now())
@@ -164,14 +164,14 @@ defmodule TimeManagerWeb.MetricsController do
 
 
   def time_per_over_overtime(conn, _params) do
-    # Get the team_id from the connection assigns (usually set by a plug like Manager)
+    # Get the team_id from the connection assigns (usually set by a plug like Team)
     team_id = conn.assigns[:team_id]
 
     # Validate that a team_id is present
     if is_nil(team_id) do
       conn
       |> put_status(:bad_request)
-      |> json(%{error: "Manager does not have an assigned team"})
+      |> json(%{error: "Team does not have an assigned team"})
     else
       # Define the start of the current month
       start_of_month = Timex.beginning_of_month(Timex.now())

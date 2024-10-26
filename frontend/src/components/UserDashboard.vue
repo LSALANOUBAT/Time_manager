@@ -10,16 +10,19 @@
 
     <h2 class="dashboard-title">User Management Dashboard</h2>
 
-    <!-- Display UserManager and TeamManager only if the user is not an employee -->
-    <user-manager v-if="isAllowedToManageUsers" />
-    <team-manager v-if="isAllowedToManageTeams" :user-role="user.role" />
+    <!-- Display UserManager and TeamManager only if the user is an admin -->
+    <user-manager v-if="user.role === 'admin'" />
+    <team-manager v-if="user.role === 'admin'" :user-role="user.role" />
+
+    <!-- TeamTracker component for managers only -->
+    <team-tracker v-if="user.role === 'manager'" />
 
     <!-- Error message if the user is not authorized -->
-    <div v-if="isAllowedToManageUsers && errorMessage">
+    <div v-if="user.role === 'admin' && errorMessage">
       <p class="error">{{ errorMessage }}</p>
     </div>
 
-    <!-- User Tracking for Employees -->
+    <!-- User Tracking for Employees and Managers -->
     <user-tracking v-if="['employee', 'manager'].includes(user.role)" :is-manager="user.role === 'manager'" />
   </div>
 </template>
@@ -29,6 +32,7 @@ import UserTracking from './User/UserTracking.vue';
 import { toastController } from '@ionic/vue';
 import UserManager from './User/UserManager.vue';
 import TeamManager from './TeamManager.vue';
+import TeamTracker from './Team/TeamTracker.vue';  // Import the TeamTracker component
 import HamburgerMenu from './HamburgerMenu.vue';
 import ModifyPasswordButton from './ModifyPasswordButton.vue';
 
@@ -39,6 +43,7 @@ export default {
   components: {
     UserManager,
     TeamManager,
+    TeamTracker, // Register the TeamTracker component
     HamburgerMenu,
     UserTracking,
     ModifyPasswordButton,
@@ -47,12 +52,9 @@ export default {
   data() {
     return {
       user: {},
-      isAllowedToManageUsers: false,
-      isAllowedToManageTeams: false,
-      clocks: [],
-      workingTimes: [],
       errorMessage: '',
       hasActiveSession: false,
+      workingTimes: [],
     };
   },
   methods: {
@@ -71,10 +73,6 @@ export default {
 
         const userData = await userResponse.json();
         this.user = userData;
-
-        // Set permissions based on user's role
-        this.isAllowedToManageUsers = userData.role !== 'employee';
-        this.isAllowedToManageTeams = userData.role === 'admin' || userData.role === 'manager';
       } catch (error) {
         this.showToast('Error fetching user data: ' + error.message, 'danger');
       }
@@ -138,7 +136,7 @@ export default {
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 1001; /* Ensures it's above other elements */
+  z-index: 1001;
 }
 
 .dashboard-title {

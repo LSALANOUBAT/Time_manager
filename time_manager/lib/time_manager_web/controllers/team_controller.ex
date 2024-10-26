@@ -104,7 +104,7 @@ defmodule TimeManagerWeb.TeamController do
           nil ->
             conn
             |> put_status(:not_found)
-            |> json(%{status: "error", message: "Manager not found"})
+            |> json(%{status: "error", message: "Team not found"})
 
           %User{role: "manager"} = new_manager ->
             # Begin a transaction to update the manager assignment
@@ -146,14 +146,14 @@ defmodule TimeManagerWeb.TeamController do
               {:ok, _updated_team} ->
                 conn
                 |> put_status(:ok)
-                |> json(%{status: "success", message: "Manager successfully assigned to the team as both manager and team member"})
+                |> json(%{status: "success", message: "Team successfully assigned to the team as both manager and team member"})
 
               {:error, changeset} ->
                 errors = format_changeset_errors(changeset)
 
                 conn
                 |> put_status(:conflict)
-                |> json(%{status: "error", message: "Manager has already a team", errors: errors})
+                |> json(%{status: "error", message: "Team has already a team", errors: errors})
             end
 
           _user ->

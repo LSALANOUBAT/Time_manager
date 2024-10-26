@@ -21,6 +21,6 @@ defmodule TimeManager.Team do
     |> cast(attrs, [:name, :manager_id])
     |> validate_required([:name])
     |> unique_constraint(:name, message: "Team name must be unique")
-    |> unique_constraint(:manager_id, message: "Manager can only manage one team")
+    |> unique_constraint(:manager_id, message: "Team can only manage one team")
   end
 end

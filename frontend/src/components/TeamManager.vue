@@ -233,7 +233,7 @@ export default {
         });
 
         if (response.ok) {
-          this.showToast("Manager assigned to team successfully.", "success");
+          this.showToast("Team assigned to team successfully.", "success");
           this.managerAssignment.teamId = null;
           this.managerAssignment.managerId = null;
           this.fetchTeams();

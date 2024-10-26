@@ -23,7 +23,7 @@ end
 
 # Create users and store their references
 admin_user = insert_user.(admin_user_params, "Admin")
-manager_user = insert_user.(manager_user_params, "Manager")
+manager_user = insert_user.(manager_user_params, "Team")
 employee1_user = insert_user.(employee1_user_params, "Employee 1")
 employee2_user = insert_user.(employee2_user_params, "Employee 2")
 

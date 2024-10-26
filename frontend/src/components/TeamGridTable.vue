@@ -54,7 +54,7 @@ export default {
         columns: [
           "ID",
           "Name",
-          "Manager ID",
+          "Team ID",
           "Created At",
           {
             name: "Actions",
