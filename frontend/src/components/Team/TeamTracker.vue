@@ -102,7 +102,69 @@ export default {
         this.showToast("Error fetching metrics: " + error.message, "danger");
       }
     },
+    async fetchTeamHoursSumOverTime() {
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
 
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/metrics/team_hours_sum_over_time`, { headers });
+        if (!response.ok) throw new Error('Failed to fetch team hours sum over time');
+        const data = await response.json();
+
+        // Initialiser le graphique avec les données de l’API
+        this.initializeTeamHoursChart(data.team_hours_sum_over_time);
+      } catch (error) {
+        console.error("Error fetching team hours sum over time:", error);
+      }
+    },
+    initializeTeamHoursChart(data) {
+      const labels = data.map(item => item.date);
+      const totalHours = data.map(item => item.total_hours);
+
+      if (this.$refs.teamHoursSumChart && !this.charts.teamHoursSumChart) {
+        this.charts.teamHoursSumChart = new Chart(this.$refs.teamHoursSumChart, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Hours Worked',
+              data: totalHours,
+              borderColor: '#4caf50',
+              backgroundColor: 'rgba(76, 175, 80, 0.1)',
+              borderWidth: 2,
+              pointRadius: 3,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top'
+              }
+            },
+            scales: {
+              x: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Date'
+                }
+              },
+              y: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Total Hours'
+                }
+              }
+            }
+          }
+        });
+      }
+    },
 
 
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {

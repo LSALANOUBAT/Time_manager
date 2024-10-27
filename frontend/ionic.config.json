@@ -1,0 +1,7 @@
+{
+  "name": "app_smartphone",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
