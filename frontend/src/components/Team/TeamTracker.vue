@@ -224,6 +224,8 @@ export default {
         if (!response.ok) throw new Error('Failed to add employee to the team');
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
+        this.fetchMetrics();
+        this.initializeCharts();
         this.selectedEmployee = null;
         this.showToast("Employee added to team successfully!", "success");
       } catch (error) {
