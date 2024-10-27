@@ -75,6 +75,14 @@ export default {
       ],
     };
   },
+  watch: {
+    teamMembers: {
+      handler() {
+        this.fetchMetrics();
+      },
+      deep: true
+    }
+  },
   methods: {
 
     async fetchMetrics() {
@@ -106,6 +114,13 @@ export default {
 
 
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
+      Object.keys(this.charts).forEach(ref => {
+        if (this.charts[ref]) {
+          this.charts[ref].destroy();
+          this.charts[ref] = null;
+        }
+      });
+
       const chartDefinitions = [
         {
           ref: 'overtimeChart',
