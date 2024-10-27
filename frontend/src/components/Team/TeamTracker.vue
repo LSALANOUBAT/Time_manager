@@ -225,7 +225,6 @@ export default {
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
         this.fetchMetrics();
-        this.initializeCharts();
         this.selectedEmployee = null;
         this.showToast("Employee added to team successfully!", "success");
       } catch (error) {

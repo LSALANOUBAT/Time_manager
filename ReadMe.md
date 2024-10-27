@@ -9,13 +9,13 @@ TimeManager is a web application designed to manage working hours for users, pro
 1. [Technologies Used](#technologies-used)
 2. [Project Structure](#project-structure)
 3. [Setup Instructions](#setup-instructions)
-   - [Backend Setup](#backend-setup)
    - [Frontend Setup](#frontend-setup)
 4. [Docker Usage](#docker-usage)
 5. [Database Migrations and Seeding](#database-migrations-and-seeding)
-6. [Running the Application](#running-the-application)
-7. [API Endpoints](#api-endpoints)
-8. [Frontend Components](#frontend-components)
+6. [Running the Application in dev](#running-the-application-in-dev)
+7. [Running the Application in prod (manage trhough CI)] (#Running-the-Application-in-prod-(manage-trhough-CI))
+8. [API Endpoints](#api-endpoints)
+9. [Frontend Components](#frontend-components)
 
 
 ## Technologies Used
@@ -45,24 +45,6 @@ time_manager/
 ```
 
 ## Setup Instructions
-
-### Backend Setup
-
-1. Navigate to the backend directory:
-   ```bash
-   cd time_manager
-   ```
-
-2. Install dependencies:
-   ```bash
-   mix deps.get
-   ```
-
-3. Create and migrate the database:
-   ```bash
-   mix ecto.create
-   mix ecto.migrate
-   ```
 
 ### Frontend Setup
 
@@ -120,7 +102,26 @@ After setting up the backend, you need to run the database migrations and seed t
    mix run priv/repo/seeds.exs
    ```
 
-## Running the Application
+## Running the Application in dev
+
+1. Start the Docker containers:
+   ```bash
+   make up_dev
+   ```
+
+2. Access the application in your browser at:
+   ```
+   https://web.orbbesle.fr
+   ```
+
+3. For the frontend, access it at:
+   ```
+   http://localhost:8080
+   ```
+
+
+
+## Running the Application in prod (manage trhough CI)
 
 1. Start the Docker containers:
    ```bash
@@ -129,13 +130,14 @@ After setting up the backend, you need to run the database migrations and seed t
 
 2. Access the application in your browser at:
    ```
-   http://localhost:4000
+   https://web.orbbesle.fr
    ```
 
 3. For the frontend, access it at:
    ```
-   http://localhost:8080
+   https://vue.orbesle.fr
    ```
+
 
 ## API Endpoints
 
