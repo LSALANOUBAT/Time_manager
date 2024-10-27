@@ -77,34 +77,6 @@ export default {
   },
   methods: {
 
-    async fetchMetrics() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-
-      try {
-        const responses = await Promise.all([
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/overtime_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/night_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/time_per_over_overtime`, { headers })
-        ]);
-
-        const [overtimeData, nightData, undertimeData, dailyWorkingData] = await Promise.all(
-            responses.map(response => response.ok ? response.json() : {})
-        );
-
-        this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
-        this.chartConfigs[1].ratio = nightData.night_ratio || 0;
-        this.chartConfigs[2].ratio = undertimeData.undertime_ratio || 0;
-
-        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData);
-      } catch (error) {
-        console.error("Error fetching metrics:", error);
-        this.showToast("Error fetching metrics: " + error.message, "danger");
-      }
-    },
-
-
-
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
       const chartDefinitions = [
         {
@@ -127,28 +99,12 @@ export default {
           labels: ['Night Hours', 'Day Hours'],
           backgroundColor: ['#42a5f5', '#ff6347'],
         },
-        {
-          ref: 'undertimeChart',
-          type: 'pie',
-          data: [
-            undertimeData.undertime_workingtimes || 0,
-            undertimeData.total_workingtimes ? undertimeData.total_workingtimes - undertimeData.undertime_workingtimes : 0
-          ],
-          labels: ['Undertime', 'On-Time'],
-          backgroundColor: ['#ff6347', '#42a5f5'],
-        },
-        {
-          ref: 'dailyWorkingTimeChart',
-          type: 'line',
-          data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
-          labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
-          label: 'Working Times Count',
-          borderColor: '#007bff',  // Couleur de la ligne pour le line chart
-        }
+        // Other charts...
       ];
 
       chartDefinitions.forEach((chart) => {
         if (this.$refs[chart.ref] && !this.charts[chart.ref]) {
+          // Create the chart if it doesn't exist
           this.charts[chart.ref] = new Chart(this.$refs[chart.ref], {
             type: chart.type,
             data: {
@@ -199,9 +155,14 @@ export default {
               } : {}
             }
           });
+        } else if (this.charts[chart.ref]) {
+          // Update existing chart data
+          this.charts[chart.ref].data.datasets[0].data = chart.data;
+          this.charts[chart.ref].update();
         }
       });
     },
+
 
     async fetchUnassignedEmployees() {
       const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};
@@ -224,9 +185,7 @@ export default {
         if (!response.ok) throw new Error('Failed to add employee to the team');
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
-        setTimeout(() => {
         this.fetchMetrics();
-        }, 1000); // Delay of 1000 milliseconds (1 second)
         this.selectedEmployee = null;
         this.showToast("Employee added to team successfully!", "success");
       } catch (error) {
