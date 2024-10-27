@@ -276,7 +276,6 @@ export default {
     this.fetchTeamMembers();
     this.fetchUnassignedEmployees();
     this.fetchMetrics();
-    this.initializeCharts();
 
   }
 };
