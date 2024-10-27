@@ -76,15 +76,6 @@ export default {
     };
   },
   watch: {
-    teamMembers: {
-      handler() {
-        this.fetchMetrics();
-      },
-      deep: true
-    }
-  },
-
-  watch: {
     chartConfigs: {
       handler() {
         this.initializeCharts();
@@ -124,6 +115,13 @@ export default {
 
 
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
+    // Step 1: Destroy and reset all chart instances
+      Object.keys(this.charts).forEach(ref => {
+        if (this.charts[ref]) {
+          this.charts[ref].destroy();
+          this.charts[ref] = null;
+        }
+      });
 
       const chartDefinitions = [
         {
