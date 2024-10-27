@@ -6,7 +6,19 @@ defmodule TimeManagerWeb.WorkingtimeController do
 
 
   def all(conn, _params) do
-    workingtimes = Repo.all(Workingtime)
+    workingtimes =
+      from(w in Workingtime,
+        join: u in assoc(w, :user),
+        select: %{
+          id: w.id,
+          user_id: w.user_id,
+          username: u.username,
+          start: w.start,
+          end: w.end
+        }
+      )
+      |> Repo.all()
+
     json(conn, workingtimes)
   end
   # Fetch working times for a user, with optional start and end time filters
