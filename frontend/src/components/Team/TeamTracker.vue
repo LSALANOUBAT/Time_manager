@@ -255,6 +255,8 @@ export default {
         if (!response.ok) throw new Error('Failed to delete member');
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
         this.showToast("Member removed successfully!", "success");
+        this.fetchTeamMembers();
+        this.fetchUnassignedEmployees();
       } catch (error) {
         this.showToast("Error deleting member: " + error.message, "danger");
       }
