@@ -86,6 +86,7 @@ export default {
         columns: [
           "ID",
           "User ID",
+          "Username",
           "Start",
           "End",
           "Hours Worked",
@@ -118,6 +119,7 @@ export default {
         data: this.workingTimes.map((wt) => [
           wt.id,
           wt.user_id,
+          wt.username,
           new Date(wt.start).toLocaleString(),
           new Date(wt.end).toLocaleString(),
           wt.hours_worked,
