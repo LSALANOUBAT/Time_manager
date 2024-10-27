@@ -15,19 +15,26 @@ export default {
     },
   },
   mounted() {
-    this.renderGrid();
+    this.initializeGrid();
   },
   watch: {
-    users() {
-      this.renderGrid();
+    users(newData) {
+      if (this.grid) {
+        // Update grid data without reinitializing the entire grid
+        this.grid.updateConfig({
+          data: newData.map((user) => [
+            user.id,
+            user.username,
+            user.email,
+            user.role,
+            new Date(user.updated_at || user.created_at).toLocaleString(),
+          ]),
+        }).forceRender();
+      }
     },
   },
   methods: {
-    renderGrid() {
-      if (this.grid) {
-        this.grid.destroy();
-      }
-
+    initializeGrid() {
       this.grid = new Grid({
         columns: [
           "ID",
@@ -38,14 +45,14 @@ export default {
           {
             name: "Actions",
             formatter: (cell, row) => {
-              return h("div", {className: "action-buttons"}, [
+              return h("div", { className: "action-buttons" }, [
                 h("button", {
                   className: "button button-edit",
-                  onClick: () => this.$emit("editUser", row._cells[0].data),
+                  onClick: () => this.$emit("editUser", row.cells[0].data),
                 }, "Edit"),
                 h("button", {
                   className: "button button-delete",
-                  onClick: () => this.$emit("deleteUser", row._cells[0].data),
+                  onClick: () => this.$emit("deleteUser", row.cells[0].data),
                 }, "Delete"),
               ]);
             },
@@ -65,8 +72,13 @@ export default {
         search: true,
         sort: true,
         language: {
-          search: {placeholder: 'Search...'},
-          pagination: {previous: 'Previous', next: 'Next', showing: 'Showing', results: () => 'rows'},
+          search: { placeholder: "Search..." },
+          pagination: {
+            previous: "Previous",
+            next: "Next",
+            showing: "Showing",
+            results: () => "rows",
+          },
         },
       }).render(this.$refs.wrapper);
     },

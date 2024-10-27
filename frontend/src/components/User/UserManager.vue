@@ -32,26 +32,23 @@
     </form>
 
     <!-- Display users in a grid -->
-    <h3>Recently Created or Modified Users</h3>
-    <GridTable :users="recentUsers" @editUser="editUser" @deleteUser="deleteUser" />
-
+    <h3>All Users</h3>
+    <GridTable :users="users" @editUser="editUser" @deleteUser="deleteUser" />
   </div>
 </template>
 
 <script>
 import { toastController } from '@ionic/vue';
-
-import GridTable from './GridTable.vue'; // Import GridTable component
+import GridTable from './GridTable.vue';
 
 export default {
   name: 'UserManager',
   components: {
-    GridTable, // Register the GridTable component
+    GridTable,
   },
   data() {
     return {
       users: [],
-      recentUsers: [],
       formData: {
         username: '',
         email: '',
@@ -62,70 +59,44 @@ export default {
     };
   },
   methods: {
-    // Fetch all users
+    // Fetch all users from the API
     async fetchUsers() {
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
+        if (!response.ok) throw new Error('Failed to fetch users');
 
         this.users = await response.json();
-        this.updateRecentUsers();
       } catch (error) {
         this.showToast('Error fetching users: ' + error.message, 'danger');
       }
-    },
-
-    // Filter and display only the 5 most recently created or updated users
-    updateRecentUsers() {
-      this.recentUsers = this.users
-          .sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
-          .slice(0, 5);
     },
 
     // Add or update a user
     async submitUser() {
       try {
         let response;
+        const userPayload = {
+          user: {
+            username: this.formData.username,
+            email: this.formData.email,
+            role: this.formData.role,
+          },
+        };
 
         if (this.editingUser) {
-          if (!this.editingUser.id) {
-            this.showToast('No user selected for editing', 'danger');
-            return; // Prevents request if no user is selected
-          }
-
-          // Update user without password
-          const userUpdate = {
-            user: {
-              username: this.formData.username,
-              email: this.formData.email,
-              role: this.formData.role,
-            },
-          };
-
           response = await fetch(`${process.env.VUE_APP_API_URL}/users/${this.editingUser.id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            body: JSON.stringify(userUpdate),
+            body: JSON.stringify(userPayload),
           });
         } else {
-          // Create new user, include password
-          const userPayload = {
-            user: {
-              username: this.formData.username,
-              email: this.formData.email,
-              password: this.formData.password, // Include password for creation
-              role: this.formData.role,
-            },
-          };
-
+          userPayload.user.password = this.formData.password; // Include password only for new users
           response = await fetch(`${process.env.VUE_APP_API_URL}/users`, {
             method: 'POST',
             headers: {
@@ -136,39 +107,31 @@ export default {
           });
         }
 
-        if (!response.ok) {
-          throw new Error('Failed to submit user');
-        }
+        if (!response.ok) throw new Error('Failed to submit user');
 
-        const user = await response.json();
-        if (this.editingUser) {
-          const index = this.users.findIndex((u) => u.id === user.id);
-          if (index !== -1) this.users.splice(index, 1, user);
-          this.showToast('User updated successfully!', 'success');
-        } else {
-          this.users.push(user);
-          this.showToast('User added successfully!', 'success');
-        }
-
-        this.editingUser = null;
-        this.formData = { username: '', email: '', password: '', role: 'employee' };
-        this.updateRecentUsers();
-        this.fetchUsers(); // Refresh users after creation or update
+        this.showToast(this.editingUser ? 'User updated successfully!' : 'User added successfully!', 'success');
+        this.resetForm();
+        await this.fetchUsers();
       } catch (error) {
         this.showToast('Error submitting user: ' + error.message, 'danger');
       }
     },
 
-    // Method to select a user for editing
+    // Method to reset form and editing state
+    resetForm() {
+      this.editingUser = null;
+      this.formData = { username: '', email: '', password: '', role: 'employee' };
+    },
+
+    // Select a user for editing
     editUser(userId) {
       const user = this.users.find((u) => u.id === userId);
-      this.editingUser = user; // Set the editing user
-      // Populate the form with the selected user's data (except password)
+      this.editingUser = user;
       this.formData = {
         username: user.username,
         email: user.email,
         role: user.role,
-        password: '', // Leave password empty, since it is not editable during update
+        password: '', // Password is not editable here
       };
     },
 
@@ -180,14 +143,10 @@ export default {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to delete user');
-        }
+        if (!response.ok) throw new Error('Failed to delete user');
 
-        this.users = this.users.filter((user) => user.id !== userId);
         this.showToast('User deleted successfully!', 'success');
-        this.updateRecentUsers();
-        this.fetchUsers(); // Refresh users after deletion
+        await this.fetchUsers();
       } catch (error) {
         this.showToast('Error deleting user: ' + error.message, 'danger');
       }
@@ -198,16 +157,10 @@ export default {
       const toast = await toastController.create({
         message,
         duration: 3000,
-        color: color || 'primary',
+        color,
         position: 'top',
       });
-      return toast.present();
-    },
-
-    // Format date for display
-    formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleString();
+      await toast.present();
     },
   },
   mounted() {
@@ -215,6 +168,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .user-manager {
   padding: 20px;
