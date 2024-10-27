@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build:prod": "vue-cli-service build --mode production",
-    "build:dev": "vue-cli-service build --mode development"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
