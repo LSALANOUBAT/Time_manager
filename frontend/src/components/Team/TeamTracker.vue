@@ -75,16 +75,6 @@ export default {
       ],
     };
   },
-  watch: {
-   teamMembers: {
-     handler() {
-       this.fetchMetrics();
-       this.fetchUnassignedEmployees();
-       this.fetchTeamMembers();
-     },
-     deep: true
-   }
- },
 
   methods: {
 
