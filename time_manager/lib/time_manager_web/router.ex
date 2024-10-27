@@ -100,6 +100,7 @@ defmodule TimeManagerWeb.Router do
       get "/users_overtime_hours_sum", MetricsController, :sum_user_overtime_hours
       get "/users_night_hours_sum", MetricsController, :sum_user_night_hours
       get "/users_hours_per_working_time", MetricsController, :hours_per_working_time
+      get "/team_hours_sum_over_time", MetricsController, :team_hours_sum_over_time
     end
   end
 

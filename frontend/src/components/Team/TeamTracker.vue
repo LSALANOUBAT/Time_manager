@@ -107,7 +107,7 @@ export default {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
 
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/api/metrics/team_hours_sum_over_time`, { headers });
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/metrics/team_hours_sum_over_time`, { headers });
         if (!response.ok) throw new Error('Failed to fetch team hours sum over time');
         const data = await response.json();
 
