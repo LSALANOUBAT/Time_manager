@@ -70,63 +70,39 @@ export default {
         { title: 'Night Work Ratio', ref: 'nightRatioChart', label: 'Night Work Ratio', ratio: null },
         { title: 'Undertime vs. On-Time Ratio', ref: 'undertimeChart', label: 'Undertime Ratio', ratio: null },
         { title: 'Daily Working Times', ref: 'dailyWorkingTimeChart' },
-        { title: 'Sum of Hours per Date', ref: 'teamHoursSumChart', label: 'Total Hours Worked' }
+
 
       ],
     };
   },
   methods: {
 
-    async fetchTeamHoursSumOverTime() {
+    async fetchMetrics() {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
 
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/metrics/team_hours_sum_over_time`, { headers });
-        if (!response.ok) throw new Error('Failed to fetch team hours sum over time');
-        const data = await response.json();
+        const responses = await Promise.all([
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/overtime_ratios`, { headers }),
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/night_ratios`, { headers }),
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, { headers }),
+          fetch(`${process.env.VUE_APP_API_URL}/metrics/time_per_over_overtime`, { headers })
+        ]);
 
-        this.initializeTeamHoursChart(data.team_hours_sum_over_time);
+        const [overtimeData, nightData, undertimeData, dailyWorkingData] = await Promise.all(
+            responses.map(response => response.ok ? response.json() : {})
+        );
+
+        this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
+        this.chartConfigs[1].ratio = nightData.night_ratio || 0;
+        this.chartConfigs[2].ratio = undertimeData.undertime_ratio || 0;
+
+        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData);
       } catch (error) {
-        console.error("Error fetching team hours sum over time:", error);
+        console.error("Error fetching metrics:", error);
+        this.showToast("Error fetching metrics: " + error.message, "danger");
       }
     },
-    initializeTeamHoursChart(data) {
-      const labels = data.map(item => item.date);
-      const totalHours = data.map(item => item.total_hours);
 
-      if (this.$refs.teamHoursSumChart && !this.charts.teamHoursSumChart) {
-        this.charts.teamHoursSumChart = new Chart(this.$refs.teamHoursSumChart, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Total Hours Worked',
-              data: totalHours,
-              borderColor: '#4caf50',
-              backgroundColor: 'rgba(76, 175, 80, 0.1)',
-              borderWidth: 2,
-              pointRadius: 3,
-              fill: true,
-              tension: 0.4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                position: 'top'
-              }
-            },
-            scales: {
-              x: { title: { display: true, text: 'Date' } },
-              y: { title: { display: true, text: 'Total Hours' } }
-            }
-          }
-        });
-      }
-    },
 
 
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
