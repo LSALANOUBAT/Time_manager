@@ -205,6 +205,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* Ensures it appears above other elements */
 }
 
 .modal-content {
@@ -213,7 +214,9 @@ export default {
   border-radius: 5px;
   width: 300px;
   text-align: center;
+  z-index: 1001; /* Ensures it appears above the overlay */
 }
+
 
 .button-edit {
   background-color: #4caf50;
