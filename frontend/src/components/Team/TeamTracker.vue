@@ -107,7 +107,8 @@ export default {
             overtimeData.overtime_hours_sum || 0,
             overtimeData.total_hours_sum ? overtimeData.total_hours_sum - overtimeData.overtime_hours_sum : 0
           ],
-          labels: ['Overtime Hours', 'Regular Hours']
+          labels: ['Overtime Hours', 'Regular Hours'],
+          backgroundColor: ['#ff6347', '#36a2eb'],
         },
         {
           ref: 'nightRatioChart',
@@ -116,7 +117,8 @@ export default {
             nightData.night_hours_sum || 0,
             nightData.total_hours_sum ? nightData.total_hours_sum - nightData.night_hours_sum : 0
           ],
-          labels: ['Night Hours', 'Day Hours']
+          labels: ['Night Hours', 'Day Hours'],
+          backgroundColor: ['#42a5f5', '#ff6347'],
         },
         {
           ref: 'undertimeChart',
@@ -125,14 +127,16 @@ export default {
             undertimeData.undertime_workingtimes || 0,
             undertimeData.total_workingtimes ? undertimeData.total_workingtimes - undertimeData.undertime_workingtimes : 0
           ],
-          labels: ['Undertime', 'On-Time']
+          labels: ['Undertime', 'On-Time'],
+          backgroundColor: ['#ff6347', '#42a5f5'],
         },
         {
           ref: 'dailyWorkingTimeChart',
-          type: 'bar',
+          type: 'line',
           data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
           labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
-          label: 'Working Times Count'
+          label: 'Working Times Count',
+          lineColor: '#007bff',  // Single color for the line chart
         }
       ];
 
@@ -145,9 +149,13 @@ export default {
               datasets: [{
                 label: chart.label || '',
                 data: chart.data,
-                backgroundColor: ['#ff6347', '#36a2eb', '#42a5f5', '#66bb6a'],
-                borderColor: '#42a5f5',
-                fill: chart.type !== 'line',
+                backgroundColor: chart.ref === 'dailyWorkingTimeChart' ? 'rgba(0, 123, 255, 0.1)' : chart.backgroundColor,
+                borderColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : '#42a5f5',
+                pointBackgroundColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : undefined,
+                pointBorderColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : undefined,
+                fill: chart.type !== 'line' || chart.ref !== 'dailyWorkingTimeChart',
+                borderWidth: 2,
+                pointRadius: chart.ref === 'dailyWorkingTimeChart' ? 4 : undefined,
               }]
             },
             options: {
@@ -155,24 +163,45 @@ export default {
               maintainAspectRatio: false,
               plugins: {
                 legend: {
-                  display: chart.type !== 'bar'
+                  display: true,
+                  position: 'top',
                 },
                 tooltip: {
                   callbacks: {
                     label: (tooltipItem) => {
                       const value = tooltipItem.raw;
-                      const total = chart.data.reduce((sum, val) => sum + val, 0);
-                      const percentage = ((value / total) * 100).toFixed(2);
-                      return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                      return `${tooltipItem.label}: ${value}`;
                     }
                   }
                 }
-              }
+              },
+              elements: {
+                line: {
+                  tension: chart.ref === 'dailyWorkingTimeChart' ? 0.2 : undefined,
+                }
+              },
+              scales: chart.ref === 'dailyWorkingTimeChart' ? {
+                x: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Date'
+                  }
+                },
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Count'
+                  }
+                }
+              } : {}
             }
           });
         }
       });
     }
+
     ,
 
     async fetchUnassignedEmployees() {
