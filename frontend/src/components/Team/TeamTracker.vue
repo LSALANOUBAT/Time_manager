@@ -83,6 +83,16 @@ export default {
       deep: true
     }
   },
+
+  watch: {
+    chartConfigs: {
+      handler() {
+        this.initializeCharts();
+      },
+      deep: true,
+    },
+  },
+
   methods: {
 
     async fetchMetrics() {
@@ -233,7 +243,6 @@ export default {
         if (!response.ok) throw new Error('Failed to add employee to the team');
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
-        this.fetchMetrics();
         this.selectedEmployee = null;
         this.showToast("Employee added to team successfully!", "success");
       } catch (error) {
@@ -265,7 +274,6 @@ export default {
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
-        this.fetchMetrics(); 
         this.showToast("Member removed successfully!", "success");
       } catch (error) {
         this.showToast("Error deleting member: " + error.message, "danger");
