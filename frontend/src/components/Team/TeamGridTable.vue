@@ -243,6 +243,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
@@ -251,6 +252,7 @@ export default {
   border-radius: 8px;
   max-width: 500px;
   width: 90%;
+  z-index: 1001;
 }
 
 .member-list {
