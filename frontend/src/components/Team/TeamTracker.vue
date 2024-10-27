@@ -136,7 +136,7 @@ export default {
           data: dailyWorkingData.daily_working_times?.map(item => item.count) || [],
           labels: dailyWorkingData.daily_working_times?.map(item => item.date) || [],
           label: 'Working Times Count',
-          lineColor: '#007bff',  // Single color for the line chart
+          borderColor: '#007bff',  // Couleur de la ligne pour le line chart
         }
       ];
 
@@ -150,12 +150,11 @@ export default {
                 label: chart.label || '',
                 data: chart.data,
                 backgroundColor: chart.ref === 'dailyWorkingTimeChart' ? 'rgba(0, 123, 255, 0.1)' : chart.backgroundColor,
-                borderColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : '#42a5f5',
-                pointBackgroundColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : undefined,
-                pointBorderColor: chart.ref === 'dailyWorkingTimeChart' ? chart.lineColor : undefined,
-                fill: chart.type !== 'line' || chart.ref !== 'dailyWorkingTimeChart',
+                borderColor: chart.borderColor,
+                fill: chart.type === 'line' && chart.ref === 'dailyWorkingTimeChart',
+                tension: 0.4,
                 borderWidth: 2,
-                pointRadius: chart.ref === 'dailyWorkingTimeChart' ? 4 : undefined,
+                pointRadius: chart.ref === 'dailyWorkingTimeChart' ? 3 : undefined,
               }]
             },
             options: {
@@ -175,11 +174,6 @@ export default {
                   }
                 }
               },
-              elements: {
-                line: {
-                  tension: chart.ref === 'dailyWorkingTimeChart' ? 0.2 : undefined,
-                }
-              },
               scales: chart.ref === 'dailyWorkingTimeChart' ? {
                 x: {
                   display: true,
@@ -192,7 +186,7 @@ export default {
                   display: true,
                   title: {
                     display: true,
-                    text: 'Count'
+                    text: 'Working Times Count'
                   }
                 }
               } : {}
@@ -200,9 +194,7 @@ export default {
           });
         }
       });
-    }
-
-    ,
+    },
 
     async fetchUnassignedEmployees() {
       const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};

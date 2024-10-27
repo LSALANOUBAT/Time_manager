@@ -62,14 +62,15 @@ defmodule TimeManagerWeb.Router do
 
     # Routes for working times
     scope "/workingtime" do
-      get "/", WorkingtimeController, :all, plug: Admin # Get all working times OK
-      get "/:userID", WorkingtimeController, :index # List working times for a specific user OK => use bearer token
-      get "/:userID/:id", WorkingtimeController, :show # Show a specific working time entry OK => use bearer token
-      post "/:userID", WorkingtimeController, :create # Create a new working time for a user OK
-      put "/:id", WorkingtimeController, :update, plug: Admin # Update a specific working time entry OK
-      delete "/:id", WorkingtimeController, :delete, plug: Admin # Delete a working time entry (admin only) OK
-      post "/:userID/clock_in", WorkingtimeController, :clock_in # Clock in for a user (no specific role required) OK
-      post "/:userID/clock_out", WorkingtimeController, :clock_out # Clock out for a user (no specific role required) OK
+      get "/", WorkingtimeController, :all, plug: Admin
+      get "/:userID", WorkingtimeController, :index
+      get "/:userID/:id", WorkingtimeController, :show
+      post "/:userID", WorkingtimeController, :create
+      put "/:id", WorkingtimeController, :update, plug: Admin
+      delete "/:id", WorkingtimeController, :delete, plug: Admin
+      post "/:userID/clock_in", WorkingtimeController, :clock_in
+      post "/:userID/clock_out", WorkingtimeController, :clock_out
+      get "/team_hours_sum_over_time", MetricsController, :team_hours_sum_over_time, plug: Manager
     end
 
     # Routes for teams
