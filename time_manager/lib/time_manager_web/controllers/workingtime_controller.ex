@@ -11,10 +11,11 @@ defmodule TimeManagerWeb.WorkingtimeController do
         join: u in assoc(w, :user),
         select: %{
           id: w.id,
-          user_id: w.user_id,
-          username: u.username,
           start: w.start,
-          end: w.end
+          end: w.end,
+          hours_worked: w.hours_worked,
+          user_id: w.user_id,
+          username: u.username
         }
       )
       |> Repo.all()
