@@ -75,15 +75,6 @@ export default {
       ],
     };
   },
-  watch: {
-    chartConfigs: {
-      handler() {
-        this.fetchMetrics();
-        this.initializeCharts();
-      },
-      deep: true,
-    },
-  },
 
   methods: {
 
@@ -285,7 +276,7 @@ export default {
     this.fetchTeamMembers();
     this.fetchUnassignedEmployees();
     this.fetchMetrics();
-
+    this.initializeCharts();
 
   }
 };
