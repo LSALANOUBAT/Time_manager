@@ -312,7 +312,7 @@ export default {
 
 .chart-container {
   flex: 1 1 48%;
-  max-width: 400px;
+  max-width: 600px;
   min-width: 300px;
   height: 400px;
   background-color: #fff;
