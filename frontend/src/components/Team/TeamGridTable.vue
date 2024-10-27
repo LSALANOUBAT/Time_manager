@@ -20,8 +20,6 @@
 import { Grid, h } from "gridjs";
 import "gridjs/dist/theme/mermaid.css";
 
-
-
 export default {
   name: "TeamGridTable",
   props: {
@@ -70,12 +68,21 @@ export default {
                   className: "button button-delete",
                   onClick: () => this.$emit("deleteTeam", row.cells[0].data),
                 }, "Delete"),
-                // Assurez-vous que cela est présent dans renderGrid
                 h("button", {
-                  className: "button button-view-members", // Vérifiez bien cette ligne
+                  style: {
+                    backgroundColor: "#007bff",
+                    color: "white",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    border: "none",
+                    transition: "background-color 0.3s",
+                    fontSize: "14px",
+                  },
+                  onmouseover: (e) => (e.target.style.backgroundColor = "#0056b3"),
+                  onmouseout: (e) => (e.target.style.backgroundColor = "#007bff"),
                   onClick: () => this.fetchTeamMembers(row.cells[0].data, row.cells[1].data),
                 }, "View Members")
-
               ]);
             },
           },
@@ -93,7 +100,7 @@ export default {
         search: true,
         sort: true,
         language: {
-          search: {placeholder: "Search..."},
+          search: { placeholder: "Search..." },
           pagination: {
             previous: "Previous",
             next: "Next",
@@ -191,7 +198,7 @@ export default {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Button styles */
+/* Button specific styles */
 .button-edit {
   background-color: #4caf50;
 }
@@ -207,17 +214,6 @@ export default {
 .button-delete:hover {
   background-color: #d32f2f;
 }
-
-/* CSS */
-.button-view-members {
-  background-color: #007bff !important; /* Force la couleur bleue */
-  color: white !important;
-}
-
-.button-view-members:hover {
-  background-color: #0056b3 !important; /* Couleur bleu foncé au survol */
-}
-
 
 .button-delete-member {
   background-color: #ff6347;
@@ -237,7 +233,6 @@ export default {
   background-color: #5a6268;
 }
 
-/* Modal styles */
 .modal-overlay {
   position: fixed;
   top: 0;
