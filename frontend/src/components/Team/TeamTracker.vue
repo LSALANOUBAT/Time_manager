@@ -23,20 +23,20 @@
     <h3>Team Members</h3>
     <table class="team-members-table">
       <thead>
-        <tr>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
+      <tr>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
-        <tr v-for="member in teamMembers" :key="member.id">
-          <td>{{ member.username }}</td>
-          <td>{{ member.role }}</td>
-          <td>
-            <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
-          </td>
-        </tr>
+      <tr v-for="member in teamMembers" :key="member.id">
+        <td>{{ member.username }}</td>
+        <td>{{ member.role }}</td>
+        <td>
+          <button @click="deleteMember(member.id)" class="button-delete-member">Remove</button>
+        </td>
+      </tr>
       </tbody>
     </table>
 
@@ -44,7 +44,7 @@
     <div class="metrics">
       <div class="chart-container" v-for="(chart, index) in chartConfigs" :key="index">
         <h3>{{ chart.title }}</h3>
-        <canvas :ref="chart.ref" width="200" height="200"></canvas>
+        <canvas :ref="chart.ref"></canvas>
         <p v-if="chart.ratio">{{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
       </div>
     </div>
@@ -85,7 +85,7 @@ export default {
         ]);
 
         const [overtimeData, nightData, undertimeData, dailyWorkingData] = await Promise.all(
-          responses.map(response => response.ok ? response.json() : {})
+            responses.map(response => response.ok ? response.json() : {})
         );
 
         this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
@@ -103,19 +103,28 @@ export default {
         {
           ref: 'overtimeChart',
           type: 'doughnut',
-          data: [overtimeData.overtime_hours_sum || 0, overtimeData.total_hours_sum || 0],
+          data: [
+            overtimeData.overtime_hours_sum || 0,
+            overtimeData.total_hours_sum ? overtimeData.total_hours_sum - overtimeData.overtime_hours_sum : 0
+          ],
           labels: ['Overtime Hours', 'Regular Hours']
         },
         {
           ref: 'nightRatioChart',
           type: 'pie',
-          data: [nightData.night_hours_sum || 0, nightData.total_hours_sum || 0],
+          data: [
+            nightData.night_hours_sum || 0,
+            nightData.total_hours_sum ? nightData.total_hours_sum - nightData.night_hours_sum : 0
+          ],
           labels: ['Night Hours', 'Day Hours']
         },
         {
           ref: 'undertimeChart',
           type: 'pie',
-          data: [undertimeData.undertime_workingtimes || 0, undertimeData.total_workingtimes || 0],
+          data: [
+            undertimeData.undertime_workingtimes || 0,
+            undertimeData.total_workingtimes ? undertimeData.total_workingtimes - undertimeData.undertime_workingtimes : 0
+          ],
           labels: ['Undertime', 'On-Time']
         },
         {
@@ -147,18 +156,29 @@ export default {
               plugins: {
                 legend: {
                   display: chart.type !== 'bar'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (tooltipItem) => {
+                      const value = tooltipItem.raw;
+                      const total = chart.data.reduce((sum, val) => sum + val, 0);
+                      const percentage = ((value / total) * 100).toFixed(2);
+                      return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                    }
+                  }
                 }
               }
             }
           });
         }
       });
-    },
+    }
+    ,
 
     async fetchUnassignedEmployees() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/unsigned_employee`, { headers });
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/users/unsigned_employee`, {headers});
         if (!response.ok) throw new Error('Failed to fetch unassigned employees');
         this.unassignedEmployees = await response.json();
       } catch (error) {
@@ -167,7 +187,7 @@ export default {
     },
 
     async addEmployeeToTeam() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${this.selectedEmployee}/team/`, {
           method: 'POST',
@@ -184,9 +204,9 @@ export default {
     },
 
     async fetchTeamMembers() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, { headers });
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members`, {headers});
         if (!response.ok) throw new Error('Failed to fetch team members');
         const data = await response.json();
         this.teamMembers = data.members || [];
@@ -197,7 +217,7 @@ export default {
     },
 
     async deleteMember(userId) {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+      const headers = {Authorization: `Bearer ${localStorage.getItem('token')}`};
       try {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/team_members/${userId}/team/`, {
           method: 'DELETE',
@@ -233,6 +253,7 @@ export default {
 .team-manager {
   padding: 20px;
 }
+
 .team-id {
   font-weight: bold;
   margin-bottom: 10px;
