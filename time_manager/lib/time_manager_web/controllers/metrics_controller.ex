@@ -75,29 +75,23 @@ defmodule TimeManagerWeb.MetricsController do
     end
   end
   def team_hours_sum_over_time(conn, _params) do
-    # Obtenez l'ID de l'équipe depuis les attributs de connexion (défini par un plug si nécessaire)
     team_id = conn.assigns[:team_id]
 
-    # Vérifiez que l'ID de l'équipe est valide
     if is_nil(team_id) do
       conn
       |> put_status(:bad_request)
       |> json(%{error: "Team does not have an assigned team"})
     else
-      # Début du mois courant
-      start_of_month = Timex.beginning_of_month(Timex.now())
-
-      # Query pour obtenir la somme des heures travaillées par jour pour tous les membres de l'équipe
+      # Query to get the total hours worked per day for the assigned team
       team_hours_sum_over_time =
         from(w in Workingtime,
           join: tm in TeamMembers, on: w.user_id == tm.employee_id,
-          where: tm.team_id == ^team_id and w.start >= ^start_of_month,
+          where: tm.team_id == ^team_id,
           group_by: fragment("DATE(?)", w.start),
           select: %{date: fragment("DATE(?)", w.start), total_hours: sum(w.hours_worked)}
         )
         |> Repo.all()
 
-      # Retourner le résultat en JSON
       conn
       |> put_status(:ok)
       |> json(%{team_hours_sum_over_time: team_hours_sum_over_time})

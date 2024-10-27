@@ -46,10 +46,9 @@
         <h3>{{ chart.title }}</h3>
         <canvas :ref="chart.ref"></canvas>
         <p v-if="chart.ratio">{{ chart.label }}: {{ (chart.ratio * 100).toFixed(2) }}%</p>
-        <canvas ref="teamHoursSumChart"></canvas>
-
       </div>
     </div>
+
   </div>
 </template>
 
@@ -114,7 +113,7 @@ export default {
         // Initialiser le graphique avec les données de l’API
         this.initializeTeamHoursChart(data.team_hours_sum_over_time);
       } catch (error) {
-        this.showToast("Error fetching team hours sum over time: " + error.message, "danger");
+        console.error("Error fetching team hours sum over time:", error);
       }
     },
     initializeTeamHoursChart(data) {
@@ -129,8 +128,8 @@ export default {
             datasets: [{
               label: 'Total Hours Worked',
               data: totalHours,
-              borderColor: '#4caf50', // Couleur pour la ligne
-              backgroundColor: 'rgba(76, 175, 80, 0.1)', // Couleur de remplissage
+              borderColor: '#4caf50',
+              backgroundColor: 'rgba(76, 175, 80, 0.1)',
               borderWidth: 2,
               pointRadius: 3,
               fill: true,
