@@ -75,6 +75,16 @@ export default {
       ],
     };
   },
+  watch: {
+   teamMembers: {
+     handler() {
+       this.fetchMetrics();
+       this.fetchUnassignedEmployees();
+       this.fetchTeamMembers();
+     },
+     deep: true
+   }
+ },
 
   methods: {
 
@@ -254,8 +264,6 @@ export default {
         });
         if (!response.ok) throw new Error('Failed to delete member');
         this.teamMembers = this.teamMembers.filter((member) => member.id !== userId);
-        this.fetchTeamMembers();
-        this.fetchUnassignedEmployees();
         this.showToast("Member removed successfully!", "success");
       } catch (error) {
         this.showToast("Error deleting member: " + error.message, "danger");
