@@ -326,7 +326,7 @@ export default {
 }
 
 .button-cancel {
-  background-color: #6c757d;
+  background-color: #f44336;
 }
 
 .create-form {
