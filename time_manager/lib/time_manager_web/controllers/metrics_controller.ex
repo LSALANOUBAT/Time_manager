@@ -82,7 +82,7 @@ defmodule TimeManagerWeb.MetricsController do
       |> put_status(:bad_request)
       |> json(%{error: "Team does not have an assigned team"})
     else
-      # Query to get the total hours worked per day for the assigned team
+      # Requête pour obtenir la somme des heures travaillées par jour pour tous les membres de l'équipe
       team_hours_sum_over_time =
         from(w in Workingtime,
           join: tm in TeamMembers, on: w.user_id == tm.employee_id,

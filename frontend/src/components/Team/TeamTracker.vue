@@ -77,31 +77,6 @@ export default {
   },
   methods: {
 
-    async fetchMetrics() {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-
-      try {
-        const responses = await Promise.all([
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/overtime_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/night_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/undertime_ratios`, { headers }),
-          fetch(`${process.env.VUE_APP_API_URL}/metrics/time_per_over_overtime`, { headers })
-        ]);
-
-        const [overtimeData, nightData, undertimeData, dailyWorkingData] = await Promise.all(
-            responses.map(response => response.ok ? response.json() : {})
-        );
-
-        this.chartConfigs[0].ratio = overtimeData.overtime_ratio || 0;
-        this.chartConfigs[1].ratio = nightData.night_ratio || 0;
-        this.chartConfigs[2].ratio = undertimeData.undertime_ratio || 0;
-
-        this.initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData);
-      } catch (error) {
-        console.error("Error fetching metrics:", error);
-        this.showToast("Error fetching metrics: " + error.message, "danger");
-      }
-    },
     async fetchTeamHoursSumOverTime() {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
 
@@ -110,7 +85,6 @@ export default {
         if (!response.ok) throw new Error('Failed to fetch team hours sum over time');
         const data = await response.json();
 
-        // Initialiser le graphique avec les données de l’API
         this.initializeTeamHoursChart(data.team_hours_sum_over_time);
       } catch (error) {
         console.error("Error fetching team hours sum over time:", error);
@@ -146,20 +120,8 @@ export default {
               }
             },
             scales: {
-              x: {
-                display: true,
-                title: {
-                  display: true,
-                  text: 'Date'
-                }
-              },
-              y: {
-                display: true,
-                title: {
-                  display: true,
-                  text: 'Total Hours'
-                }
-              }
+              x: { title: { display: true, text: 'Date' } },
+              y: { title: { display: true, text: 'Total Hours' } }
             }
           }
         });
