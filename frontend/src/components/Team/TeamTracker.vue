@@ -114,12 +114,6 @@ export default {
 
 
     initializeCharts(overtimeData, nightData, undertimeData, dailyWorkingData) {
-      Object.keys(this.charts).forEach(ref => {
-        if (this.charts[ref]) {
-          this.charts[ref].destroy();
-          this.charts[ref] = null;
-        }
-      });
 
       const chartDefinitions = [
         {
