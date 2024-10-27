@@ -224,7 +224,9 @@ export default {
         if (!response.ok) throw new Error('Failed to add employee to the team');
         this.fetchTeamMembers();
         this.fetchUnassignedEmployees();
+        setTimeout(() => {
         this.fetchMetrics();
+        }, 1000); // Delay of 1000 milliseconds (1 second)
         this.selectedEmployee = null;
         this.showToast("Employee added to team successfully!", "success");
       } catch (error) {

@@ -13,7 +13,7 @@ TimeManager is a web application designed to manage working hours for users, pro
 4. [Docker Usage](#docker-usage)
 5. [Database Migrations and Seeding](#database-migrations-and-seeding)
 6. [Running the Application in dev](#running-the-application-in-dev)
-7. [Running the Application in prod (manage trhough CI)] (#Running-the-Application-in-prod-(manage-trhough-CI))
+7. [Running the Application in prod (manage trhough CI)](#running-the-application-in-prod)
 8. [API Endpoints](#api-endpoints)
 9. [Frontend Components](#frontend-components)
 
@@ -121,7 +121,9 @@ After setting up the backend, you need to run the database migrations and seed t
 
 
 
-## Running the Application in prod (manage trhough CI)
+## Running the Application in prod
+
+   Every push on main is trigerring a CI 
 
 1. Start the Docker containers:
    ```bash
